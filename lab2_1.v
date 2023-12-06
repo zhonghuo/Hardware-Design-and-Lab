@@ -33,16 +33,6 @@ module Parameterized_Ping_Pong_Counter (
                     out = out;
                 end
                 else if(out == max && min < max) tmp = 0;
-                /*else if(out > max) out = out;
-                else if(out < min) begin
-                    flag = 1'b0;
-                    out = out;
-                    store = store + 1;
-                    if(store + out - 1 >= min) begin 
-                        out = store;
-                        flag = 1'b1;
-                    end
-                end*/
                 else out = out + 1;
             end
             else out = out;
@@ -57,15 +47,6 @@ module Parameterized_Ping_Pong_Counter (
                     tmp = 1;
                     out = out + 1;
                 end
-                /*else if(out > max) begin
-                    flag = 1'b0;
-                    out = out;
-                    store = store + 1;
-                    if(out - store + 1 <= max) begin
-                        out = out - store + 1;
-                        flag = 1'b1;
-                    end
-                end*/
                 else out = out - 1;
             end
             else out = out;       

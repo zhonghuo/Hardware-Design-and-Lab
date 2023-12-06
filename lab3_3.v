@@ -30,6 +30,10 @@ module lab3_3(
     reg [1:0] snake_1_dir = right, snake_11_dir = right, snake_111_dir = left;
     reg [15:0] snake_1_tmp_pos = snake_11_init, snake_11_tmp_pos = snake_11_init, snake_111_tmp_pos = snake_111_init;
     reg [15:0] tmp1, tmp2, tmp3, tmp4;
+    reg snake_1_have_to_change_dir = 1'b0, snake_111_have_to_change_dir = 1'b0;
+    reg flag_1 = 1'b0, flag_2 = 1'b0, flag_3 = 1'b0;
+    reg snake_1_hit_snake_11 = 1'b0, snake_111_hit_snake_11 = 1'b0;
+
 
     always @(posedge clk_div24, posedge rst) begin
         if(rst) begin
@@ -37,6 +41,12 @@ module lab3_3(
             snake_1_dir = right;
         end else begin
             if(en) begin 
+                if(snake_1_have_to_change_dir && !flag_1) begin
+                    if(snake_1_dir == right) snake_1_dir = left;
+                    else snake_1_dir = right;
+                    flag_1 = 1;
+                end
+                if(flag_1) flag_1 = 0;
                 case (snake_1_dir)
                     right: tmp1 = snake_1 >> 1;
                     left: begin
@@ -50,11 +60,16 @@ module lab3_3(
                 if((tmp1 & snake_11) != 0 && !snake_1[15]) begin
                     snake_1_dir = left;
                     snake_1 = tmp1 << 2;
+                    snake_1_hit_snake_11 = 1;
                 end else if((tmp1 & snake_11) != 0 && snake_1[15]) begin
                     snake_1_dir = right;
                     snake_1 = snake_1;
+                    snake_1_hit_snake_11 = 1;
                 end
-                else snake_1 = tmp1;
+                else begin
+                    snake_1 = tmp1;
+                    snake_1_hit_snake_11 = 0;
+                end
             end
             else snake_1 = snake_1;
         end
@@ -66,6 +81,12 @@ module lab3_3(
             snake_111_dir = left;
         end else begin
             if(en) begin
+                if(snake_111_have_to_change_dir && !flag_3) begin
+                    if(snake_111_dir == right) snake_111_dir = left;
+                    else snake_111_dir = right;
+                    flag_3 = 1;
+                end
+                if(flag_3) flag_3 = 0;
                 case (snake_111_dir)
                     left: tmp3 = snake_111 << 1;
                     right: begin
@@ -79,13 +100,18 @@ module lab3_3(
                 endcase
                 if((tmp3 & snake_11) != 0 && !snake_111[0]) begin
                     snake_111_dir = right;
+                    snake_111_hit_snake_11 = 1;
                     if(snake_111 == 16'b0000000000001110) snake_111 = snake_111_init;
                     else snake_111 = tmp3 >> 2;
                 end else if((tmp3 & snake_11) != 0 && snake_111[0]) begin
+                    snake_111_hit_snake_11 = 1;
                     snake_111_dir = left;
                     snake_111 = snake_111;
                 end
-                else snake_111 = tmp3;
+                else begin
+                    snake_111 = tmp3;
+                    snake_111_hit_snake_11 = 0;
+                end
             end
             else snake_111 = snake_111;
         end
@@ -98,6 +124,12 @@ module lab3_3(
         end
         else begin
             if(en) begin
+                if((snake_1_hit_snake_11 || snake_111_hit_snake_11) && !flag_2) begin
+                    if(snake_11_dir == right) snake_11_dir = left;
+                    else snake_11_dir = right;
+                    flag_2 = 1;
+                end
+                if(flag_2) flag_2 = 0;
                 case (snake_11_dir)
                     left: begin
                         if(snake_11 == 16'b0110000000000000) begin
@@ -116,17 +148,25 @@ module lab3_3(
                     default: snake_11 = snake_11;
                 endcase
                 if((tmp2 & snake_1) != 0 && (tmp2 & snake_111) != 0) begin
+                    snake_1_have_to_change_dir = 1;
+                    snake_111_have_to_change_dir = 1;
                     snake_11 = snake_11;
                     snake_11_dir = snake_11_dir;
                 end
                 else if((tmp2 & snake_1) == 0 && (tmp2 & snake_111) == 0)begin
                     snake_11 = tmp2;
+                    snake_1_have_to_change_dir = 0;
+                    snake_111_have_to_change_dir = 0;
                 end
                 else if((tmp2 & snake_1) != 0 && (tmp2 & snake_111) == 0) begin
+                    snake_1_have_to_change_dir = 1;
+                    snake_111_have_to_change_dir = 0;
                     snake_11_dir = right;
                     snake_11 = snake_11 >> 1;
                 end            
                 else if((tmp2 & snake_1) == 0 && (tmp2 & snake_111) != 0) begin
+                    snake_111_have_to_change_dir = 1;
+                    snake_1_have_to_change_dir = 0;
                     snake_11_dir = left;
                     snake_11 = snake_11 << 1;
                 end

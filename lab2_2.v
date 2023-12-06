@@ -8,7 +8,7 @@ module Encoder (
     input [7:0] in_data, 
     output reg [11:0] out_data, 
     output reg [2:0] state, 
-    output wire [3:0] counter_out, /* use wire to connect two module*/
+    output wire [3:0] counter_out,
     output wire direction
 );
 
@@ -24,17 +24,14 @@ parameter GET_DATA = 3'd1;
 parameter ENCRYPT_DATA = 3'd2;
 parameter OUTPUT_DATA = 3'd3;
 
-/* using mode signal to process the flip and enable signal */
+
 wire flip, enable;
 
-/* fill in the following blanks (e.g.: a = (b == 2'b01) ? 1'b1 : 1'b0) */
 assign flip = (mode == 2'b01)? 1'b1 : 1'b0;
 assign enable = (mode == 2'b10)? 1'b0 : 1'b1;
 
-/* instantiate the Parameterized_Ping_Pong_Counter module */
 Parameterized_Ping_Pong_Counter pppc(.clk(clk), .rst_n(rst_n), .enable(enable), .max(max), .min(min), .flip(flip), .direction(direction), .out(counter_out));
 
-/* state transition */
 always@(posedge clk)begin
     if(!rst_n) begin
         state = INIT;
@@ -67,7 +64,7 @@ always @* begin
         end
     endcase
 end
-/* counter (this is the offset_cnt in the Practice_2) */
+
 always @(posedge clk) begin
     if(!rst_n) offset_cnt = 4'b0;
     else offset_cnt = next_offset_cnt;
@@ -133,13 +130,13 @@ always @(posedge clk) begin
     endcase
     
 end
-/* output data */
+
 always @(posedge clk) begin
     if (!rst_n) begin
         out_data = 12'b0;
     end
     else begin
-        /* determine the value of out_data under different circumstances */
+        
         if(state == OUTPUT_DATA) begin
             out_data = output_tmp[x];
             if(x != 3'd7) x = x + 1;
