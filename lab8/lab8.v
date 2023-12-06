@@ -23,6 +23,7 @@ module Lab8(
     // We have connected the motor and sonic_top modules in the template file for you.
     //test
     //i am happy
+    //are you sure ?
     // TODO: control the motors with the information you get from ultrasonic sensor and 3-way track sensor.
     
     sonic_top B(
