@@ -22,6 +22,7 @@ module Lab8(
 );
     // We have connected the motor and sonic_top modules in the template file for you.
     // TODO: control the motors with the information you get from ultrasonic sensor and 3-way track sensor.
+    wire [1:0] mode, pre_mode;
     
     sonic_top B(
         .clk(clk), 
@@ -46,7 +47,9 @@ module Lab8(
         .l_IN({IN1, IN2}),
         .r_IN({IN3, IN4}),
         .en_left(en_left),
-        .en_right(en_right)
+        .en_right(en_right),
+        .pre_mode(pre_mode),
+        .is_out_the_track(is_out_the_track)
     );
 
     tracker_sensor T(
@@ -57,7 +60,9 @@ module Lab8(
         .mid_track(mid_track),
         .state(mode),
         .DISPLAY(DISPLAY),
-        .DIGIT(DIGIT)
+        .DIGIT(DIGIT),
+        .is_out_the_track(is_out_the_track),
+        .pre_state(pre_mode)
     );
 
 endmodule

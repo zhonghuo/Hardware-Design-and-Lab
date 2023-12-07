@@ -7,6 +7,8 @@ module motor(
     input [1:0]mode,
     input en_left,
     input en_right,
+    input is_out_the_track,
+    input [1:0]pre_mode,
     output [1:0]pwm,
     output [1:0]r_IN,
     output [1:0]l_IN
@@ -18,34 +20,30 @@ module motor(
     motor_pwm m0(
         .clk(clk), 
         .reset(rst), 
-        .duty(730), 
+        .duty(700), 
         .pmod_1(left_pwm), 
-        .en(en_left)
+        .en((en_left && mode[1] && !is_out_the_track) || (is_out_the_track && pre_mode[1] && en_left))
     );
     motor_pwm m1(
         .clk(clk), 
         .reset(rst), 
-        .duty(730), 
+        .duty(700), 
         .pmod_1(right_pwm), 
-        .en(en_right)
+        .en((en_right && mode[0] && !is_out_the_track) || (is_out_the_track && pre_mode[0] && en_right))
     );
 
-    assign pwm = (mode == 2'd1) ? 2'b01 :
-                 (mode == 2'd2) ? 2'b10 :
-                 (mode == 2'd3) ? 2'b10 : {left_pwm,right_pwm};
-    //assign pwm = {left_pwm,right_pwm};
+    assign pwm = {left_pwm,right_pwm};
     assign r_IN = 2'b10;
     assign l_IN = 2'b10;
     // TODO: trace the rest of motor.v and control the speed and direction of the two motors
     
 
-    
 endmodule
 
 module motor_pwm (
     input clk,
     input reset,
-    input [9:0]duty,
+    input [9:0] duty,
 	output pmod_1, //PWM
     input en
 );
@@ -81,7 +79,9 @@ module PWM_gen(
         end else if (count < count_max) begin
             count <= count + 1;
             // TODO: set <PWM> accordingly
-            if(count < count_duty && en) PWM <= 1;
+            if(count < count_duty && en) begin
+                PWM <= 1;
+            end
             else PWM <= 0;
         end else begin
             count <= 0;

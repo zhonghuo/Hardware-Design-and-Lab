@@ -6,7 +6,9 @@ module tracker_sensor(
     input mid_track, 
     output reg [1:0] state, 
     output wire [6:0] DISPLAY, 
-    output wire [3:0] DIGIT
+    output wire [3:0] DIGIT,
+	output wire is_out_the_track,
+	output reg [1:0] pre_state
 );
 
     // TODO: Receive three tracks and make your own policy.
@@ -15,20 +17,25 @@ module tracker_sensor(
     SevenSegment S(
         .display(DISPLAY),
         .digit(DIGIT),
-        .nums({4'b1010, 3'b000, left_track, 3'b000, mid_track, 3'b000, right_track}),
+        .nums({2'b00, state , 3'b000, left_track, 3'b000, mid_track, 3'b000, right_track}),
         .rst(reset),
         .clk(clk)
     );
 
     always @* begin
         case({left_track, mid_track, right_track})
-            000, 001, 100, 101: state = 2'd0;     // on the middle
-            011: state = 2'd1; // car veers to the right
-            110: state = 2'd2; // car veers to the left
-            111: state = 2'd3; // out the track
-            default: state = 2'd0;
+            3'b000, 3'b101: state = 2'b11;     // on the middle
+            3'b011, 3'b001: state = 2'b10; // car veers to the right
+            3'b110, 3'b100: state = 2'b01; // car veers to the left
+            3'b111: state = 2'b00; // out the track
+            default: state = 2'b10;
         endcase
+		if(state != 2'b11 && state != 2'b00) pre_state = state;
+		else if(state == 2'b00 && pre_state == 2'b00) pre_state = 2'b10;
+		else pre_state = 2'b11;
     end
+
+	assign is_out_the_track = (state == 2'b00) ? 1 : 0;
     
 endmodule
 
