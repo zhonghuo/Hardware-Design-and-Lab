@@ -24,7 +24,7 @@ module tracker_sensor(
 
     always @* begin
         case({left_track, mid_track, right_track})
-            3'b000, 3'b101: state = 2'b11;     // on the middle
+            3'b000, 3'b101, 3'b010: state = 2'b11;     // on the middle
             3'b011, 3'b001: state = 2'b10; // car veers to the right
             3'b110, 3'b100: state = 2'b01; // car veers to the left
             3'b111: state = pre_state; // out the track
