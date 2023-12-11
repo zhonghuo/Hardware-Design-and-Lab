@@ -17,19 +17,17 @@ module motor(
     reg [9:0]left_motor, right_motor;
     wire left_pwm, right_pwm;
     wire [9:0] left_duty, right_duty;
-    assign left_duty = (mode == 2'b10) ? 800 : 700;
-    assign right_duty = (mode == 2'b01) ? 775 : 700;
     motor_pwm m0(
         .clk(clk), 
         .reset(rst), 
-        .duty(left_duty),
+        .duty(700),
         .pmod_1(left_pwm), 
         .en((en_left && mode[1] && !is_out_the_track))
     );
     motor_pwm m1(
         .clk(clk), 
         .reset(rst), 
-        .duty(right_duty), 
+        .duty(700), 
         .pmod_1(right_pwm), 
         .en((en_right && mode[0] && !is_out_the_track))
     );
