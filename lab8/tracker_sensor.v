@@ -21,15 +21,57 @@ module tracker_sensor(
         .rst(reset),
         .clk(clk)
     );
-	
+	parameter turn_left = 2'b10 ;
+    parameter go_straight = 2'b11;
+    parameter turn_right = 2'b01;
+    parameter stop = 2'b00;
+    reg [2:0] state_tmp; //red digits
+    always @(posedge clk) begin
+        if(reset) state_tmp <= 0;
+        else begin
+            case(state_tmp)
+            3'b000: begin
+                if({left_track, mid_track, right_track} == 3'b011 || {left_track, mid_track, right_track} == 3'b001) 
+                    state_tmp <= 3'b001;
+                else if({left_track, mid_track, right_track} == 3'b110 || {left_track, mid_track, right_track} == 3'b100)
+                    state_tmp <= 3'b101;
+                else state_tmp <= state_tmp;
+            end
+            3'b001: begin
+                if({left_track, mid_track, right_track} == 3'b0 || {left_track, mid_track, right_track} == 3'b1)
+                    state_tmp <= 011;
+                else if({left_track, mid_track, right_track} == 3'b111) state_tmp <= 3'b010;
+                else state_tmp <= state_tmp;
+            end
+            3'b010, 3'b011: begin
+                if({left_track, mid_track, right_track} == 3'b011) state_tmp <= 001;
+                else state_tmp <= state_tmp;
+            end
+            3'b101: begin
+                if({left_track, mid_track, right_track} == 3'b100 || {left_track, mid_track, right_track} == 3'b0)
+                    state_tmp <= 3'b110;
+                else if({left_track, mid_track, right_track} == 3'b111) state_tmp <= 3'b111;
+                else state_tmp <= state_tmp;
+            end
+            3'b110, 3'b111: begin
+                if({left_track, mid_track, right_track} == 3'b110) state_tmp <= 3'b101;
+                else state_tmp <= state_tmp;
+            end
+            default: state_tmp <= 0;
+            endcase
+        end
+    end
     always @* begin
         if(reset) begin
 			state = 0;
 		end else begin
-			case({left_track, mid_track, right_track})
-            3'b111: state = 2'b11; // out the track
-            default: state = 2'b10;
-			endcase
+            case(state_tmp)
+            3'b000: state = stop;
+            3'b001, 3'b101: state = go_straight;
+            3'b010, 3'b110: state = turn_left;
+            3'b011, 3'b111: state = turn_right;
+            default: state = stop;
+            endcase
 		end
     end
 
