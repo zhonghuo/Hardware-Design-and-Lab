@@ -24,14 +24,14 @@ module motor(
         .reset(rst), 
         .duty(left_duty),
         .pmod_1(left_pwm), 
-        .en((en_left && mode[1] && !is_out_the_track) || (is_out_the_track && pre_mode[1] && en_left))
+        .en((en_left && mode[1] && !is_out_the_track))
     );
     motor_pwm m1(
         .clk(clk), 
         .reset(rst), 
         .duty(right_duty), 
         .pmod_1(right_pwm), 
-        .en((en_right && mode[0] && !is_out_the_track) || (is_out_the_track && pre_mode[0] && en_right))
+        .en((en_right && mode[0] && !is_out_the_track))
     );
 
     assign pwm = {left_pwm,right_pwm};
