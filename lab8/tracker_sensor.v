@@ -60,8 +60,8 @@ module tracker_sensor(
             end
             3'b110: begin
                 if({left_track, mid_track} == 2'b11) 
-                    state_tmp <= state_tmp;
-                else state_tmp <= 3'b110;
+                    state_tmp <= 3'b101;
+                else state_tmp <= state_tmp;
             end
             3'b111: begin
                 if({left_track, mid_track, right_track} == 3'b111) state_tmp <= state_tmp;
