@@ -38,40 +38,34 @@ module tracker_sensor(
                 else state_tmp <= state_tmp;
             end
             3'b001: begin
-                if({left_track, mid_track, right_track} == 3'b000)
-                    state_tmp <= 011;
-                else if({left_track, mid_track, right_track} == 3'b111) state_tmp <= 3'b010;
-                else state_tmp <= state_tmp;
+                if({left_track, mid_track, right_track} == 3'b111)
+                    state_tmp <= 3'b010;
+                else if({left_track, mid_track, right_track} == 3'b011) state_tmp <= state_tmp;
+                else state_tmp <= 3'b011;
             end
             3'b010: begin
                 if({left_track, mid_track, right_track} == 3'b111) state_tmp <= state_tmp;
-                else if({left_track, mid_track, right_track} == 3'b000) state_tmp <= 3'b011;
-                else state_tmp <= 3'b001;
+                else state_tmp <= 3'b011;
             end
             3'b011: begin
-                if({left_track, mid_track, right_track} == 3'b000)
-                    state_tmp <= state_tmp;
-                else if({left_track, mid_track, right_track} == 3'b111)
-                    state_tmp <= 3'b010;
-                else state_tmp <= 3'b001;
-            end
-            3'b101: begin
-                if({left_track, mid_track, right_track} == 3'b0)
-                    state_tmp <= 3'b110;
-                else if({left_track, mid_track, right_track} == 3'b111) state_tmp <= 3'b111;
+                if({mid_track, right_track} == 2'b11)
+                    state_tmp <= 3'b001;
                 else state_tmp <= state_tmp;
             end
-            3'b110: begin
-                if({left_track, mid_track, right_track} == 3'b000) 
+            3'b101: begin
+                if({left_track, mid_track, right_track} == 3'b110)
                     state_tmp <= state_tmp;
-                else if({left_track, mid_track, right_track} == 3'b111)
-                    state_tmp <= 3'b111;
-                else state_tmp <= 3'b101;
+                else if({left_track, mid_track, right_track} == 3'b111) state_tmp <= 3'b111;
+                else state_tmp <= 3'b110;
+            end
+            3'b110: begin
+                if({left_track, mid_track} == 2'b11) 
+                    state_tmp <= state_tmp;
+                else state_tmp <= 3'b110;
             end
             3'b111: begin
                 if({left_track, mid_track, right_track} == 3'b111) state_tmp <= state_tmp;
-                else if({left_track, mid_track, right_track} == 3'b000) state_tmp <= 3'b110;
-                else state_tmp <= 3'b101;
+                else state_tmp <= 3'b110;
             end
             default: state_tmp <= state_tmp;
             endcase
