@@ -38,17 +38,18 @@ module tracker_sensor(
                 else state_tmp <= state_tmp;
             end
             3'b001: begin
-                if({left_track, mid_track, right_track} == 3'b0 || {left_track, mid_track, right_track} == 3'b1)
+                if({left_track, mid_track, right_track} == 3'b000 || {left_track, mid_track, right_track} == 3'b001)
                     state_tmp <= 011;
                 else if({left_track, mid_track, right_track} == 3'b111) state_tmp <= 3'b010;
                 else state_tmp <= state_tmp;
             end
             3'b010: begin
                 if({left_track, mid_track, right_track} == 3'b111) state_tmp <= state_tmp;
+                else if({left_track, mid_track, right_track} == 3'b101) state_tmp <= 3'b011;
                 else state_tmp <= 3'b001;
             end
             3'b011: begin
-                if({left_track, mid_track, right_track} == 3'b0 || {left_track, mid_track, right_track} == 3'b1)
+                if({left_track, mid_track, right_track} == 3'b000 || {left_track, mid_track, right_track} == 3'b001)
                     state_tmp <= state_tmp;
                 else state_tmp <= 3'b001;
             end
@@ -65,6 +66,7 @@ module tracker_sensor(
             end
             3'b111: begin
                 if({left_track, mid_track, right_track} == 3'b111) state_tmp <= state_tmp;
+                else if({left_track, mid_track, right_track} == 3'b101) state_tmp <= 3'b110;
                 else state_tmp <= 3'b101;
             end
             default: state_tmp <= state_tmp;
