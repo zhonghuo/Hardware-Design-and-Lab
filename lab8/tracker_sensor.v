@@ -80,7 +80,7 @@ module tracker_sensor(
             3'b001, 3'b101: state = go_straight;
             3'b010, 3'b110: state = turn_left;
             3'b011, 3'b111: state = turn_right;
-            default: state = stop;
+            default: state = go_straight;
             endcase
 		end
     end
