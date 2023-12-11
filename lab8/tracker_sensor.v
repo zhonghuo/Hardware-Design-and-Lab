@@ -27,8 +27,9 @@ module tracker_sensor(
 			state = 0;
 		end else begin
 			case({left_track, mid_track, right_track})
-            3'b111: state = 2'b11; // out the track
-            default: state = 2'b10;
+			3'b001, 3'b011: state = 2'b01;
+            //3'b111: state = 2'b11; // out the track
+            //default: state = 2'b10;
 			endcase
 		end
     end
