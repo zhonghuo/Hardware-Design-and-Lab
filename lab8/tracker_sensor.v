@@ -21,18 +21,24 @@ module tracker_sensor(
         .rst(reset),
         .clk(clk)
     );
-
+	
     always @* begin
-        case({left_track, mid_track, right_track})
+        if(reset) begin
+			state = 0;
+			pre_state = 1;
+		end else begin
+			case({left_track, mid_track, right_track})
             3'b000, 3'b101, 3'b010: state = 2'b11;     // on the middle
             3'b011, 3'b001: state = 2'b10; // car veers to the right
             3'b110, 3'b100: state = 2'b01; // car veers to the left
-            3'b111: state = pre_state; // out the track
+            3'b111: state = 2'b00; // out the track
             default: state = 2'b10;
-        endcase
-		if(state != 2'b11 && state != 2'b00) pre_state = state;
-		else if(state == 2'b00 && pre_state == 2'b00) pre_state = 2'b10;
-		else pre_state = 2'b11;
+			endcase
+			if(state != 2'b11 && state != 2'b00) pre_state = state;
+			else pre_state = pre_state;
+			//else if(state == 2'b00) pre_state = 2'b01;
+		    //else pre_state = 2'b11;
+		end
     end
 
 	assign is_out_the_track = (state == 2'b00) ? 1 : 0;
