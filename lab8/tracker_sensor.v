@@ -31,7 +31,7 @@ module tracker_sensor(
             3'b000, 3'b101, 3'b010: state = 2'b11;     // on the middle
             3'b011, 3'b001: state = 2'b10; // car veers to the right
             3'b110, 3'b100: state = 2'b01; // car veers to the left
-            3'b111: state = 2'b00; // out the track
+            3'b111: state = 2'b11; // out the track
             default: state = 2'b10;
 			endcase
 			if(state != 2'b11 && state != 2'b00) pre_state = state;
