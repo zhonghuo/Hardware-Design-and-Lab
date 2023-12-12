@@ -28,9 +28,7 @@ module tracker_sensor(
 	reg[29:0] cnt = 30'b0, cnt_left_turn = 30'b0, cnt_right_turn = 30'b0, cnt_calibrate = 30'b0;
 	reg flag = 0, calibrate = 0;
 	wire out_the_track = 0;
-    wire [2:0] sensor;
-    assign sensor = {left_track, mid_track, right_track} ;
-
+    wire [2:0] sensor = {left_track, mid_track, right_track};
     //state
     always @(posedge clk, posedge reset) begin
         if(reset) state <= go_straight;
