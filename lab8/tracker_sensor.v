@@ -77,23 +77,13 @@ module tracker_sensor(
                     if(sensor == 3'b111) state <= state;
                     else state <= go_straight;
                 end else begin
-                    if(sensor == 3'b000 || cnt_left_turn) begin
-                        if(cnt_left_turn == 30'd200000000) cnt_left_turn <= 0;
-                        else cnt_left_turn <= cnt_left_turn+1;
-                        state <= state;
-                    end
-                    else if(sensor == 3'b111) state <= go_straight;
+                    if(sensor == 3'b111) state <= go_straight;
                     else state <= state;
                 end
             end
             turn_right: begin
                 if(flag) begin
-                    if(sensor == 3'b000 || cnt_right_turn) begin
-                        if(cnt_right_turn == 30'd200000000) cnt_right_turn <= 0;
-                        else cnt_right_turn <= cnt_right_turn+1;
-                        state <= state;
-                    end
-                    else if(sensor == 3'b111) state <= go_straight;
+                    if(sensor == 3'b111) state <= go_straight;
                     else state <= state;
                 end else begin
                     if(sensor == 3'b111) state <= state;
