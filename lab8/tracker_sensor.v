@@ -24,8 +24,8 @@ module tracker_sensor(
     parameter go_straight = 2'b11;
     parameter turn_right = 2'b01;
     parameter stop = 2'b00;
-	reg direction, ninety = 0;
-	reg[29:0] cnt = 30'b0, cnt_left_turn = 30'b0;
+	reg direction, ninety_left = 0, ninety_right = 0;
+	reg[29:0] cnt = 30'b0, cnt_left_turn = 30'b0, cnt_right_turn = 30'b0, cnt_calibrate = 30'b0;
 	reg flag = 0, calibrate = 0;
 	wire out_the_track = 0;
 
@@ -33,11 +33,14 @@ module tracker_sensor(
         if(reset) begin
 			state <= go_straight;
 			direction <= 0;
-			ninety <= 0;
+			ninety_left <= 0;
+			ninety_right <= 0;
 			flag <= 0;
 			cnt_left_turn <= 0;
 			cnt <= 0;
 			calibrate <= 0;
+			cnt_calibrate <= 0;
+			cnt_right_turn <= 0;
 		end
 		else if(!start_move) begin
 			if({left_track, mid_track, right_track} == 3'b110 || {left_track, mid_track, right_track} == 3'b100)
@@ -47,9 +50,9 @@ module tracker_sensor(
 			else direction <= 0;
 		end 
 		else begin
-			if(ninety) begin
+			if(ninety_left) begin
 				flag <= 1'b0;
-				if(cnt != 30'd100000000 && cnt_left_turn == 0) begin
+				if(cnt != 30'd30000000 && cnt_left_turn == 0) begin
 					cnt <= cnt + 1;
 					state <= go_straight;
 				end
@@ -62,36 +65,58 @@ module tracker_sensor(
 					else begin
 						state <= go_straight;
 						cnt_left_turn <= 0;
-						ninety <= 0;
+						ninety_left <= 0;
 					end
+				end
+			end else if(ninety_right) begin
+				if(cnt_right_turn != 30'd200000000 && {right_track, mid_track, left_track} == 3'b111) begin
+					cnt_right_turn <= cnt_right_turn + 1;
+					state <= turn_right;
+				end
+				else begin
+					state <= go_straight;
+					cnt_right_turn <= 0;
+					ninety_right <= 0;
 				end
 			end else begin
 				if(direction == 0) begin
 					if(state == turn_left || state == turn_right) pre_state <= state;
 					case({left_track, mid_track, right_track})
-						3'b010, 3'b100, 3'b110: begin
-							if({left_track, mid_track, right_track} == 3'b110)  calibrate <= 1;
+						3'b010, 3'b110: begin
+							if({left_track, mid_track, right_track} == 3'b110) calibrate <= 1;
 							else calibrate <= 0;
 							state <= go_straight;
+							cnt_right_turn <= 0;
 						end
-						3'b001, 3'b011, 3'b101: begin
+						3'b001, 3'b011, 3'b101, 3'b100: begin
 							state <= turn_left;
 							calibrate <= 0;
+							cnt_right_turn <= 0;
 						end
 						3'b000: begin
 							state <= turn_right;
 							flag <= 1'b1;
 							calibrate <= 0;
+							cnt_right_turn <= 0;
 						end
 						3'b111: begin
 							if(flag) begin
-								ninety <= 1;
+								ninety_left <= 1;
+								ninety_right <= 0;
 								calibrate <= 0;
+								cnt_right_turn <= 0;
 							end
 							else begin
-								ninety <= 1'b0;
-								if(calibrate) state <= turn_right;
-								else state <= go_straight;
+								ninety_left <= 1'b0; 
+								if(cnt_right_turn != 30'd150000000) begin
+									cnt_right_turn <= cnt_right_turn + 1;
+									if(calibrate) state <= turn_right;
+									else state <= go_straight;									
+								end
+								else begin
+									ninety_right <= 1;
+									cnt_right_turn <= 0;
+								end
 							end
 						end
 						default: begin
