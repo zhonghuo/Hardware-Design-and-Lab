@@ -50,10 +50,10 @@ module tracker_sensor(
         end
     end
     //state
-    always @(posedge clk or posedge reset) begin
+    always @(posedge clk, posedge reset) begin
         if(reset) begin
             state <= stop;
-        end begin
+        end else begin
             case(state)
             stop: begin
                 case(sensor)
@@ -62,23 +62,33 @@ module tracker_sensor(
                 endcase
             end
             go_straight: begin
-                if(cnt <= 30'd30000000 && sensor == 3'b111) state <= go_straight;
-                else if (sensor == 3'b111 && flag) state <= turn_left;
-                else if(sensor == 3'b111 && !flag) state <= turn_right;
-                else if(flag) state <= turn_right;
-                else state <= turn_left;
+                if(flag) begin
+                    if(cnt <= 30'd30000000 && sensor == 3'b111) state <= go_straight;
+                    else if (sensor == 3'b111) state <= turn_left;
+                    else state <= turn_right;
+                end else begin
+                    if(cnt <= 30'd30000000 && sensor == 3'b111) state <= go_straight;
+                    else if(sensor == 3'b111) state <= turn_right;
+                    else state <= turn_left;
+                end
             end
             turn_left: begin
-                if(sensor == 3'b111 && flag) state <= state;
-                else if(sensor == 3'b111 && !flag) state <= go_straight;
-                else if(flag) state <= go_straight;
-                else state <= state; 
+                if(flag) begin
+                    if(sensor == 3'b111) state <= state;
+                    else state <= go_straight;
+                end else begin
+                    if(sensor == 3'b111) state <= go_straight;
+                    else state <= state;
+                end
             end
             turn_right: begin
-                if(sensor == 3'b111 && flag) state <= go_straight;
-                else if(sensor == 3'b111 && !flag) state <= state;
-                else if(flag) state <= state;
-                else state <= go_straight; 
+                if(flag) begin
+                    if(sensor == 3'b111) state <= go_straight;
+                    else state <= state;
+                end else begin
+                    if(sensor == 3'b111) state <= state;
+                    else state <= go_straight;
+                end
             end
             default: state <= state;
             endcase
@@ -154,4 +164,3 @@ module SevenSegment(
     end
     
 endmodule
-
