@@ -31,64 +31,19 @@ module tracker_sensor(
     wire [2:0] sensor;
     assign sensor = {left_track, mid_track, right_track} ;
 
-    //flag
-    // 0 for counter clock
-    always @(posedge clk or posedge reset) begin
-        if(reset) flag <= 0;
-        else begin
-            if(sensor == 3'b011 && state == stop) flag <= 1;
-            else flag <= flag;
-        end
-    end
-    //cnt
-    //count the time of the sensor receiving 111
-    always @(posedge clk or posedge reset) begin
-        if(reset) cnt <= 0;
-        else begin
-            if(sensor == 3'b111) cnt <= cnt+1;
-            else cnt <= 0;
-        end
-    end
     //state
     always @(posedge clk, posedge reset) begin
-        if(reset) begin
-            state <= stop;
-        end else begin
+        if(reset) state <= go_straight;
+        else begin
             case(state)
-            stop: begin
-                case(sensor)
-                3'b110, 3'b011: state <= go_straight; 
-                default: state <= state;
-                endcase
-            end
             go_straight: begin
-                if(flag) begin
-                    if(cnt <= 30'd20000000 && sensor == 3'b111) state <= go_straight;
-                    else if (sensor == 3'b111) state <= turn_left;
-                    else state <= turn_right;
-                end else begin
-                    if(cnt <= 30'd20000000 && sensor == 3'b111) state <= go_straight;
-                    else if(sensor == 3'b111) state <= turn_right;
-                    else state <= turn_left;
-                end
+                if(sensor == 3'b101 || (!left_track && !right_track)) state <= state;
+                else if(!left_track) state <= turn_left;
+                else if(!right_track) state <= turn_right;
             end
-            turn_left: begin
-                if(flag) begin
-                    if(sensor == 3'b111) state <= state;
-                    else state <= go_straight;
-                end else begin
-                    if(sensor == 3'b110) state <= go_straight;
-                    else state <= state;
-                end
-            end
-            turn_right: begin
-                if(flag) begin
-                    if(sensor == 3'b011) state <= go_straight;
-                    else state <= state;
-                end else begin
-                    if(sensor == 3'b111) state <= state;
-                    else state <= go_straight;
-                end
+            turn_left, turn_right: begin
+                if(sensor == 3'b101) state <= go_straight;
+                else state <= state;
             end
             default: state <= state;
             endcase

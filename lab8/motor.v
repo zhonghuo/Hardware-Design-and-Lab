@@ -19,14 +19,14 @@ module motor(
     motor_pwm m0(
         .clk(clk), 
         .reset(rst), 
-        .duty(750),
+        .duty(730),
         .pmod_1(left_pwm), 
         .en((en_left && mode[1]))
     );
     motor_pwm m1(
         .clk(clk), 
         .reset(rst), 
-        .duty(750), 
+        .duty(730), 
         .pmod_1(right_pwm), 
         .en((en_right && mode[0]))
     );
