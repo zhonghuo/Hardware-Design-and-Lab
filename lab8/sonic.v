@@ -115,8 +115,8 @@ module PosCounter(clk, rst, echo, distance_count, led, en_left, en_right, start_
                  (distance_count >= 60 && distance_count < 65) ? 16'b0001_1111_1111_1111 :
                  (distance_count >= 65 && distance_count < 70) ? 16'b0011_1111_1111_1111 :
                  (distance_count >= 70 && distance_count < 75) ? 16'b0111_1111_1111_1111 : 16'b1111_1111_1111_1111;
-    assign en_left = (distance_count <= 20 || (!start_move && !start_left_move)) ? 0 : 1;
-    assign en_right = (distance_count <= 20 || (!start_move && !start_right_move)) ? 0 : 1;
+    assign en_left = (distance_count <= 12 || (!start_move && !start_left_move)) ? 0 : 1;
+    assign en_right = (distance_count <= 12 || (!start_move && !start_right_move)) ? 0 : 1;
 endmodule
 
 // send trigger signal to sensor
