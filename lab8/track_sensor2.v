@@ -50,7 +50,7 @@ module tracker_sensor(
         end
     end
     //state
-    always @(posedge clk, posedge reset) begin
+    always @(posedge clk or posedge reset) begin
         if(reset) begin
             state <= stop;
         end begin
