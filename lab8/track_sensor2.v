@@ -53,7 +53,7 @@ module tracker_sensor(
     always @(posedge clk or posedge reset) begin
         if(reset) begin
             state <= stop;
-        end begin
+        end else begin
             case(state)
             stop: begin
                 case(sensor)
