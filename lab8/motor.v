@@ -7,7 +7,6 @@ module motor(
     input [1:0]mode,
     input en_left,
     input en_right,
-    input is_out_the_track,
     input [1:0]pre_mode,
     output [1:0]pwm,
     output [1:0]r_IN,
@@ -22,14 +21,14 @@ module motor(
         .reset(rst), 
         .duty(700),
         .pmod_1(left_pwm), 
-        .en((en_left && mode[1] && !is_out_the_track))
+        .en((en_left && mode[1]))
     );
     motor_pwm m1(
         .clk(clk), 
         .reset(rst), 
         .duty(700), 
         .pmod_1(right_pwm), 
-        .en((en_right && mode[0] && !is_out_the_track))
+        .en((en_right && mode[0]))
     );
 
     assign pwm = {left_pwm,right_pwm};

@@ -48,8 +48,7 @@ module Lab8(
         .r_IN({IN3, IN4}),
         .en_left(en_left),
         .en_right(en_right),
-        .pre_mode(pre_mode),
-        .is_out_the_track(is_out_the_track)
+        .pre_mode(pre_mode)
     );
 
     tracker_sensor T(
@@ -61,8 +60,8 @@ module Lab8(
         .state(mode),
         .DISPLAY(DISPLAY),
         .DIGIT(DIGIT),
-        .is_out_the_track(is_out_the_track),
-        .pre_state(pre_mode)
+        .pre_state(pre_mode),
+        .start_move(start_move)
     );
 
 endmodule
