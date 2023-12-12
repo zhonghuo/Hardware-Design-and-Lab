@@ -28,113 +28,71 @@ module tracker_sensor(
 	reg[29:0] cnt = 30'b0, cnt_left_turn = 30'b0, cnt_right_turn = 30'b0, cnt_calibrate = 30'b0;
 	reg flag = 0, calibrate = 0;
 	wire out_the_track = 0;
+    wire [2:0] sensor;
+    assign sensor = {left_track, mid_track, right_track} ;
 
-    always @(posedge clk, posedge reset) begin
+    //flag
+    // 0 for counter clock
+    always @(posedge clk or posedge reset) begin
+        if(reset) flag <= 0;
+        else begin
+            if(sensor == 3'b011 && state == stop) flag <= 1;
+            else flag <= flag;
+        end
+    end
+    //cnt
+    //count the time of the sensor receiving 111
+    always @(posedge clk or posedge reset) begin
+        if(reset) cnt <= 0;
+        else begin
+            if(sensor == 3'b111) cnt <= cnt+1;
+            else cnt <= 0;
+        end
+    end
+    //state
+    always @(posedge clk or posedge reset) begin
         if(reset) begin
-			state <= go_straight;
-			direction <= 0;
-			ninety_left <= 0;
-			ninety_right <= 0;
-			flag <= 0;
-			cnt_left_turn <= 0;
-			cnt <= 0;
-			calibrate <= 0;
-			cnt_calibrate <= 0;
-			cnt_right_turn <= 0;
-		end
-		else if(!start_move) begin
-			if({left_track, mid_track, right_track} == 3'b110 || {left_track, mid_track, right_track} == 3'b100)
-				direction <= 0;
-			else if({left_track, mid_track, right_track} == 3'b011 || {left_track, mid_track, right_track} == 3'b001)
-				direction <= 1;
-			else direction <= 0;
-		end 
-		else begin
-			if(ninety_left) begin
-				flag <= 1'b0;
-				if(cnt != 30'd30000000 && cnt_left_turn == 0) begin
-					cnt <= cnt + 1;
-					state <= go_straight;
-				end
-				else begin
-					cnt <= 0;
-					if(cnt_left_turn != 30'd200000000 && {left_track, mid_track, right_track} != 3'b110) begin
-						cnt_left_turn <= cnt_left_turn + 1;
-						state <= turn_left;
-					end
-					else begin
-						state <= go_straight;
-						cnt_left_turn <= 0;
-						ninety_left <= 0;
-					end
-				end
-			end else if(ninety_right) begin
-				if(cnt_right_turn != 30'd200000000 && {right_track, mid_track, left_track} == 3'b111) begin
-					cnt_right_turn <= cnt_right_turn + 1;
-					state <= turn_right;
-				end
-				else begin
-					state <= go_straight;
-					cnt_right_turn <= 0;
-					ninety_right <= 0;
-				end
-			end else begin
-				if(direction == 0) begin
-					if(state == turn_left || state == turn_right) pre_state <= state;
-					case({left_track, mid_track, right_track})
-						3'b010, 3'b110: begin
-							if({left_track, mid_track, right_track} == 3'b110) calibrate <= 1;
-							else calibrate <= 0;
-							state <= go_straight;
-							cnt_right_turn <= 0;
-						end
-						3'b001, 3'b011, 3'b101, 3'b100: begin
-							state <= turn_left;
-							calibrate <= 0;
-							cnt_right_turn <= 0;
-						end
-						3'b000: begin
-							state <= turn_right;
-							flag <= 1'b1;
-							calibrate <= 0;
-							cnt_right_turn <= 0;
-						end
-						3'b111: begin
-							if(flag) begin
-								ninety_left <= 1;
-								ninety_right <= 0;
-								calibrate <= 0;
-								cnt_right_turn <= 0;
-							end
-							else begin
-								ninety_left <= 1'b0; 
-								if(cnt_right_turn != 30'd150000000) begin
-									cnt_right_turn <= cnt_right_turn + 1;
-									if(calibrate) state <= turn_right;
-									else state <= go_straight;									
-								end
-								else begin
-									ninety_right <= 1;
-									cnt_right_turn <= 0;
-								end
-							end
-						end
-						default: begin
-							state <= go_straight;
-						end
-					endcase			
-				end
-				else begin
-					case({left_track, mid_track, right_track})
-						3'b001, 3'b010, 3'b011: state <= go_straight;
-						3'b000: state <= turn_left;
-						3'b100, 3'b101, 3'b110: state <= turn_right;
-						default: state <= go_straight;
-					endcase			
-				end
-			end
-
-		end
+            state <= stop;
+        end begin
+            case(state)
+            stop: begin
+                case(sensor)
+                3'b110, 3'b011: state <= go_straight; 
+                default: state <= state;
+                endcase
+            end
+            go_straight: begin
+                if(flag) begin
+                    if(cnt <= 30'd30000000 && sensor == 3'b111) state <= go_straight;
+                    else if (sensor == 3'b111) state <= turn_left;
+                    else state <= turn_right;
+                end else begin
+                    if(cnt <= 30'd30000000 && sensor == 3'b111) state <= go_straight;
+                    else if(sensor == 3'b111) state <= turn_right;
+                    else state <= turn_left;
+                end
+            end
+            turn_left: begin
+                if(flag) begin
+                    if(sensor == 3'b111) state <= state;
+                    else state <= go_straight;
+                end else begin
+                    if(sensor == 3'b111) state <= go_straight;
+                    else state <= state;
+                end
+            end
+            turn_right: begin
+                if(flag) begin
+                    if(sensor == 3'b111) state <= go_straight;
+                    else state <= state;
+                end else begin
+                    if(sensor == 3'b111) state <= state;
+                    else state <= go_straight;
+                end
+            end
+            default: state <= state;
+            endcase
+        end
     end
     
 endmodule
