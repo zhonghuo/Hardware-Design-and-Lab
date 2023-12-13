@@ -40,13 +40,13 @@ module tracker_sensor(
 		else begin
 			if(start_move) begin
 				if({left_track, mid_track, right_track} == 3'b111) begin
-					if(cnt_out_of_control < 30'd181000000) begin
+					if(cnt_out_of_control < 30'd130000000) begin
 						cnt_out_of_control <= cnt_out_of_control + 1;
 						out_of_control <= 0;
 					end
 					else begin
 						out_of_control <= 1;
-						cnt_out_of_control <= 30'd181000001;
+						cnt_out_of_control <= 30'd130000001;
 					end
 				end
 				else begin
@@ -101,7 +101,7 @@ module tracker_sensor(
 				end
 				else begin
 					cnt <= 0;
-					if(cnt_left_turn_0 != 30'd150000000 && {left_track, mid_track, right_track} != 3'b110) begin
+					if(cnt_left_turn_0 != 30'd100000000 && {left_track, mid_track, right_track} != 3'b110) begin
 						cnt_left_turn_0 <= cnt_left_turn_0 + 1;
 						state <= turn_left;
 					end
@@ -112,7 +112,7 @@ module tracker_sensor(
 					end
 				end
 			end else if(ninety_right_0) begin
-				if(cnt_right_turn_0 != 30'd150000000 && {right_track, mid_track, left_track} == 3'b111) begin
+				if(cnt_right_turn_0 != 30'd100000000 && {right_track, mid_track, left_track} == 3'b111) begin
 					cnt_right_turn_0 <= cnt_right_turn_0 + 1;
 					state <= turn_right;
 				end
@@ -130,7 +130,7 @@ module tracker_sensor(
 				end
 				else begin
 					cnt <= 0;
-					if(cnt_right_turn_1 != 30'd150000000 && {right_track, mid_track, left_track} != 3'b110) begin
+					if(cnt_right_turn_1 != 30'd100000000 && {right_track, mid_track, left_track} != 3'b110) begin
 						cnt_right_turn_1 <= cnt_right_turn_1 + 1;
 						state <= turn_right;
 					end
@@ -142,7 +142,7 @@ module tracker_sensor(
 				end
 			end
 			else if(ninety_left_1) begin
-				if(cnt_left_turn_1 != 30'd150000000 && {right_track, mid_track, left_track} == 3'b111) begin
+				if(cnt_left_turn_1 != 30'd100000000 && {right_track, mid_track, left_track} == 3'b111) begin
 					cnt_left_turn_1 <= cnt_left_turn_1 + 1;
 					state <= turn_left;
 				end
