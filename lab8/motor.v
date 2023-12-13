@@ -8,6 +8,7 @@ module motor(
     input en_left,
     input en_right,
     input [1:0]pre_mode,
+    input out_of_control,
     output [1:0]pwm,
     output [1:0]r_IN,
     output [1:0]l_IN
@@ -19,21 +20,23 @@ module motor(
     motor_pwm m0(
         .clk(clk), 
         .reset(rst), 
-        .duty(700),
+        .duty(710),
         .pmod_1(left_pwm), 
         .en((en_left && mode[1]))
     );
     motor_pwm m1(
         .clk(clk), 
         .reset(rst), 
-        .duty(700), 
+        .duty(710), 
         .pmod_1(right_pwm), 
         .en((en_right && mode[0]))
     );
 
     assign pwm = {left_pwm,right_pwm};
-    assign r_IN = 2'b10;
-    assign l_IN = 2'b10;
+    assign r_IN = (out_of_control) ? 2'b01 : 2'b10;
+    assign l_IN = (out_of_control) ? 2'b01 : 2'b10;
+    //assign r_IN = 2'b10;
+    //assign l_IN = 2'b10;
     // TODO: trace the rest of motor.v and control the speed and direction of the two motors
     
 
