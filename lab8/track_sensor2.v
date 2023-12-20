@@ -26,27 +26,147 @@ module tracker_sensor(
     parameter go_straight = 2'b11;
     parameter turn_right = 2'b01;
     parameter stop = 2'b00;
-	reg direction, ninety_left = 0, ninety_right = 0;
-	reg[29:0] cnt = 30'b0, cnt_left_turn = 30'b0, cnt_right_turn = 30'b0, cnt_calibrate = 30'b0;
-	reg flag = 0, calibrate = 0;
-	wire out_the_track = 0;
+	reg ninety_left = 0, flag_ninety_left = 0;
+	reg[29:0] cnt = 30'b0;
+	reg big_turn_right = 0, flag_big_turn_right = 0;
     wire [2:0] sensor = {left_track, mid_track, right_track};
     //state
     always @(posedge clk, posedge reset) begin
-        if(reset) state <= go_straight;
+        if(reset) begin
+			state <= go_straight;
+			pre_state <= go_straight;
+			big_turn_right <= 0;
+			flag_big_turn_right <= 0;
+			cnt <= 0;
+		end
         else begin
-            case(state)
-            go_straight: begin
-                if(sensor == 3'b101 || (!left_track && !right_track)) state <= state;
-                else if(!left_track) state <= turn_left;
-                else if(!right_track) state <= turn_right;
-            end
-            turn_left, turn_right: begin
-                if(sensor == 3'b101) state <= go_straight;
-                else state <= state;
-            end
-            default: state <= state;
-            endcase
+			if(big_turn_right) begin
+				flag_big_turn_right <= 0;
+				if(cnt < 30'd35000000) begin
+					cnt <= cnt + 1;
+					state <= go_straight;
+				end
+				else begin
+					if(sensor != 3'b101 && sensor != 3'b011) begin
+						state <= turn_right;
+					end
+					else begin
+						state <= go_straight;
+						cnt <= 0;
+						big_turn_right <= 0;
+					end
+				end
+			end
+			else if(ninety_left) begin
+				flag_ninety_left <= 0;
+				if(cnt < 30'd35000000) begin
+					cnt <= cnt + 1;
+					state <= go_straight;
+				end
+				else begin
+					if(sensor != 3'b101 && sensor != 3'b110) state <= turn_left;
+					else begin
+						state <= go_straight;
+						cnt <= 0;
+						ninety_left <= 0;
+					end
+				end
+			end
+			else begin
+				case(state)
+				go_straight: begin
+					if(sensor == 3'b101 || (!left_track && !right_track)) begin
+						state <= state;
+						pre_state <= pre_state;
+					end
+					else if(!left_track) begin
+						state <= turn_left;
+						pre_state <= pre_state;
+						if(sensor == 3'b001) flag_ninety_left <= 1;
+						else flag_ninety_left <= flag_ninety_left;
+					end
+					else if(!right_track) begin
+						state <= turn_right;
+						pre_state <= pre_state;
+						if(sensor == 3'b100) flag_big_turn_right <= 1;
+						else flag_big_turn_right <= flag_big_turn_right;
+					end
+					else begin
+						if(flag_big_turn_right) begin
+							big_turn_right <= 1;
+						end
+						else if(flag_ninety_left) begin
+							ninety_left <= 1;
+						end
+						else begin
+							state <= (pre_state == turn_left) ? turn_right :
+									(pre_state == turn_right) ? turn_left : go_straight; 
+						end
+					end
+				end
+				turn_left: begin
+					if(!mid_track) begin
+						state <= go_straight;
+						pre_state <= turn_left;
+						if(sensor == 3'b100) flag_big_turn_right <= 1;
+						else flag_big_turn_right <= flag_big_turn_right;
+						if(sensor == 3'b001) flag_ninety_left <= 1;
+						else flag_ninety_left <= flag_ninety_left;
+					end
+					else if(!left_track) begin
+						state <= turn_left;
+						pre_state <= pre_state;
+					end
+					else if(!right_track) begin
+						state <= turn_right;
+						pre_state <= turn_left;
+					end
+					else begin
+						if(flag_big_turn_right) begin
+							big_turn_right <= 1;
+						end
+						else if(flag_ninety_left) begin
+							ninety_left <= 1;
+						end
+						else begin
+							state <= (pre_state == turn_left) ? turn_right :
+									(pre_state == turn_right) ? turn_left : go_straight; 
+						end
+					end
+				end
+				turn_right: begin
+					if(!mid_track) begin
+						state <= go_straight;
+						pre_state <= turn_right;
+						if(sensor == 3'b100) flag_big_turn_right <= 1;
+						else flag_big_turn_right <= flag_big_turn_right;
+						if(sensor == 3'b001) flag_ninety_left <= 1;
+						else flag_ninety_left <= flag_ninety_left;
+					end
+					else if(!left_track) begin
+						state <= turn_left;
+						pre_state <= turn_right;
+					end
+					else if(!right_track) begin
+						state <= turn_right;
+						pre_state <= pre_state;
+					end
+					else begin
+						if(flag_big_turn_right) begin
+							big_turn_right <= 1;
+						end
+						else if(flag_ninety_left) begin
+							ninety_left <= 1;
+						end
+						else begin
+							state <= (pre_state == turn_left) ? turn_right :
+									(pre_state == turn_right) ? turn_left : go_straight; 
+						end
+					end
+				end
+				default: state <= state;
+				endcase
+			end
         end
     end
     
