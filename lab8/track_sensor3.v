@@ -8,11 +8,9 @@ module tracker_sensor(
     output reg [1:0] state, 
     output wire [6:0] DISPLAY, 
     output wire [3:0] DIGIT,
-	output reg [1:0] pre_state,
-	output wire out_of_control
+	output reg [1:0] pre_state
 );
 
-	assign out_of_control = 0;
     // TODO: Receive three tracks and make your own policy.
     // Hint: You can use output state to change your action.
     SevenSegment S(
