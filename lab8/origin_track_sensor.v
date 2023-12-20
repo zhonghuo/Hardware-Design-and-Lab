@@ -40,13 +40,13 @@ module tracker_sensor(
 		else begin
 			if(start_move) begin
 				if({left_track, mid_track, right_track} == 3'b111) begin
-					if(cnt_out_of_control < 30'd130000000) begin
+					if(cnt_out_of_control < 30'd330000000) begin
 						cnt_out_of_control <= cnt_out_of_control + 1;
 						out_of_control <= 0;
 					end
 					else begin
 						out_of_control <= 1;
-						cnt_out_of_control <= 30'd130000001;
+						cnt_out_of_control <= 30'd330000001;
 					end
 				end
 				else begin
@@ -112,7 +112,7 @@ module tracker_sensor(
 					end
 				end
 			end else if(ninety_right_0) begin
-				if(cnt_right_turn_0 != 30'd100000000 && {right_track, mid_track, left_track} == 3'b111) begin
+				if(cnt_right_turn_0 != 30'd100000000 && {right_track, mid_track, left_track} != 3'b011) begin
 					cnt_right_turn_0 <= cnt_right_turn_0 + 1;
 					state <= turn_right;
 				end
@@ -157,7 +157,10 @@ module tracker_sensor(
 					if(state == turn_left || state == turn_right) pre_state <= state;
 					case({left_track, mid_track, right_track})
 						3'b010, 3'b110: begin
-							if({left_track, mid_track, right_track} == 3'b110) calibrate_0 <= 1;
+							if({left_track, mid_track, right_track} == 3'b110) begin
+								direction <= 1;
+								calibrate_0 <= 1;
+							end
 							else calibrate_0 <= 0;
 							state <= go_straight;
 							cnt_right_turn_0 <= 0;
@@ -201,7 +204,10 @@ module tracker_sensor(
 				else begin
 					case({left_track, mid_track, right_track})
 						3'b010, 3'b011: begin
-							if({left_track, mid_track, right_track} == 3'b011) calibrate_1 <= 1;
+							if({left_track, mid_track, right_track} == 3'b011) begin
+								direction <= 0;
+								calibrate_1 <= 1;
+							end
 							else calibrate_1 <= 0;
 							state <= go_straight;
 							cnt_left_turn_1 <= 0;
