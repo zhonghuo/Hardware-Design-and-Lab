@@ -21,41 +21,28 @@ module final_project(
     wire [9:0] h_cnt; //640
     wire [9:0] v_cnt;  //480
     wire [15:0] nums;
-    reg [2:0] state = 3'b000, select_level = 3'b001;
-    reg[3:0] player1_state = 4'd6;
-    reg en_select = 1;
-    reg [1:0] player1_jump = 2'b0;
-    reg [29:0] cnt_player1_jump = 30'b0;
-    
 
-    parameter menu_state = 3'b000, level_1_state = 3'd1, level_2_state = 3'd2, level_3_state = 3'd3, level_4_state = 3'd4, level_5_state = 3'd5;
-    parameter stactic = 4'd6, right = 4'd7, left = 4'd2, up = 4'd8;
-    parameter [8:0] W_code = 9'b0_0001_1101;
-    parameter [8:0] A_code = 9'b0_0001_1100;
-    parameter [8:0] S_code = 9'b0_0001_1011;
-    parameter [8:0] D_code = 9'b0_0010_0011;
-    parameter [8:0] UP_code = 9'b0_0111_0101;
-    parameter [8:0] LEFT_code = 9'b0_0110_1011;
-    parameter [8:0] DOWN_code = 9'b0_0111_0010;
-    parameter [8:0] RIGHT_code = 9'b1_0111_0100;
-    parameter [8:0] ENTER_code = 9'b0_0101_1010;
+    //game engine IO
+    wire [2:0] state = 3'b000, select_level = 3'b001;
+    wire[3:0] player1_state = 4'd6;
+    wire en_select = 1;
+    wire [1:0] player1_jump = 2'b0;
+    wire [29:0] cnt_player1_jump = 30'b0;
 
     assign {vgaRed, vgaGreen, vgaBlue} = (valid==1'b1) ? pixel:12'h0;
-
-    wire been_ready;
-    wire [3:0] move;
     wire [9:0] key_down;
     wire [8:0] last_change;
-    wire [9:0] key_decode = 1 << move;
-    assign move =   (last_change == W_code) ? 0 :
-	                (last_change == A_code) ? 1 :
-				    (last_change == S_code) ? 2 :
-					(last_change == D_code) ? 3 :
-					(last_change == UP_code) ? 4 :
-					(last_change == LEFT_code) ? 5 :
-					(last_change == DOWN_code) ? 6 :
-					(last_change == RIGHT_code) ? 7 : 
-                    (last_change == ENTER_code) ? 8 : 9;
+    /*
+    W -> key_down[0]
+    A -> 1
+    S -> 2
+    D -> 3
+    up -> 4
+    left -> 5
+    down -> 6
+    right -> 7
+    enter -> 8 9
+    */
     
     KeyboardDecoder k(
 		.key_down(key_down),
@@ -112,130 +99,16 @@ module final_project(
         .DIGIT(DIGIT)
     );
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) begin
-            select_level <= 3'd1;
-            en_select <= 1;
-            state <= menu_state;
-            player1_state <= stactic;
-            player1_jump <= 0;
-            cnt_player1_jump <= 30'b0;
-        end else begin
-            if(state == menu_state) begin
-                if(key_down == 0) begin
-                    select_level <= select_level;
-                    en_select <= 1;
-                end else begin
-                    if(!en_select) begin
-                        select_level <= select_level;
-                        en_select <= en_select;
-                    end else begin
-                        if(key_down[0] || key_down[4]) begin
-                            if(select_level < 5) select_level <= select_level + 1;
-                            else select_level <= select_level;
-                            en_select <= 0;
-                        end
-                        else if(key_down[2] || key_down[6]) begin
-                            if(select_level > 1) select_level <= select_level - 1;
-                            else select_level <= select_level;
-                            en_select <= 0;
-                        end
-                        else if(key_down[8]) begin
-                            state <= select_level;
-                            select_level <= select_level;
-                            en_select <= en_select;
-                        end
-                        else begin
-                            select_level <= select_level;
-                            en_select <= en_select;
-                        end
-                    end
-                end
-            end else begin
-                select_level <= select_level;
-                en_select <= 1;
-                if(key_down == 0) begin
-                    if(!player1_jump) begin
-                        player1_state <= stactic;
-                        player1_jump <= 0;
-                        cnt_player1_jump <= 30'b0;
-                    end
-                    else begin
-                        if(cnt_player1_jump < 30'd50000000) begin
-                            player1_jump <= 2'd1;
-                            cnt_player1_jump <= cnt_player1_jump + 1;
-                        end
-                        else if(cnt_player1_jump >= 30'd50000000 && cnt_player1_jump < 30'd100000000) begin
-                            player1_jump <= 2'd2;
-                            cnt_player1_jump <= cnt_player1_jump + 1;
-                        end
-                        else player1_jump <= 0;
-                    end
-                end
-                else if(key_down == 10'b0000010000) begin
-                    player1_state <= up;
-                    if(cnt_player1_jump >= 30'd100000000) cnt_player1_jump <= 0;
-                    else cnt_player1_jump <= cnt_player1_jump;
-                    if(cnt_player1_jump < 30'd50000000) begin
-                        player1_jump <= 2'd1;
-                        cnt_player1_jump <= cnt_player1_jump + 1;
-                    end
-                    else if(cnt_player1_jump >= 30'd50000000 && cnt_player1_jump < 30'd100000000) begin
-                        player1_jump <= 2'd2;
-                        cnt_player1_jump <= cnt_player1_jump + 1;
-                    end
-                    else player1_jump <= 2'd0;
-                end
-                else if((key_down[5] || key_down[4]) && !key_down[7]) begin
-                    player1_state <= left;
-                    if(cnt_player1_jump >= 30'd100000000) cnt_player1_jump <= 0;
-                    else cnt_player1_jump <= cnt_player1_jump;
-                    if(key_down[4] || player1_jump) begin
-                        if(cnt_player1_jump < 30'd50000000) begin
-                            player1_jump <= 2'd1;
-                            cnt_player1_jump <= cnt_player1_jump + 1;
-                        end
-                        else if(cnt_player1_jump >= 30'd50000000 && cnt_player1_jump < 30'd100000000) begin
-                            player1_jump <= 2'd2;
-                            cnt_player1_jump <= cnt_player1_jump + 1;
-                        end
-                        else player1_jump <= 2'd0;
-                    end
-                    else player1_jump <= 2'd0;
-                end
-                else if((key_down[7] || key_down[4]) && !key_down[5]) begin
-                    player1_state <= right;
-                    if(cnt_player1_jump >= 30'd100000000) cnt_player1_jump <= 0;
-                    else cnt_player1_jump <= cnt_player1_jump;
-                    if(key_down[4] || player1_jump) begin
-                        if(cnt_player1_jump < 30'd50000000) begin
-                            player1_jump <= 2'd1;
-                            cnt_player1_jump <= cnt_player1_jump + 1;
-                        end
-                        else if(cnt_player1_jump >= 30'd50000000 && cnt_player1_jump < 30'd100000000) begin
-                            player1_jump <= 2'd2;
-                            cnt_player1_jump <= cnt_player1_jump + 1;
-                        end
-                        else player1_jump <= 2'd0;
-                    end
-                    else player1_jump <= 2'd0;
-                end
-                else begin
-                    if(!player1_jump) player1_state <= player1_state;
-                    else begin
-                        if(cnt_player1_jump < 30'd50000000) begin
-                            player1_jump <= 2'd1;
-                            cnt_player1_jump <= cnt_player1_jump + 1;
-                        end
-                        else if(cnt_player1_jump >= 30'd50000000 && cnt_player1_jump < 30'd100000000) begin
-                            player1_jump <= 2'd2;
-                            cnt_player1_jump <= cnt_player1_jump + 1;
-                        end
-                        else player1_jump <= 0;
-                    end
-                end
-            end
-        end
-    end
+    game_engine_ver1 GE_ver1(
+        .clk(clk), 
+        .rst(rst), 
+        .key_down(key_down), 
+        .state(state), 
+        .select_level(select_level), 
+        .player1_jump(player1_jump), 
+        .player1_state(player1_state), 
+        .en_select(en_select),
+        .cnt_player1_jump(cnt_player1_jump)
+    );
 endmodule
 
