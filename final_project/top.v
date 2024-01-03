@@ -30,34 +30,27 @@ module final_project(
     reg [29:0] cnt_player1_jump = 30'b0, cnt_player2_jump = 30'b0;
     
 
-    parameter menu_state = 3'b000, level_1_state = 3'd1, level_2_state = 3'd2, level_3_state = 3'd3, level_4_state = 3'd4, level_5_state = 3'd5;
-    parameter stactic = 4'd6, right = 4'd7, left = 4'd2, up = 4'd8;
-    parameter [8:0] W_code = 9'b0_0001_1101;
-    parameter [8:0] A_code = 9'b0_0001_1100;
-    parameter [8:0] S_code = 9'b0_0001_1011;
-    parameter [8:0] D_code = 9'b0_0010_0011;
-    parameter [8:0] UP_code = 9'b0_0111_0101;
-    parameter [8:0] LEFT_code = 9'b0_0110_1011;
-    parameter [8:0] DOWN_code = 9'b0_0111_0010;
-    parameter [8:0] RIGHT_code = 9'b1_0111_0100;
-    parameter [8:0] ENTER_code = 9'b0_0101_1010;
-
     assign {vgaRed, vgaGreen, vgaBlue} = (valid==1'b1) ? pixel:12'h0;
-
-    wire been_ready;
-    wire [3:0] move;
     wire [9:0] key_down;
     wire [8:0] last_change;
-    wire [9:0] key_decode = 1 << move;
-    assign move =   (last_change == W_code) ? 0 :
-	                (last_change == A_code) ? 1 :
-				    (last_change == S_code) ? 2 :
-					(last_change == D_code) ? 3 :
-					(last_change == UP_code) ? 4 :
-					(last_change == LEFT_code) ? 5 :
-					(last_change == DOWN_code) ? 6 :
-					(last_change == RIGHT_code) ? 7 : 
-                    (last_change == ENTER_code) ? 8 : 9;
+    /*
+    W -> key_down[0]
+    A -> 1
+    S -> 2
+    D -> 3
+    up -> 4
+    left -> 5
+    down -> 6
+    right -> 7
+    enter -> 8 9
+    */
+    parameter menu_state = 3'b000;
+parameter level_1_state = 3'd1;
+parameter level_2_state = 3'd2;
+parameter level_3_state = 3'd3;
+parameter level_4_state = 3'd4;
+parameter level_5_state = 3'd5;
+parameter stactic = 4'd6, right = 4'd7, left = 4'd2, up = 4'd8;
     
     KeyboardDecoder k(
 		.key_down(key_down),
