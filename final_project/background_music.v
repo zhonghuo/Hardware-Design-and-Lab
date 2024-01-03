@@ -38,7 +38,7 @@ module background_music(
     note_gen noteGen_00(
         .clk(clk), 
         .rst(rst), 
-        .volume(vol_in),
+        .volume(3),
         .note_div_left(freq_outL), 
         .note_div_right(freq_outR), 
         .audio_left(audio_in_left),     // left sound audio
