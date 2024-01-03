@@ -10,7 +10,11 @@ module final_project(
     output wire [3:0] DIGIT,
     inout PS2_DATA, 
     inout PS2_CLK, 
-    output [15:0] led
+    output [15:0] led,
+    output audio_mclk, // master clock
+    output audio_lrck, // left-right clock
+    output audio_sck,  // serial clock
+    output audio_sdin // serial audio data input
 );
     wire [11:0] data;
     wire clk_25MHz;
@@ -45,12 +49,12 @@ module final_project(
     enter -> 8 9
     */
     parameter menu_state = 3'b000;
-parameter level_1_state = 3'd1;
-parameter level_2_state = 3'd2;
-parameter level_3_state = 3'd3;
-parameter level_4_state = 3'd4;
-parameter level_5_state = 3'd5;
-parameter stactic = 4'd6, right = 4'd7, left = 4'd2, up = 4'd8;
+    parameter level_1_state = 3'd1;
+    parameter level_2_state = 3'd2;
+    parameter level_3_state = 3'd3;
+    parameter level_4_state = 3'd4;
+    parameter level_5_state = 3'd5;
+    parameter stactic = 4'd6, right = 4'd7, left = 4'd2, up = 4'd8;
     
     KeyboardDecoder k(
 		.key_down(key_down),
@@ -108,6 +112,16 @@ parameter stactic = 4'd6, right = 4'd7, left = 4'd2, up = 4'd8;
         .rst(rst),
         .DISPLAY(DISPLAY),
         .DIGIT(DIGIT)
+    );
+
+    background_music Background_music1(
+        .clk(clk),
+        .rst(rst),
+        .en(1),
+        .audio_mclk(audio_mclk),
+        .audio_lrck(audio_lrck),
+        .audio_sck(audio_sck),
+        .audio_sdin(audio_sdin)
     );
 
     always @(posedge clk, posedge rst) begin

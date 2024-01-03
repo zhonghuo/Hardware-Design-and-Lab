@@ -5,7 +5,7 @@ module background_music(
     output audio_mclk, // master clock
     output audio_lrck, // left-right clock, Word Select clock, or sample rate clock
     output audio_sck, // serial clock
-    output reg audio_sdin // serial audio data input
+    output audio_sdin // serial audio data input
 );
     parameter max_ibeatNum = 14656;
 
