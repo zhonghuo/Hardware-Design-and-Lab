@@ -6,7 +6,7 @@ module mech(
     output reg collision_with_player1, 
     output reg collision_with_player2,
     output wire [16:0] addr, 
-    input wire [39:0] terrain_props, 
+    input wire [39:0] mech_props, 
     input wire [39:0] player1_props, 
     input wire [39:0] player2_props,
     input wire[9:0] disp_h,
