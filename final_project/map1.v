@@ -18,7 +18,11 @@ module map1(
     terrain map1_ceiling(
         .clk(clk),
         .rst(rst),
-        .terrain_props({10'd0, 10'd0, 10'd320, 10'd10}),
+        .pivot_h(10'd0),
+        .pivot_v(10'd0),
+        .width(10'd320),
+        .height(10'd10),
+        .is_floor(0),
         .en(en_ceiling),
         .addr(addr_ceiling),
         .mem_pivot_h(0),
@@ -32,11 +36,87 @@ module map1(
     terrain map1_floor(
         .clk(clk),
         .rst(rst),
-        .terrain_props({10'd0, 10'd230, 10'd320, 10'd10}),
+        .pivot_h(10'd0),
+        .pivot_v(10'd230),
+        .width(10'd320),
+        .height(10'd10),
+        .is_floor(1),
         .en(en_floor),
         .addr(addr_floor),
-        .mem_pivot_h(10'd1),
+        .mem_pivot_h(10'd0),
         .mem_pivot_v(10'd220),
+        .vga_h(vga_h),
+        .vga_v(vga_v),
+        .collision_with_player1(collision_with_player1),
+        .collision_with_player2(collision_with_player2)
+    );
+
+    terrain map1_LeftBoundary(
+        .clk(clk),
+        .rst(rst),
+        .pivot_h(10'd0),
+        .pivot_v(10'd10),
+        .width(10'd10),
+        .height(10'd220),
+        .is_floor(0),
+        .en(en_LeftBoundary),
+        .addr(addr_LeftBoundary),
+        .mem_pivot_h(10'd305),
+        .mem_pivot_v(10'd10),
+        .vga_h(vga_h),
+        .vga_v(vga_v),
+        .collision_with_player1(collision_with_player1),
+        .collision_with_player2(collision_with_player2)
+    );
+
+    terrain map1_RightBoundary(
+        .clk(clk),
+        .rst(rst),
+        .pivot_h(10'd310),
+        .pivot_v(10'd10),
+        .width(10'd10),
+        .height(10'd220),
+        .is_floor(0),
+        .en(en_RightBoundary),
+        .addr(addr_RightBoundary),
+        .mem_pivot_h(10'd305),
+        .mem_pivot_v(10'd10),
+        .vga_h(vga_h),
+        .vga_v(vga_v),
+        .collision_with_player1(collision_with_player1),
+        .collision_with_player2(collision_with_player2)
+    );
+
+    terrain map1_RedRiver(
+        .clk(clk),
+        .rst(rst),
+        .pivot_h(10'd150),
+        .pivot_v(10'd230),
+        .width(10'd40),
+        .height(10'd6),
+        .is_floor(0),
+        .en(en_RedRiver),
+        .addr(addr_RedRiver),
+        .mem_pivot_h(10'd0),
+        .mem_pivot_v(10'd65),
+        .vga_h(vga_h),
+        .vga_v(vga_v),
+        .collision_with_player1(collision_with_player1),
+        .collision_with_player2(collision_with_player2)
+    );
+
+    terrain map1_BlueRiver(
+        .clk(clk),
+        .rst(rst),
+        .pivot_h(10'd210),
+        .pivot_v(10'd230),
+        .width(10'd40),
+        .height(10'd6),
+        .is_floor(0),
+        .en(en_BlueRiver),
+        .addr(addr_BlueRiver),
+        .mem_pivot_h(10'd55),
+        .mem_pivot_v(10'd70),
         .vga_h(vga_h),
         .vga_v(vga_v),
         .collision_with_player1(collision_with_player1),
@@ -46,6 +126,10 @@ module map1(
     always @* begin
         if(en_ceiling) addr = addr_ceiling;
         else if(en_floor) addr = addr_floor;
+        else if(en_LeftBoundary) addr = addr_LeftBoundary;
+        else if(en_RightBoundary) addr = addr_RightBoundary;
+        else if(en_RedRiver) addr = addr_RedRiver;
+        else if(en_BlueRiver) addr = addr_BlueRiver;
         else addr = 12900;
     end
 
