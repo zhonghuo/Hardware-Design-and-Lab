@@ -12,8 +12,8 @@ module map1(
     output reg clear
 );
     wire collision_with_player1, collision_with_player2;
-    wire en_ceiling, en_floor;
-    wire [16:0] addr_ceiling, addr_floor;
+    wire en_ceiling, en_floor, en_LeftBoundary, en_RightBoundary, en_RedRiver, en_BlueRiver;
+    wire [16:0] addr_ceiling, addr_floor, addr_LeftBoundary, addr_RightBoundary, addr_BlueRiver, addr_RedRiver;
 
     terrain map1_ceiling(
         .clk(clk),
