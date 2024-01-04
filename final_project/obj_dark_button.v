@@ -16,7 +16,7 @@ module dark_button(
     assign h = vga_h>>1;
     reg [9:0] disp_h, disp_v;
     always @* begin
-        if(v-pivot_v>=0 && v-pivot_v<width && h-pivot_h>=0 && h-pivot_h<height) begin
+        if(v-pivot_v>=0 && v-pivot_v<height && h-pivot_h>=0 && h-pivot_h<width) begin
             en = 1;
             disp_h = h-pivot_h;
             disp_v = v-pivot_v;
