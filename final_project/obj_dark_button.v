@@ -11,7 +11,7 @@ module dark_button(
     assign mem_pivot_h = 21;
     assign mem_pivot_v = 1;
 
-    wire h, v;
+    wire [9:0] h, v;
     assign v = vga_v>>1;
     assign h = vga_h>>1;
     reg [9:0] disp_h, disp_v;
