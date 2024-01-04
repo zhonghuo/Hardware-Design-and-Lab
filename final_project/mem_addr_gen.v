@@ -45,7 +45,7 @@ module mem_addr_gen(
     };
 
     parameter menu_state = 3'b000, level_1_state = 3'd1, level_2_state = 3'd2, level_3_state = 3'd3, level_4_state = 3'd4, level_5_state = 3'd5;
-    parameter stactic = 4'd6, right = 4'd7, left = 4'd2, up = 4'd8;
+    parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
 
 
     assign pixel_addr = (state == menu_state && select_level == level_1_state) ? (
