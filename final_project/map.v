@@ -4,8 +4,8 @@ module map(
     input en, 
     input [2:0] level,
     input [2:0] map,
-    input wire [9:0] vga_h, //640 ?{?b?????X?????pixel
-    input wire [9:0] vga_v,  //480 ?{?b?????X?????pixel
+    input wire [9:0] vga_h, //640 
+    input wire [9:0] vga_v,  //480 
     inout PS2_DATA, 
     inout PS2_CLK, 
     output wire [16:0] addr, 
