@@ -20,7 +20,7 @@ module dark_button(
             en = 1;
             disp_h = h-pivot_h;
             disp_v = v-pivot_v;
-        end begin
+        end else begin
             en = 0;
             disp_h = 0;
             disp_v = 0;
