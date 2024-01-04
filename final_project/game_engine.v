@@ -3,9 +3,9 @@ module map_switch(
     input rst, 
     inout PS2_DATA, 
     inout PS2_CLK, 
-    input wire [9:0] vga_h, //640 ?{?b?????X?????pixel
-    input wire [9:0] vga_v,  //480 ?{?b?????X?????pixel
-    output reg [16:0] pixel_addr //??top??X????
+    input wire [9:0] vga_h, //640 
+    input wire [9:0] vga_v,  //480 
+    output reg [16:0] pixel_addr 
 );
     parameter menu_state = 3'b000;
     parameter level_1_state = 3'd1;
