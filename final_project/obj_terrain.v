@@ -1,7 +1,7 @@
- //牆壁或是地板的物件
- //判斷角色有沒有撞到這塊地形
- //以及在螢幕輸出到這塊地形上的時候，要給出addr
- //props <= {ph, pv, w, h}(水平位置，垂直位置，圖寬，圖高)
+ //??��?��?�是?��?��??�物�?
+ //?��?��角色??��?��?��?�到?��?�地�?
+ //以�?�在?��幕輸?��?��?��?�地形�?��?��?��?��?��?�給?��addr
+ //props <= {ph, pv, w, h}(水平位置，�?�直位置，�?�寬，�?��??)
 module terrain(
     output reg collision_with_player1,
     output reg collision_with_player2, 
@@ -32,7 +32,7 @@ module terrain(
     assign addr = (dir_disp_h == 1 && dir_disp_v == 1) ? (
         ((vga_h >> 1) + disp_h) + ((vga_v) + disp_v) * 320
     ) : (
-        
-    )
+        0
+    );
 
 endmodule

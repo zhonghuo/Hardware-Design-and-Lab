@@ -110,7 +110,7 @@ module map_switch(
     //map choose
 
     //map modules~~
-    map menu(
+    /*map menu(
         .clk(clk), 
         .rst(rst), 
         .en(map_en[0] && !select), 
@@ -121,8 +121,20 @@ module map_switch(
         .addr(menu_addr), 
         .vga_h(vga_h), 
         .vga_v(vga_v)
+    );*/
+
+    menu Menu(
+        .clk(clk),
+        .rst(rst),
+        .level(level),
+        .map(map),
+        .vga_h(vga_h),
+        .vga_v(vga_v),
+        .key_down(key_down),
+        .addr(menu_addr)
     );
-    map1 map1(
+
+    /*map1 map1(
         .clk(clk), 
         .rst(rst), 
         .en(map_en[1] && select), 
@@ -134,7 +146,8 @@ module map_switch(
         .clear(map1_clear),
         .vga_h(vga_h), 
         .vga_v(vga_v)
-    );
+    );*/
+
     map map2(
         .clk(clk), 
         .rst(rst), 
