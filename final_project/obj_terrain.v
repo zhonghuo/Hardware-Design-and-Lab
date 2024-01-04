@@ -6,6 +6,7 @@ module terrain(
     output reg collision_with_player1,
     output reg collision_with_player2, 
     output wire [16:0] addr, 
+    output wire en,
     input wire [39:0] terrain_props, 
     //input wire [39:0] player1_props, 
     //input wire [39:0] player2_props, 
@@ -29,19 +30,24 @@ module terrain(
     wire [9:0] player2_width = player2_props[19:10];
     wire [9:0] player2_height = player2_props[9:0];*/
 
+    assign en = ((vga_h >> 1) >= pivot_h && (vga_h >> 1) <= (pivot_h + width) && (vga_v >> 1) >= pivot_v && (vga_v >> 1) <= (pivot_v + height));
 
-    assign addr = ((vga_h >> 1) >= pivot_h && (vga_h >> 1) <= (pivot_h + width) && (vga_v >> 1) >= pivot_v && (vga_v >> 1) <= (pivot_v + height) && dir_disp_h == 1 && dir_disp_v == 1) ? (
-        ((vga_h >> 1) + disp_h) + ((vga_v >> 1) + disp_v) * 320
-    ) : (
-        ((vga_h >> 1) >= pivot_h && (vga_h >> 1) <= (pivot_h + width) && (vga_v >> 1) >= pivot_v && (vga_v >> 1) <= (pivot_v + height) && dir_disp_h == 1 && dir_disp_v == 0) ? (
-            ((vga_h >> 1) + disp_h) + ((vga_v >> 1) - disp_v) * 320
+    assign addr = ((vga_h >> 1) >= pivot_h && (vga_h >> 1) <= (pivot_h + width) && (vga_v >> 1) >= pivot_v && (vga_v >> 1) <= (pivot_v + height)) ? (
+        (dir_disp_h == 1 && dir_disp_v == 1) ? (
+            ((vga_h >> 1) + disp_h) + ((vga_v >> 1) + disp_v) * 320
         ) : (
-            ((vga_h >> 1) >= pivot_h && (vga_h >> 1) <= (pivot_h + width) && (vga_v >> 1) >= pivot_v && (vga_v >> 1) <= (pivot_v + height) && dir_disp_h == 0 && dir_disp_v == 1) ? (
-                ((vga_h >> 1) - disp_h) + ((vga_v >> 1) + disp_v) * 320
+            (dir_disp_h == 1 && dir_disp_v == 0) ? (
+                ((vga_h >> 1) + disp_h) + ((vga_v >> 1) - disp_v) * 320
             ) : (
-                ((vga_h >> 1) - disp_h) + ((vga_v >> 1) - disp_v) * 320
+                (dir_disp_h == 0 && dir_disp_v == 1) ? (
+                    ((vga_h >> 1) - disp_h) + ((vga_v >> 1) + disp_v) * 320
+                ) : (
+                    ((vga_h >> 1) - disp_h) + ((vga_v >> 1) - disp_v) * 320
+                )   
             )
         )
+    ) : (
+        12900
     );
 
 endmodule
