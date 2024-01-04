@@ -39,13 +39,13 @@ module map_switch(
 	);
 
     //map
-    reg [2:0] map = 0;//????{?b?o?O????e??
+    reg [2:0] map = 1;//????{?b?o?O????e??
     reg [2:0] select = 0; //???Uenter?T?w??????d??Aselect = 1
     reg en_key = 1; //??????L?u?|??o?@????????enable
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
-            map <= 0;
+            map <= 1;
             select <= 0;
             en_key <= 1;
         end
@@ -122,7 +122,7 @@ module map_switch(
         .vga_h(vga_h), 
         .vga_v(vga_v)
     );
-    map map1(
+    map1 map1(
         .clk(clk), 
         .rst(rst), 
         .en(map_en[1] && select), 
