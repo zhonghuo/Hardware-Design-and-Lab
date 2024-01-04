@@ -22,7 +22,6 @@ module map1(
         .pivot_v(10'd0),
         .width(10'd320),
         .height(10'd10),
-        .is_floor(0),
         .en(en_ceiling),
         .addr(addr_ceiling),
         .mem_pivot_h(0),
@@ -40,7 +39,6 @@ module map1(
         .pivot_v(10'd230),
         .width(10'd320),
         .height(10'd10),
-        .is_floor(1),
         .en(en_floor),
         .addr(addr_floor),
         .mem_pivot_h(10'd0),
@@ -58,7 +56,6 @@ module map1(
         .pivot_v(10'd10),
         .width(10'd10),
         .height(10'd220),
-        .is_floor(0),
         .en(en_LeftBoundary),
         .addr(addr_LeftBoundary),
         .mem_pivot_h(10'd305),
@@ -76,7 +73,6 @@ module map1(
         .pivot_v(10'd10),
         .width(10'd10),
         .height(10'd220),
-        .is_floor(0),
         .en(en_RightBoundary),
         .addr(addr_RightBoundary),
         .mem_pivot_h(10'd305),
@@ -94,7 +90,6 @@ module map1(
         .pivot_v(10'd230),
         .width(10'd40),
         .height(10'd6),
-        .is_floor(0),
         .en(en_RedRiver),
         .addr(addr_RedRiver),
         .mem_pivot_h(10'd0),
@@ -112,7 +107,6 @@ module map1(
         .pivot_v(10'd230),
         .width(10'd40),
         .height(10'd6),
-        .is_floor(0),
         .en(en_BlueRiver),
         .addr(addr_BlueRiver),
         .mem_pivot_h(10'd55),
@@ -125,11 +119,11 @@ module map1(
 
     always @* begin
         if(en_ceiling) addr = addr_ceiling;
+        else if(en_RedRiver) addr = addr_RedRiver;
+        else if(en_BlueRiver) addr = addr_BlueRiver;        
         else if(en_floor) addr = addr_floor;
         else if(en_LeftBoundary) addr = addr_LeftBoundary;
         else if(en_RightBoundary) addr = addr_RightBoundary;
-        else if(en_RedRiver) addr = addr_RedRiver;
-        else if(en_BlueRiver) addr = addr_BlueRiver;
         else addr = 12900;
     end
 

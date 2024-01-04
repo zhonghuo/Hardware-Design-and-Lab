@@ -17,7 +17,6 @@ module terrain(
     input wire [9:0] pivot_v,
     input wire [9:0] width,
     input wire [9:0] height,
-    input wire is_floor,
     input clk,
     input rst
 );
@@ -37,29 +36,14 @@ module terrain(
 
     reg [9:0] disp_h, disp_v;
     always @* begin
-        if(!is_floor) begin
-            if(v-pivot_v>=0 && v-pivot_v<height && h-pivot_h>=0 && h-pivot_h<width) begin
-                en = 1;
-                disp_h = h-pivot_h;
-                disp_v = v-pivot_v;
-            end else begin
-                en = 0;
-                disp_h = 0;
-                disp_v = 0;
-            end
-        end
-        else begin
-            if((h >= 0 && h < 150 && v >= 230 && v < 240) || (h >= 150 && h < 190 && v >= 236 && v < 240) 
-            || (h >= 190 && h < 210 && v >= 230 && v < 240) || (h >= 210 && h < 250 && v >= 236 && v < 240) 
-            || (h >= 250 && h < 320 && v >= 230 && v < 240)) begin
-                en = 1;
-                disp_h = h-pivot_h;
-                disp_v = v-pivot_v;
-            end else begin
-                en = 0;
-                disp_h = 0;
-                disp_v = 0;
-            end
+        if(v-pivot_v>=0 && v-pivot_v<height && h-pivot_h>=0 && h-pivot_h<width) begin
+            en = 1;
+            disp_h = h-pivot_h;
+            disp_v = v-pivot_v;
+        end else begin
+            en = 0;
+            disp_h = 0;
+            disp_v = 0;
         end
     end
     assign addr = disp_h + mem_pivot_h + 320*(disp_v + mem_pivot_v);
