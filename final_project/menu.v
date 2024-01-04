@@ -70,7 +70,7 @@ module menu(
 
     always @* begin
         case(map)
-        0: begin
+        1: begin
             if(obj_vga_en[9]) addr = d_btn5_addr;
             else if(obj_vga_en[0]) addr = l_btn1_addr;
             else if(obj_vga_en[1]) addr = l_btn2_addr;
@@ -78,7 +78,7 @@ module menu(
             else if(obj_vga_en[3]) addr = l_btn4_addr;
             else addr = 0;
         end
-        1: begin
+        2: begin
             if(obj_vga_en[8]) addr = d_btn4_addr;
             else if(obj_vga_en[0]) addr = l_btn1_addr;
             else if(obj_vga_en[1]) addr = l_btn2_addr;
@@ -86,7 +86,7 @@ module menu(
             else if(obj_vga_en[4]) addr = l_btn5_addr;
             else addr = 0;
         end
-        2: begin
+        3: begin
             if(obj_vga_en[7]) addr = d_btn3_addr;
             else if(obj_vga_en[0]) addr = l_btn1_addr;
             else if(obj_vga_en[1]) addr = l_btn2_addr;
@@ -94,7 +94,7 @@ module menu(
             else if(obj_vga_en[3]) addr = l_btn4_addr;
             else addr = 0;
         end
-        3:  begin
+        4:  begin
             if(obj_vga_en[6]) addr = d_btn2_addr;
             else if(obj_vga_en[0]) addr = l_btn1_addr;
             else if(obj_vga_en[4]) addr = l_btn5_addr;
@@ -102,7 +102,7 @@ module menu(
             else if(obj_vga_en[3]) addr = l_btn4_addr;
             else addr = 0;
         end
-        4: begin
+        5: begin
             if(obj_vga_en[5]) addr = d_btn1_addr;
             else if(obj_vga_en[4]) addr = l_btn5_addr;
             else if(obj_vga_en[1]) addr = l_btn2_addr;

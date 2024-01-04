@@ -22,7 +22,9 @@ module dark_button(
             disp_v = v-pivot_v;
         end begin
             en = 0;
+            disp_h = 0;
+            disp_v = 0;
         end
     end
-    assign addr = disp_h+320*disp_v;
+    assign addr = disp_h+mem_pivot_h+320*(disp_v+mem_pivot_v);
 endmodule
