@@ -1,19 +1,27 @@
 module map1(
     input clk, 
     input rst, 
+    input wire [9:0] key_down, 
     input en, 
     input [2:0] level,
     input [2:0] map,
     input wire [9:0] vga_h, 
     input wire [9:0] vga_v,  
-    inout PS2_DATA, 
-    inout PS2_CLK, 
+    input [3:0] player1_state,
+    input [1:0] player1_jump,
+    input [9:0] player1_horizontal_displacement,
+    input [9:0] player1_vertical_displacement,
     output reg [16:0] addr, 
     output reg clear
 );
+    parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
     wire collision_with_player1, collision_with_player2;
-    wire en_ceiling, en_floor, en_LeftBoundary, en_RightBoundary, en_RedRiver, en_BlueRiver;
+    wire en_ceiling, en_floor, en_LeftBoundary, en_RightBoundary, en_RedRiver, en_BlueRiver, en_Wall_1, en_player_1;
     wire [16:0] addr_ceiling, addr_floor, addr_LeftBoundary, addr_RightBoundary, addr_BlueRiver, addr_RedRiver;
+    wire [16:0] addr_Wall_1, addr_player_1;
+    wire [1:0] player_jump;
+    wire [3:0] player_state;
+
 
     terrain map1_ceiling(
         .clk(clk),
@@ -117,6 +125,23 @@ module map1(
         .collision_with_player2(collision_with_player2)
     );
 
+    terrain map1_Wall_1(
+        .clk(clk),
+        .rst(rst),
+        .pivot_h(10'd10),
+        .pivot_v(10'd190),
+        .width(10'd105),
+        .height(10'd8),
+        .en(en_Wall_1),
+        .addr(addr_Wall_1),
+        .mem_pivot_h(10'd50),
+        .mem_pivot_v(10'd215),
+        .vga_h(vga_h),
+        .vga_v(vga_v),
+        .collision_with_player1(collision_with_player1),
+        .collision_with_player2(collision_with_player2)
+    );
+
     always @* begin
         if(en_ceiling) addr = addr_ceiling;
         else if(en_RedRiver) addr = addr_RedRiver;
@@ -124,6 +149,7 @@ module map1(
         else if(en_floor) addr = addr_floor;
         else if(en_LeftBoundary) addr = addr_LeftBoundary;
         else if(en_RightBoundary) addr = addr_RightBoundary;
+        else if(en_Wall_1) addr = addr_Wall_1;
         else addr = 12900;
     end
 
