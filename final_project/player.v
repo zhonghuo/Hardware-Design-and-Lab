@@ -41,13 +41,15 @@ module player (
     reg en1, en2, en3, en4;
     reg [3:0] player_state;
     reg [1:0] player_jump;
-    
+
     wire [9:0] h, v;
     wire in_square;
     assign h = vga_h >> 1;
     assign v = vga_v >> 1;
     reg [9:0] disp_h, disp_v;
     reg [9:0] player_pivot_h, player_pivot_v;
+
+    assign addr = 0;
 
     //assign addr = disp_h + mem_pivot_h + 320*(disp_v + mem_pivot_v);
     /*always @* begin
@@ -83,7 +85,7 @@ module player (
         end
     end*/
 
-    always @(posedge clk, posedge rst) begin
+/*always @(posedge clk, posedge rst) begin
         if(rst) begin
             player_state <= stactic;
             player_jump <= 0;
@@ -118,7 +120,7 @@ module player (
                     cnt_player_jump <= cnt_player_jump + 1;
                 end
                 else begin
-                    player_jump <= 2'd2;
+                    //player_jump <= 2'd2;
                     if(cnt_player_jump < 30'd100000000) begin
                         cnt_player_jump <= cnt_player_jump + 1;
                     end
@@ -189,9 +191,9 @@ module player (
                 end
             end
         end
-    end
+    end*/
 
-    always @(posedge clk, posedge rst) begin
+    /*always @(posedge clk, posedge rst) begin
         if(rst) begin
             player_horizontal_displacement <= 0;
             player_vertical_displacement <= 0;
@@ -310,5 +312,5 @@ module player (
                     player_vertical_displacement <= player_vertical_displacement;
             end
         end
-    end
+    end*/
 endmodule

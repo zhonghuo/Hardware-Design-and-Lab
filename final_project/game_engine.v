@@ -43,12 +43,18 @@ module map_switch(
     reg [2:0] map = 1;
     reg [2:0] select = 0;
     reg en_key = 1;
+    reg [3:0] player_state = 4'd6;
+    reg [1:0] player_jump = 2'b0;
+    reg [29:0] cnt_player_jump = 0;
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
             map <= 1;
             select <= 0;
             en_key <= 1;
+            player_state <= 4'd6;
+            player_jump <= 2'b0;
+            cnt_player_jump <= 0;
         end
         else begin
             if(select == 0) begin
@@ -78,10 +84,102 @@ module map_switch(
                     end
                 end
             end
-            else map <= map;
+            else begin
+                map <= map;
+                if(!key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
+                    if(player_jump == 0) begin
+                        player_state <= 4'd6;
+                        player_jump <= 0;
+                        cnt_player_jump <= 0;
+                    end else begin
+                        if(cnt_player_jump < 30'd50000000) begin
+                            cnt_player_jump <= cnt_player_jump + 1;
+                            player_jump <= 1;
+                        end else begin
+                            player_jump <= 2'd2;
+                            if(cnt_player_jump < 30'd100000000) begin
+                                cnt_player_jump <= cnt_player_jump + 1;
+                            end else begin
+                                player_jump <= 0;
+                                cnt_player_jump <= 0;
+                            end
+                        end
+                    end
+                end
+                else if(key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
+                    player_state <= 4'd9;
+                    if(cnt_player_jump < 30'd50000000) begin
+                        cnt_player_jump <= cnt_player_jump + 1;
+                        player_jump <= 1;
+                    end else begin
+                        player_jump <= 2'd2;
+                        if(cnt_player_jump < 30'd100000000) begin
+                            cnt_player_jump <= cnt_player_jump + 1;
+                        end else begin
+                            player_jump <= 0;
+                            cnt_player_jump <= 0;
+                        end
+                    end
+                end
+                else if((key_down[5] || key_down[4]) && !key_down[7]) begin
+                    player_state <= 4'd8;
+                    if(key_down[4] || player_jump != 0) begin
+                        if(cnt_player_jump < 30'd50000000) begin
+                            cnt_player_jump <= cnt_player_jump + 1;
+                            player_jump <= 1;
+                        end else begin
+                            player_jump <= 2'd2;
+                            if(cnt_player_jump < 30'd100000000) begin
+                                cnt_player_jump <= cnt_player_jump + 1;
+                            end else begin
+                                player_jump <= 0;
+                                cnt_player_jump <= 0;
+                            end
+                        end
+                    end
+                    else player_jump <= 0;
+                end
+                else if((key_down[7] || key_down[4]) && !key_down[5]) begin
+                    player_state <= 4'd7;
+                    if(key_down[4] || player_jump != 0) begin
+                        if(cnt_player_jump < 30'd50000000) begin
+                            cnt_player_jump <= cnt_player_jump + 1;
+                            player_jump <= 1;
+                        end else begin
+                            player_jump <= 2'd2;
+                            if(cnt_player_jump < 30'd100000000) begin
+                                cnt_player_jump <= cnt_player_jump + 1;
+                            end else begin
+                                player_jump <= 0;
+                                cnt_player_jump <= 0;
+                            end
+                        end
+                    end
+                    else player_jump <= 0;
+                end
+                else begin
+                    if(player_jump == 0) player_state <= player_state;
+                    else begin
+                        if(cnt_player_jump < 30'd50000000) begin
+                            cnt_player_jump <= cnt_player_jump + 1;
+                            player_jump <= 1;
+                        end else begin
+                            player_jump <= 2'd2;
+                            if(cnt_player_jump < 30'd100000000) begin
+                                cnt_player_jump <= cnt_player_jump + 1;
+                            end else begin
+                                player_jump <= 0;
+                                cnt_player_jump <= 0;
+                            end
+                        end
+                    end
+                end
+            end
         end
     end 
-        //?U??map module?????
+
+
+    //?U??map module?????
     //reg [16:0] pixel_addr;
     wire [16:0] map1_addr, map2_addr, map3_addr, map4_addr, map5_addr, menu_addr;
     wire [5:0] map_en = 1<<map;
@@ -145,8 +243,9 @@ module map_switch(
         .clear(map1_clear),
         .vga_h(vga_h), 
         .vga_v(vga_v),
+        .player_state(player_state),
         //.player_state(p_state),
-        //.player_jump(player_jump),
+        .player_jump(player_jump),
         //.player_horizontal_displacement(player_horizontal_displacement),
         //.player_vertical_displacement(player_vertical_displacement),
         .led(led)

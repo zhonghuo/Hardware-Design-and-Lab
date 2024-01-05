@@ -18,7 +18,7 @@ module mem_addr_gen(
     output reg [15:0] led
 );
     
-    reg [7:0] position;
+    /*reg [7:0] position;
     reg [8:0] player1_horizontal_displacement = 9'b0, player1_vertical_displacement = 9'b0;
     reg [24:0] player1_cnt_horizontal = 25'b0, player1_cnt_vertical = 25'b0;
     reg [8:0] player2_horizontal_displacement = 9'b0, player2_vertical_displacement = 9'b0;
@@ -698,5 +698,5 @@ module mem_addr_gen(
                     player2_vertical_displacement <= player2_vertical_displacement;
             end
         end
-    end
+    end*/
 endmodule
