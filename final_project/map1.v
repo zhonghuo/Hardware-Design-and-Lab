@@ -16,12 +16,13 @@ module map1(
 );
     parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
     wire collision_with_player1, collision_with_player2;
-    wire en_ceiling, en_floor, en_LeftBoundary, en_RightBoundary, en_RedRiver, en_BlueRiver, en_Wall_1, en_player_1;
+    wire en_ceiling, en_floor, en_LeftBoundary, en_RightBoundary, en_RedRiver, en_BlueRiver, en_Wall_1, en_player1_stactic;
+    wire en_player1_left, en_player1_right, en_player1_up;
     wire [16:0] addr_ceiling, addr_floor, addr_LeftBoundary, addr_RightBoundary, addr_BlueRiver, addr_RedRiver;
-    wire [16:0] addr_Wall_1, addr_player_1;
+    wire [16:0] addr_Wall_1, addr_player1_stactic, addr_player1_left, addr_player1_right, addr_player1_up;
     wire [1:0] player_jump;
     wire [3:0] player_state;
-
+    //wire [9:0] player_pivot_h, player_pivot_v;
 
     terrain map1_ceiling(
         .clk(clk),
@@ -142,6 +143,18 @@ module map1(
         .collision_with_player2(collision_with_player2)
     );
 
+    player1_state_cal player1_state_cal(
+        .clk(clk),
+        .rst(rst),
+        .key_down(key_down),
+        .addr(addr_player1_stactic),
+        .vga_h(vga_h),
+        .vga_v(vga_v),
+        .player_jump(player_jump),
+        .player_state(player_state),
+        .en(en_player1_stactic)
+    );
+
     always @* begin
         if(en_ceiling) addr = addr_ceiling;
         else if(en_RedRiver) addr = addr_RedRiver;
@@ -150,6 +163,8 @@ module map1(
         else if(en_LeftBoundary) addr = addr_LeftBoundary;
         else if(en_RightBoundary) addr = addr_RightBoundary;
         else if(en_Wall_1) addr = addr_Wall_1;
+        else if(en_player1_stactic) addr = addr_player1_stactic;
+        //else if(en_player1_left) addr = addr_player1_left;
         else addr = 12900;
     end
 

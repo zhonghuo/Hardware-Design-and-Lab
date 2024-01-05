@@ -2,6 +2,8 @@ module player (
     input clk,
     input rst,
     input wire [9:0] key_down, 
+    input [1:0] player_jump,
+    input [3:0] player_state,
     //input [4:0] cnt_terrain,
     //input [4:0] cnt_treasure, 
     //input [4:0] cnt_mech, 
@@ -11,7 +13,8 @@ module player (
     //another flag like: input[31:0] flag,
 
     //mem_addr related
-    //output wire [16:0] addr, 
+    output wire [16:0] addr, 
+    output wire en,
     //input wire [9:0] disp_h, disp_v, 
     /*
     always @(posedge clk or posedge rst) begin
@@ -20,122 +23,94 @@ module player (
 
         end
     */
-    input [9:0] init_pivot_h, init_pivot_v,
-    input [9:0] width, height,
-    //input [9:0] width, height, 
-    output wire [9:0] player_pivot_h, 
-    output wire [9:0] player_pivot_v
+    //input [9:0] init_pivot_h, init_pivot_v,
+    //input [9:0] width, height,
+    input wire [9:0] vga_h,
+    input wire [9:0] vga_v
+    //input wire [9:0] mem_pivot_h,
+    //input wire [9:0] mem_pivot_v
+    //output reg [9:0] player_pivot_h, 
+    //output reg [9:0] player_pivot_v
 );
 
     parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
     reg [29:0] cnt_player_jump = 0;
     reg [9:0] player_horizontal_displacement = 0, player_vertical_displacement = 0;
     reg [24:0] player_cnt_horizontal = 25'b0, player_cnt_vertical = 25'b0;
-    reg [3:0] player_state;
-    reg [1:0] player_jump;
+    reg en1, en2, en3, en4;
 
-    assign player_pivot_h = (init_pivot_h + player_horizontal_displacement);
-    assign player_pivot_v = (init_pivot_v + player_vertical_displacement);
+    wire [9:0] h, v;
+    wire in_square;
+    assign h = vga_h >> 1;
+    assign v = vga_v >> 1;
+    reg [9:0] disp_h, disp_v;
+    reg [9:0] player_pivot_h, player_pivot_v;
+
+    //assign addr = disp_h + mem_pivot_h + 320*(disp_v + mem_pivot_v);
+    assign en = (player_state == stactic) ? (
+        ((h >= (13+player_horizontal_displacement)) && (h <= (28+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v <= (230-player_vertical_displacement))) ? 1 : 0
+    ) : (
+        (player_state == left) ? (
+            ((h >= (8+player_horizontal_displacement)) && (h <= (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v <= (230-player_vertical_displacement))) ? 1 : 0
+        ) : (
+            (player_state == right) ? (
+                ((h >= (8+player_horizontal_displacement)) && (h <= (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v <= (230-player_vertical_displacement))) ? 1 : 0
+            ) : (
+                (player_state == up && player_jump == 1) ? (
+                    ((h >= (10+player_horizontal_displacement)) && (h <= (25+player_horizontal_displacement)) && (v >= (199-player_vertical_displacement)) && (v <= (227-player_vertical_displacement))) ? 1 : 0
+                ) : (
+                    (player_state == up && player_jump == 2) ? (
+                        ((h >= (13+player_horizontal_displacement)) && (h <= (28+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v <= (230-player_vertical_displacement))) ? 1 : 0
+                    ) : (
+                        0
+                    )
+                )
+            )
+        )
+    );
 
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) begin
-            player_state <= stactic;
-            player_jump <= 0;
-            cnt_player_jump <= 30'b0;
-        end else begin
-            if(!key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
-                if(!player_jump) begin
-                    player_state <= stactic;
-                    player_jump <= 0;
-                    cnt_player_jump <= 30'b0;
-                end
-                else begin
-                    if(cnt_player_jump < 30'd50000000 && player_jump != 2) begin
-                        player_jump <= 2'd1;
-                        cnt_player_jump <= cnt_player_jump + 1;
-                    end
-                    else begin
-                        player_jump <= 2'd2;
-                        if(cnt_player_jump < 30'd100000000) begin
-                            cnt_player_jump <= cnt_player_jump + 1;
-                        end
-                        else player_jump <= 0;
-                    end
-                end
-            end
-            else if(key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
-                player_state <= up;
-                if(cnt_player_jump >= 30'd100000000) cnt_player_jump <= 0;
-                else cnt_player_jump <= cnt_player_jump;
-                if(cnt_player_jump < 30'd50000000 && player_jump != 2) begin
-                    player_jump <= 2'd1;
-                    cnt_player_jump <= cnt_player_jump + 1;
-                end
-                else begin
-                    player_jump <= 2'd2;
-                    if(cnt_player_jump < 30'd100000000) begin
-                        cnt_player_jump <= cnt_player_jump + 1;
-                    end
-                    else player_jump <= 0;
-                end
-            end
-            else if((key_down[5] || key_down[4]) && !key_down[7]) begin
-                player_state <= left;
-                if(cnt_player_jump >= 30'd100000000) cnt_player_jump <= 0;
-                else cnt_player_jump <= cnt_player_jump;
-                if(key_down[4] || player_jump) begin
-                    if(cnt_player_jump < 30'd50000000 && player_jump != 2) begin
-                        player_jump <= 2'd1;
-                        cnt_player_jump <= cnt_player_jump + 1;
-                    end
-                    else begin
-                        player_jump <= 2'd2;
-                        if(cnt_player_jump < 30'd100000000) begin
-                            cnt_player_jump <= cnt_player_jump + 1;
-                        end
-                        else player_jump <= 0;
-                    end
-                end
-                else player_jump <= 2'd0;
-            end
-            else if((key_down[7] || key_down[4]) && !key_down[5]) begin
-                player_state <= right;
-                if(cnt_player_jump >= 30'd100000000) cnt_player_jump <= 0;
-                else cnt_player_jump <= cnt_player_jump;
-                if(key_down[4] || player_jump) begin
-                    if(cnt_player_jump < 30'd50000000 && player_jump != 2) begin
-                        player_jump <= 2'd1;
-                        cnt_player_jump <= cnt_player_jump + 1;
-                    end
-                    else begin
-                        player_jump <= 2'd2;
-                        if(cnt_player_jump < 30'd100000000) begin
-                            cnt_player_jump <= cnt_player_jump + 1;
-                        end
-                        else player_jump <= 0;
-                    end
-                end
-                else player_jump <= 2'd0;
-            end
-            else begin
-                if(!player_jump) player_state <= player_state;
-                else begin
-                    if(cnt_player_jump < 30'd50000000 && player_jump != 2) begin
-                        player_jump <= 2'd1;
-                        cnt_player_jump <= cnt_player_jump + 1;
-                    end
-                    else begin
-                        player_jump <= 2'd2;
-                        if(cnt_player_jump < 30'd100000000) begin
-                            cnt_player_jump <= cnt_player_jump + 1;
-                        end
-                        else player_jump <= 0;
-                    end
-                end
-            end
-        end
-    end
+    assign addr = (player_state == stactic) ? (
+        ((h >= (13+player_horizontal_displacement)) && (h <= (28+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v <= (230-player_vertical_displacement))) ? (
+            (h+40-player_horizontal_displacement) + (v+player_vertical_displacement-200)*320
+        ) : (
+            12900
+        )
+    ) : (
+        (player_state == left) ? (
+            ((h >= (8+player_horizontal_displacement)) && (h <= (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v <= (230-player_vertical_displacement))) ? (
+                (h+78-player_horizontal_displacement) + (v+player_vertical_displacement-200)*320
+            ) : (
+                12900
+            )
+        ) : (
+            (player_state == right) ? (
+                ((h >= (8+player_horizontal_displacement)) && (h <= (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v <= (230-player_vertical_displacement))) ? (
+                    (h+63-player_horizontal_displacement) + (v+player_vertical_displacement-200)*320
+                ) : (
+                    12900
+                )
+            ) : (
+                (player_state == up && player_jump == 1) ? (
+                    ((h >= (10+player_horizontal_displacement)) && (h <= (25+player_horizontal_displacement)) && (v >= (199-player_vertical_displacement)) && (v <= (227-player_vertical_displacement))) ? (
+                        (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-169)*320
+                    ) : (
+                        12900
+                    )
+                ) : (
+                    (player_state == up && player_jump == 2) ? (
+                        ((h >= (13+player_horizontal_displacement)) && (h <= (28+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v <= (230-player_vertical_displacement))) ? (
+                            (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-200)*320
+                        ) : (
+                            12900
+                        )
+                    ) : (
+                        12900
+                    )
+                )
+            )
+        )
+    );
 
     always @(posedge clk, posedge rst) begin
         if(rst) begin
