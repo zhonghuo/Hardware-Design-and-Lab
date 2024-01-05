@@ -92,7 +92,7 @@ module final_project(
         .clk22(clk_22)
     );
 
-    /*mem_addr_gen mem_addr_gen_inst(
+    mem_addr_gen mem_addr_gen_inst(
         .clk(clk_22),
         .origine_clk(clk),
         .rst(rst),
@@ -107,7 +107,7 @@ module final_project(
         .pixel_addr(pixel_addr),
         .player1_collide(player1_collide),
         .led(led)
-    );*/
+    );
 
     blk_mem_gen_0 blk_mem_gen_0_inst(
         .clka(clk_25MHz),
@@ -144,7 +144,7 @@ module final_project(
         .audio_sdin(audio_sdin)
     );
 
-    map_switch Map_switch(
+    /*map_switch Map_switch(
         .clk(clk),
         .rst(rst),
         .PS2_DATA(PS2_DATA),
@@ -152,7 +152,7 @@ module final_project(
         .vga_h(h_cnt),
         .vga_v(v_cnt),
         .pixel_addr(pixel_addr)
-    );
+    );*/
 
 endmodule
 
