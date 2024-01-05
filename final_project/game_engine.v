@@ -5,7 +5,8 @@ module map_switch(
     inout PS2_CLK, 
     input wire [9:0] vga_h, //640 
     input wire [9:0] vga_v,  //480 
-    output reg [16:0] pixel_addr 
+    output reg [16:0] pixel_addr,
+    output wire [15:0] led
 );
     parameter menu_state = 3'b000;
     parameter level_1_state = 3'd1;
@@ -28,7 +29,7 @@ module map_switch(
     wire [9:0] key_down;
     wire [8:0] last_change;
     wire been_ready;
-    /*KeyboardDecoder kd1(
+    KeyboardDecoder kd1(
 		.key_down(key_down),
 		.last_change(last_change),
 		.key_valid(been_ready),
@@ -36,7 +37,7 @@ module map_switch(
 		.PS2_CLK(PS2_CLK),
 		.rst(rst),
 		.clk(clk)
-	);*/
+	);
 
     //map
     reg [2:0] map = 1;
@@ -105,6 +106,7 @@ module map_switch(
         end
     end
 
+
     //map choose
 
     //map modules~~
@@ -143,10 +145,11 @@ module map_switch(
         .clear(map1_clear),
         .vga_h(vga_h), 
         .vga_v(vga_v),
-        .player1_state(player1_state),
-        .player1_jump(player1_jump),
-        .player1_horizontal_displacement(player1_horizontal_displacement),
-        .player1_vertical_displacement(player1_vertical_displacement)
+        //.player_state(p_state),
+        //.player_jump(player_jump),
+        //.player_horizontal_displacement(player_horizontal_displacement),
+        //.player_vertical_displacement(player_vertical_displacement),
+        .led(led)
     );
 
     map map2(

@@ -121,6 +121,16 @@ module final_project(
         .DIGIT(DIGIT)
     );
 
+    background_music Background_music1(
+        .clk(clk),
+        .rst(rst),
+        .en(1),
+        .audio_mclk(audio_mclk),
+        .audio_lrck(audio_lrck),
+        .audio_sck(audio_sck),
+        .audio_sdin(audio_sdin)
+    );
+
     always @(posedge clk, posedge rst) begin
         if(rst) begin
             select_level <= 3'd1;
