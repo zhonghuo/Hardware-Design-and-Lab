@@ -7,7 +7,7 @@ module background_music(
     output audio_sck, // serial clock
     output audio_sdin // serial audio data input
 );
-    parameter max_ibeatNum = 14656;
+    parameter max_ibeatNum = 3840;
 
     wire [2:0] vol_in;
     //assign vol_in = ;
