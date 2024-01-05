@@ -28,7 +28,7 @@ module map_switch(
     wire [9:0] key_down;
     wire [8:0] last_change;
     wire been_ready;
-    KeyboardDecoder kd1(
+    /*KeyboardDecoder kd1(
 		.key_down(key_down),
 		.last_change(last_change),
 		.key_valid(been_ready),
@@ -36,7 +36,7 @@ module map_switch(
 		.PS2_CLK(PS2_CLK),
 		.rst(rst),
 		.clk(clk)
-	);
+	);*/
 
     //map
     reg [2:0] map = 1;
