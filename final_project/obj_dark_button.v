@@ -5,7 +5,7 @@ module dark_button(
     output reg en //to indicate that screen should print the object
 );
     //props
-    wire [9:0] width, height, mem_pivot_h, mem_pivot_v;
+    /*wire [9:0] width, height, mem_pivot_h, mem_pivot_v;
     assign width = 23;
     assign height = 26;
     assign mem_pivot_h = 21;
@@ -26,5 +26,5 @@ module dark_button(
             disp_v = 0;
         end
     end
-    assign addr = disp_h+mem_pivot_h+320*(disp_v+mem_pivot_v);
+    assign addr = disp_h+mem_pivot_h+320*(disp_v+mem_pivot_v);*/
 endmodule

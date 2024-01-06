@@ -76,7 +76,7 @@ module final_project(
     parameter level_5_state = 3'd5;
     parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
     
-    /*KeyboardDecoder k(
+    KeyboardDecoder k(
 		.key_down(key_down),
 		.last_change(last_change),
 		.key_valid(been_ready),
@@ -84,7 +84,7 @@ module final_project(
 		.PS2_CLK(PS2_CLK),
 		.rst(rst),
 		.clk(clk)
-	);*/
+	);
 
     clock_divider clk_wiz_0_inst(
         .clk(clk),
@@ -134,7 +134,7 @@ module final_project(
         .DIGIT(DIGIT)
     );
 
-    /*background_music Background_music1(
+    background_music Background_music1(
         .clk(clk),
         .rst(rst),
         .en(1),
@@ -142,13 +142,14 @@ module final_project(
         .audio_lrck(audio_lrck),
         .audio_sck(audio_sck),
         .audio_sdin(audio_sdin)
-    );*/
+    );
 
     map_switch Map_switch(
         .clk(clk),
         .rst(rst),
         .PS2_DATA(PS2_DATA),
         .PS2_CLK(PS2_CLK),
+        .key_down(key_down),
         .vga_h(h_cnt),
         .vga_v(v_cnt),
         .pixel_addr(pixel_addr),

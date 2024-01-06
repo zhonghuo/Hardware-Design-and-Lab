@@ -3,9 +3,10 @@ module map_switch(
     input rst, 
     inout PS2_DATA, 
     inout PS2_CLK, 
+    input [9:0] key_down,
     input wire [9:0] vga_h, //640 
     input wire [9:0] vga_v,  //480 
-    output reg [16:0] pixel_addr,
+    output [16:0] pixel_addr,
     output wire [15:0] led
 );
     parameter menu_state = 3'b000;
@@ -26,10 +27,10 @@ module map_switch(
     );
 
     //keyboard
-    wire [9:0] key_down;
+    //wire [9:0] key_down;
     wire [8:0] last_change;
     wire been_ready;
-    KeyboardDecoder kd1(
+    /*KeyboardDecoder kd1(
 		.key_down(key_down),
 		.last_change(last_change),
 		.key_valid(been_ready),
@@ -37,7 +38,7 @@ module map_switch(
 		.PS2_CLK(PS2_CLK),
 		.rst(rst),
 		.clk(clk)
-	);
+	);*/
 
     //map
     reg [2:0] map = 1;
@@ -185,25 +186,159 @@ module map_switch(
     wire [5:0] map_en = 1<<map;
     wire map1_clear, map2_clear, map3_clear, map4_clear, map5_clear;
         //addr switch
-    always @* begin
+    /*always @(posedge clk, posedge rst) begin
         if(rst) begin
-            pixel_addr = menu_addr;
+            pixel_addr <= menu_addr;
         end else begin
             if(!select) begin
-                pixel_addr = menu_addr;
+                pixel_addr <= menu_addr;
             end else begin
                 case(map)
-                1: pixel_addr = map1_addr;
-                2: pixel_addr = map2_addr;
-                3: pixel_addr = map3_addr;
-                4: pixel_addr = map4_addr;
-                5: pixel_addr = map5_addr;
-                default: pixel_addr = menu_addr;
+                1: pixel_addr <= map1_addr;
+                2: pixel_addr <= map2_addr;
+                3: pixel_addr <= map3_addr;
+                4: pixel_addr <= map4_addr;
+                5: pixel_addr <= map5_addr;
+                default: pixel_addr <= menu_addr;
                 endcase                
             end
         end
-    end
+    end*/
+    wire [9:0] h, v;
+    assign h = vga_h >> 1;
+    assign v = vga_v >> 1;
 
+    /*assign pixel_addr = (!select) ? menu_addr :
+                        (map==1) ? map1_addr :
+                        (map==2) ? map2_addr :
+                        (map==3) ? map3_addr :
+                        (map==4) ? map4_addr : map5_addr;*/
+
+    assign pixel_addr = (!select && map == 1) ? (
+        (h >= 150 && h < 170 && v >= 40 && v < 65) ? (
+            (h-150)+(v-39)*320
+        ) : (
+            (h >= 150 && h < 170 && v >= 80 && v < 105) ? (
+                (h-150)+(v-79)*320
+            ) : (
+                (h >= 150 && h < 170 && v >= 120 && v < 145) ? (
+                    (h-150)+(v-119)*320
+                ) : (
+                    (h >= 150 && h < 170 && v >= 160 && v < 185) ? (
+                        (h-150)+(v-159)*320
+                    ) : (
+                        (h >= 148 && h < 170 && v >= 200 && v < 225) ? (
+                            (h-127)+(v-199)*320
+                        ) : (
+                            0
+                        )
+                    )
+                )
+            )
+        )
+    ) : (
+        (!select && map == 2) ? (
+            (h >= 150 && h < 170 && v >= 40 && v < 65) ? (
+                (h-150)+(v-39)*320
+            ) : (
+                (h >= 150 && h < 170 && v >= 80 && v < 105) ? (
+                    (h-150)+(v-79)*320
+                ) : (
+                    (h >= 150 && h < 170 && v >= 120 && v < 145) ? (
+                        (h-150)+(v-119)*320
+                    ) : (
+                        (h >= 148 && h < 170 && v >= 160 && v < 185) ? (
+                            (h-127)+(v-159)*320
+                        ) : (
+                            (h >= 150 && h < 170 && v >= 200 && v < 225) ? (
+                                (h-150)+(v-199)*320
+                            ) : (
+                                0
+                            )
+                        )
+                    )
+                )
+            )
+        )  : (
+            (!select && map == 3) ? (
+                (h >= 150 && h < 170 && v >= 40 && v < 65) ? (
+                    (h-150)+(v-39)*320
+                ) : (
+                    (h >= 150 && h < 170 && v >= 80 && v < 105) ? (
+                        (h-150)+(v-79)*320
+                    ) : (
+                        (h >= 148 && h < 170 && v >= 120 && v < 145) ? (
+                            (h-127)+(v-119)*320
+                        ) : (
+                            (h >= 150 && h < 170 && v >= 160 && v < 185) ? (
+                                (h-150)+(v-159)*320
+                            ) : (
+                                (h >= 150 && h < 170 && v >= 200 && v < 225) ? (
+                                    (h-150)+(v-199)*320
+                                ) : (
+                                    0
+                                )
+                            )
+                        )
+                    )
+                )
+            ) : (
+                (!select && map == 4) ? (
+                    (h >= 150 && h < 170 && v >= 40 && v < 65) ? (
+                        (h-150)+(v-39)*320
+                    ) : (
+                        (h >= 148 && h < 170 && v >= 80 && v < 105) ? (
+                            (h-127)+(v-79)*320
+                        ) : (
+                            (h >= 150 && h < 170 && v >= 120 && v < 145) ? (
+                                (h-150)+(v-119)*320
+                            ) : (
+                                (h >= 150 && h < 170 && v >= 160 && v < 185) ? (
+                                    (h-150)+(v-159)*320
+                                ) : (
+                                    (h >= 150 && h < 170 && v >= 200 && v < 225) ? (
+                                        (h-150)+(v-199)*320
+                                    ) : (
+                                        0
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ) : (
+                    (!select && map == 5) ? (
+                        (h >= 148 && h < 170 && v >= 40 && v < 65) ? (
+                            (h-127)+(v-39)*320
+                        ) : (
+                            (h >= 150 && h < 170 && v >= 80 && v < 105) ? (
+                                (h-150)+(v-79)*320
+                            ) : (
+                                (h >= 150 && h < 170 && v >= 120 && v < 145) ? (
+                                    (h-150)+(v-119)*320
+                                ) : (
+                                    (h >= 150 && h < 170 && v >= 160 && v < 185) ? (
+                                        (h-150)+(v-159)*320
+                                    ) : (
+                                        (h >= 150 && h < 170 && v >= 200 && v < 225) ? (
+                                            (h-150)+(v-199)*320
+                                        ) : (
+                                            0
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ) : (
+                        (select && map == 1) ? (
+                            map1_addr
+                        ) : (
+                            0
+                        )
+                    )
+                )
+            )
+        )
+    );
 
     //map choose
 
@@ -221,7 +356,7 @@ module map_switch(
         .vga_v(vga_v)
     );*/
 
-    menu Menu(
+    /*menu Menu(
         .clk(clk),
         .rst(rst),
         .level(level),
@@ -230,17 +365,17 @@ module map_switch(
         .vga_v(vga_v),
         .key_down(key_down),
         .addr(menu_addr)
-    );
+    );*/
 
-    map1 map1(
+    map1 Map1(
         .clk(clk), 
         .rst(rst), 
-        .key_down(key_down),
-        .en(map_en[1] && select), 
-        .level(3'd1), 
-        .map(map),
+        ///.key_down(key_down),
+        //.en(map_en[1] && select), 
+        //.level(3'd1), 
+        //.map(map),
         .addr(map1_addr), 
-        .clear(map1_clear),
+        //.clear(map1_clear),
         .vga_h(vga_h), 
         .vga_v(vga_v),
         .player_state(player_state),
@@ -251,7 +386,7 @@ module map_switch(
         .led(led)
     );
 
-    map map2(
+    /*map map2(
         .clk(clk), 
         .rst(rst), 
         .en(map_en[2] && select), 
@@ -302,6 +437,6 @@ module map_switch(
         .clear(map5_clear),
         .vga_h(vga_h), 
         .vga_v(vga_v)
-    );
+    );*/
 
 endmodule
