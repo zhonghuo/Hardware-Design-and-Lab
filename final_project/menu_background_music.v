@@ -1,4 +1,4 @@
-module background_music(
+module menu_background_music(
     input clk, 
     input rst, 
     input en, //whenever posedge en, the song plays from the begining
