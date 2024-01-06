@@ -139,6 +139,10 @@ module final_project(
     wire is_menu;
     assign is_menu = (select != 0);
     wire mclk1, mclk2, lrck1, lrck2, sck1, sck2, sdin1, sdin2;
+    assign audio_lrck = is_menu ? lrck2 : lrck1;
+    assign audio_mclk = is_menu ? mclk2 : mclk1;
+    assign audio_sck = is_menu ? sck2 : sck1;
+    assign audio_sdin = is_menu ? sdin2 : sdin1;
     background_music Background_music2( //viyella
         .clk(clk),
         .rst(rst),
