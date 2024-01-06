@@ -134,7 +134,7 @@ module final_project(
         .DIGIT(DIGIT)
     );
 
-    background_music Background_music1(
+    menu_background_music Background_music1(
         .clk(clk),
         .rst(rst),
         .en(1),

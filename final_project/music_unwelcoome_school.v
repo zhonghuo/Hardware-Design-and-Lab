@@ -1,4 +1,4 @@
-module music_viyella (
+module music_unwelcome_school (
 	input [13:0] ibeatNum,
 	output reg [21:0] toneL,
     output reg [21:0] toneR
