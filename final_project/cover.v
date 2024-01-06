@@ -14,10 +14,10 @@ module game_cover(
         .en(en_u),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(58), 
-        .mem_pivot_v(135),
-        .pivot_h(105),
-        .pivot_v(80),
+        .mem_pivot_h(55), 
+        .mem_pivot_v(90),
+        .pivot_h(145),
+        .pivot_v(120),
         .width(25),
         .height(40)
     );
@@ -27,10 +27,10 @@ module game_cover(
         .en(en_h),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(183), 
-        .mem_pivot_v(5),
-        .pivot_h(80),
-        .pivot_v(80),
+        .mem_pivot_h(185), 
+        .mem_pivot_v(7),
+        .pivot_h(120),
+        .pivot_v(120),
         .width(25),
         .height(40)
     );
@@ -40,10 +40,10 @@ module game_cover(
         .en(en_t),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(33), 
+        .mem_pivot_h(30), 
         .mem_pivot_v(90),
-        .pivot_h(55),
-        .pivot_v(80),
+        .pivot_h(95),
+        .pivot_v(120),
         .width(25),
         .height(40)
     );
@@ -55,8 +55,8 @@ module game_cover(
         .vga_v(vga_v), 
         .mem_pivot_h(108), 
         .mem_pivot_v(50),
-        .pivot_h(30),
-        .pivot_v(80),
+        .pivot_h(70),
+        .pivot_v(120),
         .width(25),
         .height(40)
     );
@@ -66,11 +66,11 @@ module game_cover(
         .en(en_m),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(83), 
+        .mem_pivot_h(78), 
         .mem_pivot_v(50),
-        .pivot_h(105),
-        .pivot_v(40),
-        .width(25),
+        .pivot_h(145),
+        .pivot_v(63),
+        .width(30),
         .height(40)
     );
 
@@ -79,10 +79,10 @@ module game_cover(
         .en(en_o),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(133), 
+        .mem_pivot_h(135), 
         .mem_pivot_v(50),
-        .pivot_h(80),
-        .pivot_v(40),
+        .pivot_h(120),
+        .pivot_v(62),
         .width(25),
         .height(40)
     );
@@ -92,10 +92,10 @@ module game_cover(
         .en(en_r),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(208), 
+        .mem_pivot_h(210), 
         .mem_pivot_v(50),
-        .pivot_h(55),
-        .pivot_v(40),
+        .pivot_h(95),
+        .pivot_v(62),
         .width(25),
         .height(40)
     );
@@ -107,8 +107,8 @@ module game_cover(
         .vga_v(vga_v), 
         .mem_pivot_h(133), 
         .mem_pivot_v(5),
-        .pivot_h(30),
-        .pivot_v(40),
+        .pivot_h(70),
+        .pivot_v(60),
         .width(25),
         .height(40)
     );
@@ -120,7 +120,7 @@ module game_cover(
         .vga_v(vga_v), 
         .mem_pivot_h(108), 
         .mem_pivot_v(5),
-        .pivot_h(130),
+        .pivot_h(170),
         .pivot_v(5),
         .width(25),
         .height(40)
@@ -131,10 +131,10 @@ module game_cover(
         .en(en_p),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(158), 
+        .mem_pivot_h(159), 
         .mem_pivot_v(50),
-        .pivot_h(105),
-        .pivot_v(5),
+        .pivot_h(145),
+        .pivot_v(10),
         .width(25),
         .height(40)
     );
@@ -144,9 +144,9 @@ module game_cover(
         .en(en_a),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(8), 
+        .mem_pivot_h(5), 
         .mem_pivot_v(5),
-        .pivot_h(80),
+        .pivot_h(120),
         .pivot_v(5),
         .width(25),
         .height(40)
@@ -157,9 +157,9 @@ module game_cover(
         .en(en_c),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(58), 
+        .mem_pivot_h(55), 
         .mem_pivot_v(5),
-        .pivot_h(55),
+        .pivot_h(95),
         .pivot_v(5),
         .width(25),
         .height(40)
@@ -170,11 +170,11 @@ module game_cover(
         .en(en_s),
         .vga_h(vga_h), 
         .vga_v(vga_v), 
-        .mem_pivot_h(8), 
+        .mem_pivot_h(5), 
         .mem_pivot_v(90),
-        .pivot_h(30),
-        .pivot_v(5),
-        .width(25),
+        .pivot_h(70),
+        .pivot_v(8),
+        .width(23),
         .height(40)
     );
 
@@ -185,8 +185,8 @@ module game_cover(
         .vga_v(vga_v), 
         .mem_pivot_h(108), 
         .mem_pivot_v(5),
-        .pivot_h(5),
-        .pivot_v(0),
+        .pivot_h(45),
+        .pivot_v(5),
         .width(25),
         .height(40)
     );

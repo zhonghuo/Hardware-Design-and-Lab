@@ -14,8 +14,11 @@ module abc(
 );
 
     wire [9:0] h, v;
-    assign h = vga_h >> 2;
-    assign v = vga_v >> 2;
+    wire [10:0] tmp_h, tmp_v;
+    assign tmp_h = vga_h*3;
+    assign tmp_v = vga_v*3;
+    assign h = tmp_h>>3;
+    assign v = tmp_v>>3;
 
     reg [9:0] disp_h, disp_v;
     always @* begin
@@ -29,6 +32,6 @@ module abc(
             disp_v = 0;
         end
     end
-    assign addr = disp_h + mem_pivot_h + 160*(disp_v + mem_pivot_v);
+    assign addr = disp_h + mem_pivot_h + 240*(disp_v + mem_pivot_v);
 
 endmodule
