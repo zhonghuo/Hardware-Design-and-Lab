@@ -134,14 +134,28 @@ module final_project(
         .DIGIT(DIGIT)
     );
 
-    menu_background_music Background_music1(
+    //music choose
+    wire [2:0] select;
+    wire is_menu;
+    assign is_menu = (select != 0);
+    wire mclk1, mclk2, lrck1, lrck2, sck1, sck2, sdin1, sdin2;
+    background_music Background_music2( //viyella
         .clk(clk),
         .rst(rst),
-        .en(1),
-        .audio_mclk(audio_mclk),
-        .audio_lrck(audio_lrck),
-        .audio_sck(audio_sck),
-        .audio_sdin(audio_sdin)
+        .en(is_menu),
+        .audio_mclk(mclk2),
+        .audio_lrck(lrck2),
+        .audio_sck(sck2),
+        .audio_sdin(sdin2)
+    );
+    menu_background_music Background_music1(//unwelcome school
+        .clk(clk),
+        .rst(rst),
+        .en(~is_menu),
+        .audio_mclk(mclk1),
+        .audio_lrck(lrck1),
+        .audio_sck(sck1),
+        .audio_sdin(sdin1)
     );
 
     map_switch Map_switch(
@@ -153,7 +167,8 @@ module final_project(
         .vga_h(h_cnt),
         .vga_v(v_cnt),
         .pixel_addr(pixel_addr),
-        .led(led)
+        .led(led), 
+        .select(select)
     );
 
 endmodule
