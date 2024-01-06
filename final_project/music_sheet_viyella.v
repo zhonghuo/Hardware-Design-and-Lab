@@ -21,95 +21,95 @@ module music_viyella (
     parameter Bflat1 = 862068;
     parameter B1 = 819672;
 
-    parameter C2 = 781250;      // C2ªºÀW²v
-    parameter Csharp2 = 735294; // C#2/Db2ªºÀW²v
-    parameter Dflat2 = 735294;  // D?2ªºÀW²v
-    parameter D2 = 694444;      // D2ªºÀW²v
-    parameter Dsharp2 = 657895; // D#2/Eb2ªºÀW²v
-    parameter Eflat2 = 657895;  // E?2ªºÀW²v
-    parameter E2 = 609756;      // E2ªºÀW²v
-    parameter F2 = 581395;      // F2ªºÀW²v
-    parameter Fsharp2 = 543478; // F#2/Gb2ªºÀW²v
-    parameter Gflat2 = 543477;  // G?2ªºÀW²v
-    parameter G2 = 510204;      // G2ªºÀW²v
-    parameter Gsharp2 = 490196; // G#2/Ab2ªºÀW²v
-    parameter Aflat2 = 490196;  // A?2ªºÀW²v
-    parameter A2 = 454545;      // A2ªºÀW²v
-    parameter Asharp2 = 431034; // A#2/Bb2ªºÀW²v
-    parameter Bflat2 = 431034;  // B?2ªºÀW²v
-    parameter B2 = 409836;      // B2ªºÀW²v
+    parameter C2 = 781250;      // C2çš„é »çŽ‡
+    parameter Csharp2 = 735294; // C#2/Db2çš„é »çŽ‡
+    parameter Dflat2 = 735294;  // Dâ™­2çš„é »çŽ‡
+    parameter D2 = 694444;      // D2çš„é »çŽ‡
+    parameter Dsharp2 = 657895; // D#2/Eb2çš„é »çŽ‡
+    parameter Eflat2 = 657895;  // Eâ™­2çš„é »çŽ‡
+    parameter E2 = 609756;      // E2çš„é »çŽ‡
+    parameter F2 = 581395;      // F2çš„é »çŽ‡
+    parameter Fsharp2 = 543478; // F#2/Gb2çš„é »çŽ‡
+    parameter Gflat2 = 543477;  // Gâ™­2çš„é »çŽ‡
+    parameter G2 = 510204;      // G2çš„é »çŽ‡
+    parameter Gsharp2 = 490196; // G#2/Ab2çš„é »çŽ‡
+    parameter Aflat2 = 490196;  // Aâ™­2çš„é »çŽ‡
+    parameter A2 = 454545;      // A2çš„é »çŽ‡
+    parameter Asharp2 = 431034; // A#2/Bb2çš„é »çŽ‡
+    parameter Bflat2 = 431034;  // Bâ™­2çš„é »çŽ‡
+    parameter B2 = 409836;      // B2çš„é »çŽ‡
     
-    parameter C3 = 390625;      // C3ªºÀW²v
-    parameter Csharp3 = 367647; // C#3/Db3ªºÀW²v
-    parameter Dflat3 = 367647;  // D?3ªºÀW²v
-    parameter D3 = 347222;      // D3ªºÀW²v
-    parameter Dsharp3 = 328947; // D#3/Eb3ªºÀW²v
-    parameter Eflat3 = 328947;  // E?3ªºÀW²v
-    parameter E3 = 304878;      // E3ªºÀW²v
-    parameter F3 = 290323;      // F3ªºÀW²v
-    parameter Fsharp3 = 271739; // F#3/Gb3ªºÀW²v
-    parameter Gflat3 = 271738;  // G?3ªºÀW²v
-    parameter G3 = 255102;      // G3ªºÀW²v
-    parameter Gsharp3 = 245098; // G#3/Ab3ªºÀW²v
-    parameter Aflat3 = 245098;  // A?3ªºÀW²v
-    parameter A3 = 227273;      // A3ªºÀW²v
-    parameter Asharp3 = 215517; // A#3/Bb3ªºÀW²v
-    parameter Bflat3 = 215517;  // B?3ªºÀW²v
-    parameter B3 = 204918;      // B3ªºÀW²v
+    parameter C3 = 390625;      // C3çš„é »çŽ‡
+    parameter Csharp3 = 367647; // C#3/Db3çš„é »çŽ‡
+    parameter Dflat3 = 367647;  // Dâ™­3çš„é »çŽ‡
+    parameter D3 = 347222;      // D3çš„é »çŽ‡
+    parameter Dsharp3 = 328947; // D#3/Eb3çš„é »çŽ‡
+    parameter Eflat3 = 328947;  // Eâ™­3çš„é »çŽ‡
+    parameter E3 = 304878;      // E3çš„é »çŽ‡
+    parameter F3 = 290323;      // F3çš„é »çŽ‡
+    parameter Fsharp3 = 271739; // F#3/Gb3çš„é »çŽ‡
+    parameter Gflat3 = 271738;  // Gâ™­3çš„é »çŽ‡
+    parameter G3 = 255102;      // G3çš„é »çŽ‡
+    parameter Gsharp3 = 245098; // G#3/Ab3çš„é »çŽ‡
+    parameter Aflat3 = 245098;  // Aâ™­3çš„é »çŽ‡
+    parameter A3 = 227273;      // A3çš„é »çŽ‡
+    parameter Asharp3 = 215517; // A#3/Bb3çš„é »çŽ‡
+    parameter Bflat3 = 215517;  // Bâ™­3çš„é »çŽ‡
+    parameter B3 = 204918;      // B3çš„é »çŽ‡
 
-    parameter C4 = 195312;      // C4ªºÀW²v
-    parameter Csharp4 = 183824; // C#4/Db4ªºÀW²v
-    parameter Dflat4 = 183824;  // D?4ªºÀW²v
-    parameter D4 = 173611;      // D4ªºÀW²v
-    parameter Dsharp4 = 164474; // D#4/Eb4ªºÀW²v
-    parameter Eflat4 = 164474;  // E?4ªºÀW²v
-    parameter E4 = 152439;      // E4ªºÀW²v
-    parameter F4 = 145161;      // F4ªºÀW²v
-    parameter Fsharp4 = 135870; // F#4/Gb4ªºÀW²v
-    parameter Gflat4 = 135869;  // G?4ªºÀW²v
-    parameter G4 = 127551;      // G4ªºÀW²v
-    parameter Gsharp4 = 122549; // G#4/Ab4ªºÀW²v
-    parameter Aflat4 = 122549;  // A?4ªºÀW²v
-    parameter A4 = 113636;      // A4ªºÀW²v¡]¼Ð·Ç½Õ­µ¡G440 Hz¡^
-    parameter Asharp4 = 107759; // A#4/Bb4ªºÀW²v
-    parameter Bflat4 = 107759;  // B?4ªºÀW²v
-    parameter B4 = 102459;      // B4ªºÀW²v
+    parameter C4 = 195312;      // C4çš„é »çŽ‡
+    parameter Csharp4 = 183824; // C#4/Db4çš„é »çŽ‡
+    parameter Dflat4 = 183824;  // Dâ™­4çš„é »çŽ‡
+    parameter D4 = 173611;      // D4çš„é »çŽ‡
+    parameter Dsharp4 = 164474; // D#4/Eb4çš„é »çŽ‡
+    parameter Eflat4 = 164474;  // Eâ™­4çš„é »çŽ‡
+    parameter E4 = 152439;      // E4çš„é »çŽ‡
+    parameter F4 = 145161;      // F4çš„é »çŽ‡
+    parameter Fsharp4 = 135870; // F#4/Gb4çš„é »çŽ‡
+    parameter Gflat4 = 135869;  // Gâ™­4çš„é »çŽ‡
+    parameter G4 = 127551;      // G4çš„é »çŽ‡
+    parameter Gsharp4 = 122549; // G#4/Ab4çš„é »çŽ‡
+    parameter Aflat4 = 122549;  // Aâ™­4çš„é »çŽ‡
+    parameter A4 = 113636;      // A4çš„é »çŽ‡ï¼ˆæ¨™æº–èª¿éŸ³ï¼š440 Hzï¼‰
+    parameter Asharp4 = 107759; // A#4/Bb4çš„é »çŽ‡
+    parameter Bflat4 = 107759;  // Bâ™­4çš„é »çŽ‡
+    parameter B4 = 102459;      // B4çš„é »çŽ‡
 
-    parameter C5 = 97656;       // C5ªºÀW²v
-    parameter Csharp5 = 91954;  // C#5/Db5ªºÀW²v
-    parameter Dflat5 = 91954;   // D?5ªºÀW²v
-    parameter D5 = 86806;       // D5ªºÀW²v
-    parameter Dsharp5 = 82237;  // D#5/Eb5ªºÀW²v
-    parameter Eflat5 = 82237;   // E?5ªºÀW²v
-    parameter E5 = 76220;       // E5ªºÀW²v
-    parameter F5 = 72581;       // F5ªºÀW²v
-    parameter Fsharp5 = 67935;  // F#5/Gb5ªºÀW²v
-    parameter Gflat5 = 67934;   // G?5ªºÀW²v
-    parameter G5 = 63776;       // G5ªºÀW²v
-    parameter Gsharp5 = 61275;  // G#5/Ab5ªºÀW²v
-    parameter Aflat5 = 61275;   // A?5ªºÀW²v
-    parameter A5 = 56818;       // A5ªºÀW²v
-    parameter Asharp5 = 53880;  // A#5/Bb5ªºÀW²v
-    parameter Bflat5 = 53880;   // B?5ªºÀW²v
-    parameter B5 = 51229;       // B5ªºÀW²v
+    parameter C5 = 97656;       // C5çš„é »çŽ‡
+    parameter Csharp5 = 91954;  // C#5/Db5çš„é »çŽ‡
+    parameter Dflat5 = 91954;   // Dâ™­5çš„é »çŽ‡
+    parameter D5 = 86806;       // D5çš„é »çŽ‡
+    parameter Dsharp5 = 82237;  // D#5/Eb5çš„é »çŽ‡
+    parameter Eflat5 = 82237;   // Eâ™­5çš„é »çŽ‡
+    parameter E5 = 76220;       // E5çš„é »çŽ‡
+    parameter F5 = 72581;       // F5çš„é »çŽ‡
+    parameter Fsharp5 = 67935;  // F#5/Gb5çš„é »çŽ‡
+    parameter Gflat5 = 67934;   // Gâ™­5çš„é »çŽ‡
+    parameter G5 = 63776;       // G5çš„é »çŽ‡
+    parameter Gsharp5 = 61275;  // G#5/Ab5çš„é »çŽ‡
+    parameter Aflat5 = 61275;   // Aâ™­5çš„é »çŽ‡
+    parameter A5 = 56818;       // A5çš„é »çŽ‡
+    parameter Asharp5 = 53880;  // A#5/Bb5çš„é »çŽ‡
+    parameter Bflat5 = 53880;   // Bâ™­5çš„é »çŽ‡
+    parameter B5 = 51229;       // B5çš„é »çŽ‡
 
-    parameter C6 = 48828;       // C6ªºÀW²v
-    parameter Csharp6 = 45977;  // C#6/Db6ªºÀW²v
-    parameter Dflat6 = 45977;   // D?6ªºÀW²v
-    parameter D6 = 43403;       // D6ªºÀW²v
-    parameter Dsharp6 = 41118;  // D#6/Eb6ªºÀW²v
-    parameter Eflat6 = 41118;   // E?6ªºÀW²v
-    parameter E6 = 38110;       // E6ªºÀW²v
-    parameter F6 = 36290;       // F6ªºÀW²v
-    parameter Fsharp6 = 33968;  // F#6/Gb6ªºÀW²v
-    parameter Gflat6 = 33968;   // G?6ªºÀW²v
-    parameter G6 = 31888;       // G6ªºÀW²v
-    parameter Gsharp6 = 30638;  // G#6/Ab6ªºÀW²v
-    parameter Aflat6 = 30638;   // A?6ªºÀW²v
-    parameter A6 = 28409;       // A6ªºÀW²v
-    parameter Asharp6 = 26940;  // A#6/Bb6ªºÀW²v
-    parameter Bflat6 = 26940;   // B?6ªºÀW²v
-    parameter B6 = 25614;       // B6ªºÀW²v
+    parameter C6 = 48828;       // C6çš„é »çŽ‡
+    parameter Csharp6 = 45977;  // C#6/Db6çš„é »çŽ‡
+    parameter Dflat6 = 45977;   // Dâ™­6çš„é »çŽ‡
+    parameter D6 = 43403;       // D6çš„é »çŽ‡
+    parameter Dsharp6 = 41118;  // D#6/Eb6çš„é »çŽ‡
+    parameter Eflat6 = 41118;   // Eâ™­6çš„é »çŽ‡
+    parameter E6 = 38110;       // E6çš„é »çŽ‡
+    parameter F6 = 36290;       // F6çš„é »çŽ‡
+    parameter Fsharp6 = 33968;  // F#6/Gb6çš„é »çŽ‡
+    parameter Gflat6 = 33968;   // Gâ™­6çš„é »çŽ‡
+    parameter G6 = 31888;       // G6çš„é »çŽ‡
+    parameter Gsharp6 = 30638;  // G#6/Ab6çš„é »çŽ‡
+    parameter Aflat6 = 30638;   // Aâ™­6çš„é »çŽ‡
+    parameter A6 = 28409;       // A6çš„é »çŽ‡
+    parameter Asharp6 = 26940;  // A#6/Bb6çš„é »çŽ‡
+    parameter Bflat6 = 26940;   // Bâ™­6çš„é »çŽ‡
+    parameter B6 = 25614;       // B6çš„é »çŽ‡
 
     parameter C7 = 23851;
     parameter Csharp7 = 22548;
@@ -1795,10 +1795,10 @@ module music_viyella (
 14'd2388 : toneR = D5; 14'd2389 : toneR = D5; 14'd2390 : toneR = D5; 14'd2391 : toneR = 1;
 14'd2392 : toneR = Aflat5; 14'd2393 : toneR = Aflat5; 14'd2394 : toneR = Aflat5; 14'd2395 : toneR = Aflat5;
 14'd2396 : toneR = Aflat5; 14'd2397 : toneR = Aflat5; 14'd2398 : toneR = Aflat5; 14'd2399 : toneR = 1;
-14'd2400 : toneR = D5; 14'd2401 : toneR = D5; 14'd2402 : toneR = D5; 14'd2403 : toneR = D5;
-14'd2404 : toneR = D5; 14'd2405 : toneR = D5; 14'd2406 : toneR = D5; 14'd2407 : toneR = D5;
-14'd2408 : toneR = D5; 14'd2409 : toneR = D5; 14'd2410 : toneR = D5; 14'd2411 : toneR = D5;
-14'd2412 : toneR = D5; 14'd2413 : toneR = D5; 14'd2414 : toneR = D5; 14'd2415 : toneR = 1;
+14'd2400 : toneR = G5; 14'd2401 : toneR = G5; 14'd2402 : toneR = G5; 14'd2403 : toneR = G5;
+14'd2404 : toneR = G5; 14'd2405 : toneR = G5; 14'd2406 : toneR = G5; 14'd2407 : toneR = G5;
+14'd2408 : toneR = G5; 14'd2409 : toneR = G5; 14'd2410 : toneR = G5; 14'd2411 : toneR = G5;
+14'd2412 : toneR = G5; 14'd2413 : toneR = G5; 14'd2414 : toneR = G5; 14'd2415 : toneR = 1;
 14'd2416 : toneR = G5; 14'd2417 : toneR = G5; 14'd2418 : toneR = G5; 14'd2419 : toneR = 1;
 14'd2420 : toneR = Bflat5; 14'd2421 : toneR = Bflat5; 14'd2422 : toneR = Bflat5; 14'd2423 : toneR = 1;
 14'd2424 : toneR = Dflat6; 14'd2425 : toneR = Dflat6; 14'd2426 : toneR = Dflat6; 14'd2427 : toneR = 1;
