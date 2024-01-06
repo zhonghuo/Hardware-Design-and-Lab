@@ -7,7 +7,8 @@ module map_switch(
     input wire [9:0] vga_h, //640 
     input wire [9:0] vga_v,  //480 
     output [16:0] pixel_addr,
-    output wire [15:0] led
+    output wire [15:0] led, 
+    output reg [2:0] select
 );
     parameter menu_state = 3'b000;
     parameter level_1_state = 3'd1;
@@ -42,7 +43,6 @@ module map_switch(
 
     //map
     reg [2:0] map = 1;
-    reg [2:0] select = 0;
     reg en_key = 1;
     reg [3:0] player_state = 4'd6, player2_state = 4'd6;
     reg [1:0] player_jump = 2'b0, player2_jump = 2'b0;
