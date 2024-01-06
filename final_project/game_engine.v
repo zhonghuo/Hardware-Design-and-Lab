@@ -44,9 +44,9 @@ module map_switch(
     reg [2:0] map = 1;
     reg [2:0] select = 0;
     reg en_key = 1;
-    reg [3:0] player_state = 4'd6;
-    reg [1:0] player_jump = 2'b0;
-    reg [29:0] cnt_player_jump = 0;
+    reg [3:0] player_state = 4'd6, player2_state = 4'd6;
+    reg [1:0] player_jump = 2'b0, player2_jump = 2'b0;
+    reg [29:0] cnt_player_jump = 0, cnt_player2_jump = 0;
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
@@ -197,6 +197,129 @@ module map_switch(
         end
     end 
 
+
+    always @(posedge clk or posedge rst) begin
+        if(rst) begin
+            player2_state <= 4'd6;
+            player2_jump <= 2'b0;
+            cnt_player2_jump <= 0;
+        end
+        else begin
+            if(select == 1) begin
+                map <= map;
+                if(!key_down[0] && !key_down[1] && !key_down[2] && !key_down[3]) begin
+                    if(player2_jump == 0) begin
+                        player2_state <= 4'd6;
+                        player2_jump <= 0;
+                        cnt_player2_jump <= 0;
+                    end else begin
+                        if(cnt_player2_jump < 30'd70000000 && !p2_collision && player2_jump != 2) begin
+                            cnt_player2_jump <= cnt_player2_jump + 1;
+                            player2_jump <= 1;
+                        end else begin
+                            player2_jump <= 2'd2;
+                            if(cnt_player2_jump < 30'd240000000 && !p2_land) begin
+                                cnt_player2_jump <= cnt_player2_jump + 1;
+                            end else begin
+                                player2_jump <= 0;
+                                cnt_player2_jump <= 0;
+                            end
+                        end
+                    end
+                end
+                else if(key_down[0] && !key_down[1] && !key_down[2] && !key_down[3]) begin
+                    player2_state <= 4'd9;
+                    if(cnt_player2_jump < 30'd70000000 && !p2_collision && player2_jump != 2) begin
+                        cnt_player2_jump <= cnt_player2_jump + 1;
+                        player2_jump <= 1;
+                    end else begin
+                        player2_jump <= 2'd2;
+                        if(cnt_player2_jump < 30'd240000000 && !p2_land) begin
+                            cnt_player2_jump <= cnt_player2_jump + 1;
+                        end else begin
+                            player2_jump <= 0;
+                            cnt_player2_jump <= 0;
+                        end
+                    end
+                end
+                else if((key_down[0] || key_down[1]) && !key_down[3]) begin
+                    player2_state <= 4'd8;
+                    if((key_down[0] || player2_jump != 0) && !should_down2) begin
+                        if(cnt_player2_jump < 30'd70000000 && !p2_collision && player2_jump != 2) begin
+                            cnt_player2_jump <= cnt_player2_jump + 1;
+                            player2_jump <= 1;
+                        end else begin
+                            player2_jump <= 2'd2;
+                            if(cnt_player2_jump < 30'd240000000 && !p2_land) begin
+                                cnt_player2_jump <= cnt_player2_jump + 1;
+                            end else begin
+                                player2_jump <= 0;
+                                cnt_player2_jump <= 0;
+                            end
+                        end
+                    end
+                    else if(should_down2) begin
+                        player2_jump <= 2'd2;
+                        if(cnt_player2_jump < 30'd240000000 && !p2_land) begin
+                            cnt_player2_jump <= cnt_player2_jump + 1;
+                        end else begin
+                            player2_jump <= 0;
+                            cnt_player2_jump <= 0;
+                        end
+                    end
+                    else player2_jump <= 0;
+                end
+                else if((key_down[3] || key_down[0]) && !key_down[1]) begin
+                    player2_state <= 4'd7;
+                    if((key_down[0] || player2_jump != 0) && !should_down2) begin
+                        if(cnt_player2_jump < 30'd70000000 && !p2_collision && player2_jump != 2) begin
+                            cnt_player2_jump <= cnt_player2_jump + 1;
+                            player2_jump <= 1;
+                        end else begin
+                            player2_jump <= 2'd2;
+                            if(cnt_player2_jump < 30'd240000000 && !p2_land) begin
+                                cnt_player2_jump <= cnt_player2_jump + 1;
+                            end else begin
+                                player2_jump <= 0;
+                                cnt_player2_jump <= 0;
+                            end
+                        end
+                    end
+                    else if(should_down2) begin
+                        player2_jump <= 2'd2;
+                        if(cnt_player2_jump < 30'd240000000 && !p2_land) begin
+                            cnt_player2_jump <= cnt_player2_jump + 1;
+                        end else begin
+                            player2_jump <= 0;
+                            cnt_player2_jump <= 0;
+                        end
+                    end
+                    else player2_jump <= 0;
+                end
+                else begin
+                    if(player2_jump == 0) player2_state <= player2_state;
+                    else begin
+                        if(cnt_player2_jump < 30'd70000000 && !p2_collision && player2_jump != 2) begin
+                            cnt_player2_jump <= cnt_player2_jump + 1;
+                            player2_jump <= 1;
+                        end else begin
+                            player2_jump <= 2'd2;
+                            if(cnt_player2_jump < 30'd240000000 && !p2_land) begin
+                                cnt_player2_jump <= cnt_player2_jump + 1;
+                            end else begin
+                                player2_jump <= 0;
+                                cnt_player2_jump <= 0;
+                            end
+                        end
+                    end
+                end
+            end else begin
+                player2_state <= 4'd6;
+                player2_jump <= 2'b0;
+                cnt_player2_jump <= 0;
+            end
+        end
+    end 
 
     //?U??map module?????
     //reg [16:0] pixel_addr;
@@ -388,23 +511,21 @@ module map_switch(
     map1 Map1(
         .clk(clk), 
         .rst(rst), 
-        ///.key_down(key_down),
-        //.en(map_en[1] && select), 
-        //.level(3'd1), 
-        //.map(map),
         .addr(map1_addr), 
-        //.clear(map1_clear),
         .vga_h(vga_h), 
         .vga_v(vga_v),
         .player_state(player_state),
-        //.player_state(p_state),
+        .player2_state(player2_state),
         .player_jump(player_jump),
-        //.player_horizontal_displacement(player_horizontal_displacement),
-        //.player_vertical_displacement(player_vertical_displacement),
+        .player2_jump(player2_jump),
         .led(led),
         .p1_collision(p1_collision),
+        .p2_collision(p2_collision),
         .p1_land(p1_land),
-        .should_down(should_down)
+        .p2_land(p2_land),
+        .should_down(should_down),
+        .should_down2(should_down2),
+        .button1_tounch(button1_tounch)
     );
 
     /*map map2(
