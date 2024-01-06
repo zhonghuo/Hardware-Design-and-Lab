@@ -93,12 +93,12 @@ module map_switch(
                         player_jump <= 0;
                         cnt_player_jump <= 0;
                     end else begin
-                        if(cnt_player_jump < 30'd50000000) begin
+                        if(cnt_player_jump < 30'd70000000 && !p1_collision && player_jump != 2) begin
                             cnt_player_jump <= cnt_player_jump + 1;
                             player_jump <= 1;
                         end else begin
                             player_jump <= 2'd2;
-                            if(cnt_player_jump < 30'd100000000) begin
+                            if(cnt_player_jump < 30'd240000000 && !p1_land) begin
                                 cnt_player_jump <= cnt_player_jump + 1;
                             end else begin
                                 player_jump <= 0;
@@ -109,12 +109,12 @@ module map_switch(
                 end
                 else if(key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
                     player_state <= 4'd9;
-                    if(cnt_player_jump < 30'd50000000) begin
+                    if(cnt_player_jump < 30'd70000000 && !p1_collision && player_jump != 2) begin
                         cnt_player_jump <= cnt_player_jump + 1;
                         player_jump <= 1;
                     end else begin
                         player_jump <= 2'd2;
-                        if(cnt_player_jump < 30'd100000000) begin
+                        if(cnt_player_jump < 30'd240000000 && !p1_land) begin
                             cnt_player_jump <= cnt_player_jump + 1;
                         end else begin
                             player_jump <= 0;
@@ -124,13 +124,13 @@ module map_switch(
                 end
                 else if((key_down[5] || key_down[4]) && !key_down[7]) begin
                     player_state <= 4'd8;
-                    if(key_down[4] || player_jump != 0) begin
-                        if(cnt_player_jump < 30'd50000000) begin
+                    if((key_down[4] || player_jump != 0) && !should_down) begin
+                        if(cnt_player_jump < 30'd70000000 && !p1_collision && player_jump != 2) begin
                             cnt_player_jump <= cnt_player_jump + 1;
                             player_jump <= 1;
                         end else begin
                             player_jump <= 2'd2;
-                            if(cnt_player_jump < 30'd100000000) begin
+                            if(cnt_player_jump < 30'd240000000 && !p1_land) begin
                                 cnt_player_jump <= cnt_player_jump + 1;
                             end else begin
                                 player_jump <= 0;
@@ -138,22 +138,40 @@ module map_switch(
                             end
                         end
                     end
+                    else if(should_down) begin
+                        player_jump <= 2'd2;
+                        if(cnt_player_jump < 30'd240000000 && !p1_land) begin
+                            cnt_player_jump <= cnt_player_jump + 1;
+                        end else begin
+                            player_jump <= 0;
+                            cnt_player_jump <= 0;
+                        end
+                    end
                     else player_jump <= 0;
                 end
                 else if((key_down[7] || key_down[4]) && !key_down[5]) begin
                     player_state <= 4'd7;
-                    if(key_down[4] || player_jump != 0) begin
-                        if(cnt_player_jump < 30'd50000000) begin
+                    if((key_down[4] || player_jump != 0) && !should_down) begin
+                        if(cnt_player_jump < 30'd70000000 && !p1_collision && player_jump != 2) begin
                             cnt_player_jump <= cnt_player_jump + 1;
                             player_jump <= 1;
                         end else begin
                             player_jump <= 2'd2;
-                            if(cnt_player_jump < 30'd100000000) begin
+                            if(cnt_player_jump < 30'd240000000 && !p1_land) begin
                                 cnt_player_jump <= cnt_player_jump + 1;
                             end else begin
                                 player_jump <= 0;
                                 cnt_player_jump <= 0;
                             end
+                        end
+                    end
+                    else if(should_down) begin
+                        player_jump <= 2'd2;
+                        if(cnt_player_jump < 30'd240000000 && !p1_land) begin
+                            cnt_player_jump <= cnt_player_jump + 1;
+                        end else begin
+                            player_jump <= 0;
+                            cnt_player_jump <= 0;
                         end
                     end
                     else player_jump <= 0;
@@ -161,12 +179,12 @@ module map_switch(
                 else begin
                     if(player_jump == 0) player_state <= player_state;
                     else begin
-                        if(cnt_player_jump < 30'd50000000) begin
+                        if(cnt_player_jump < 30'd70000000 && !p1_collision && player_jump != 2) begin
                             cnt_player_jump <= cnt_player_jump + 1;
                             player_jump <= 1;
                         end else begin
                             player_jump <= 2'd2;
-                            if(cnt_player_jump < 30'd100000000) begin
+                            if(cnt_player_jump < 30'd240000000 && !p1_land) begin
                                 cnt_player_jump <= cnt_player_jump + 1;
                             end else begin
                                 player_jump <= 0;
@@ -383,7 +401,10 @@ module map_switch(
         .player_jump(player_jump),
         //.player_horizontal_displacement(player_horizontal_displacement),
         //.player_vertical_displacement(player_vertical_displacement),
-        .led(led)
+        .led(led),
+        .p1_collision(p1_collision),
+        .p1_land(p1_land),
+        .should_down(should_down)
     );
 
     /*map map2(

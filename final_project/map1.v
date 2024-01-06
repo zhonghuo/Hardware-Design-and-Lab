@@ -13,17 +13,21 @@ module map1(
     //input [9:0] player_vertical_displacement,
     output wire [16:0] addr, 
     //output reg clear,
-    output reg [15:0] led
+    output reg [15:0] led,
+    output wire p1_collision,
+    output wire p1_land,
+    output wire should_down
 );
     parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
     wire collision_with_player1, collision_with_player2;
-    //wire en_ceiling, en_floor, en_LeftBoundary, en_RightBoundary, en_RedRiver, en_BlueRiver, en_Wall_1;
-    //wire en_GreenRiver, en_Wall_2, en_Wall_3, en_Wall_4, en_RedDoor, en_BlueDoor, en_Wall_5, en_Wall_6;
-    //wire en_stactic;
-    //wire [16:0] addr_ceiling, addr_floor, addr_LeftBoundary, addr_RightBoundary, addr_BlueRiver, addr_RedRiver;
-    //wire [16:0] addr_Wall_1;
-    //wire [16:0] addr_GreenRiver, addr_Wall_2, addr_Wall_3, addr_Wall_4, addr_RedDoor, addr_BlueDoor, addr_Wall_5, addr_Wall_6;
-    //wire [16:0] addr_stactic;
+    //wire p1_collision;
+    wire en_ceiling, en_floor, en_LeftBoundary, en_RightBoundary, en_RedRiver, en_BlueRiver, en_Wall_1;
+    wire en_GreenRiver, en_Wall_2, en_Wall_3, en_Wall_4, en_RedDoor, en_BlueDoor, en_Wall_5, en_Wall_6;
+    wire en_stactic;
+    wire [16:0] addr_ceiling, addr_floor, addr_LeftBoundary, addr_RightBoundary, addr_BlueRiver, addr_RedRiver;
+    wire [16:0] addr_Wall_1;
+    wire [16:0] addr_GreenRiver, addr_Wall_2, addr_Wall_3, addr_Wall_4, addr_RedDoor, addr_BlueDoor, addr_Wall_5, addr_Wall_6;
+    wire [16:0] addr_stactic;
     //reg [1:0] player_jump;
     //reg [3:0] player_state;
     reg [29:0] cnt_player_jump = 0;
@@ -34,24 +38,33 @@ module map1(
     reg [9:0] player_horizontal_displacement = 0, player_vertical_displacement = 0;
     reg [24:0] player_cnt_horizontal = 25'b0, player_cnt_vertical = 25'b0;
 
-    /*always @(posedge clk, posedge rst) begin
+    always @(posedge clk, posedge rst) begin
         if(rst) led <= 16'b0000_0000_0000_1111;
         else begin
-            if(player_state == 4'd6) led <= 16'b1000_0000_0000_1111;
-            else if(player_state == 4'd7) led <= 16'b1100_0000_0000_1111;
-            else if(player_state == 4'd8) led <= 16'b1110_0000_0000_1111;
-            else if(player_state == 4'd9) led <= 16'b1111_0000_0000_1111;
-            else led <= 16'b0000_0000_0000_1111;
+            if(p1_collision) led <= 16'b1111_1111_1111_1111;
+            else if(p1_land) led <= 16'b0011_1111_1111_1111;
+            else if(should_down) led <= 16'b0000_1111_1111_1111;
+            else led <= led <= 16'b0000_0000_0000_1111;
         end
-    end*/
+    end
+
+    assign p1_collision = (player_jump == 1 && (199 - player_vertical_displacement) == 190 && (10 + player_horizontal_displacement) < 240) ||
+    (player_state == right && (28+player_horizontal_displacement) >= 275 && (230-player_vertical_displacement) >= 220);    // wall 7
+
+    assign p1_land = (player_jump == 2 && (230-player_vertical_displacement) == 230 && (28+player_horizontal_displacement) < 276) ||  // floor
+    (player_jump == 2 && (13 + player_horizontal_displacement) >= 274 && (28+player_horizontal_displacement) <= 320 && (230-player_vertical_displacement) == 210) ||  // wall 7
+    (player_jump == 2 && (230 -player_vertical_displacement) == 182 && (8+player_horizontal_displacement) >= 8 && (25+player_horizontal_displacement) < 255);
+
+    assign should_down = (player_state == left && (22+player_horizontal_displacement) <= 277 && (230-player_vertical_displacement)>= 210 && (230-player_vertical_displacement) < 212) ||
+    (player_state == right && (8+player_horizontal_displacement) >= 236 && (230-player_vertical_displacement) >= 182 && (230-player_vertical_displacement) < 184);
 
     assign addr = (h>=0 && h <320 && v>=0 && v < 10) ? (   // ceiling
         h+(v+220)*320
     ) : (
-        (h >= 150 && h < 190 && v >= 230 && v < 236) ? (   //red river
+        (h >= 160 && h < 180 && v >= 230 && v < 236) ? (   //red river
             19521
         ) : (
-            (h >= 210 && h < 250 && v >= 230 && v < 236) ? (  // blue river
+            (h >= 220 && h < 240 && v >= 230 && v < 236) ? (  // blue river
                 22470
             ) : (
                 (h >= 190 && h < 230 && v >= 182 && v < 188) ? (  // green river
@@ -66,7 +79,7 @@ module map1(
                             (h>=310 && h<320 && v>=10 && v<230) ? (  // right boundary
                                 (h-310+305) + v*320
                             ) : (
-                                (h>=10 && h<250 && v >=182 && v<190) ? (    // wall 1
+                                (h>=10 && h<240 && v >=182 && v<190) ? (    // wall 1
                                     (h-10+50) + (v-182+215)*320
                                 ) : (
                                     (h>=50 && h<310 && v>=139 && v<147) ? (   // wall 2
@@ -87,47 +100,52 @@ module map1(
                                                         (h>=280 && h<301 && v>=19 && v<48) ? (  // blue door
                                                             (h-280+32) + (v-19+89)*320
                                                         ) : (
-                                                            (player_state == right) ? (
-                                                                ((h >= (8+player_horizontal_displacement)) && (h < (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
-                                                                    (h+63-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
-                                                                ) : (
-                                                                    12900
-                                                                )
+                                                            (h >= 275 && h < 310 && v >= 210 && v < 230) ? (  // wall 7
+                                                                (h-290) + (v-215+218)*320
                                                             ) : (
-                                                                (player_state == stactic) ? (
-                                                                    ((h >= (13+player_horizontal_displacement)) && (h < (28+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
-                                                                        (h+40-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
+                                                                (player_state == right) ? (
+                                                                    ((h >= (8+player_horizontal_displacement)) && (h < (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
+                                                                        (h+63-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
                                                                     ) : (
                                                                         12900
                                                                     )
                                                                 ) : (
-                                                                    (player_state == left) ? (
-                                                                        ((h >= (8+player_horizontal_displacement)) && (h < (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
-                                                                            (h+78-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
+                                                                    (player_state == stactic) ? (
+                                                                        ((h >= (13+player_horizontal_displacement)) && (h < (28+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
+                                                                            (h+40-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
                                                                         ) : (
                                                                             12900
                                                                         )
                                                                     ) : (
-                                                                        (player_state == up) ? (
-                                                                            (player_jump == 1) ? (
-                                                                                ((h >= (10+player_horizontal_displacement)) && (h < (25+player_horizontal_displacement)) && (v >= (199-player_vertical_displacement)) && (v < (227-player_vertical_displacement))) ? (
-                                                                                    (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-169) * 320
-                                                                                ) : (   
-                                                                                    12900
-                                                                                )
+                                                                        (player_state == left) ? (
+                                                                            ((h >= (8+player_horizontal_displacement)) && (h < (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
+                                                                                (h+78-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
                                                                             ) : (
-                                                                                ((h >= (10+player_horizontal_displacement)) && (h < (25+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
-                                                                                    (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
-                                                                                ) : (   
-                                                                                    12900
-                                                                                )
+                                                                                12900
                                                                             )
                                                                         ) : (
-                                                                            12900
+                                                                            (player_state == up) ? (
+                                                                                (player_jump == 1) ? (
+                                                                                    ((h >= (10+player_horizontal_displacement)) && (h < (25+player_horizontal_displacement)) && (v >= (199-player_vertical_displacement)) && (v < (227-player_vertical_displacement))) ? (
+                                                                                        (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-169) * 320
+                                                                                    ) : (   
+                                                                                        12900
+                                                                                    )
+                                                                                ) : (
+                                                                                    ((h >= (10+player_horizontal_displacement)) && (h < (25+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
+                                                                                        (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
+                                                                                    ) : (   
+                                                                                        12900
+                                                                                    )
+                                                                                )
+                                                                            ) : (
+                                                                                12900
+                                                                            )
                                                                         )
                                                                     )
-                                                                )
+                                                                )                                                                
                                                             )
+
                                                         )
                                                     )
                                                 )
@@ -161,7 +179,7 @@ module map1(
                     player_cnt_vertical <= 0;
                 end
                 else if(player_jump == 1) begin
-                    if(player_cnt_vertical < 25'd2500000) begin
+                    if(player_cnt_vertical < 25'd2000000) begin
                         player_cnt_vertical <= player_cnt_vertical + 1;
                         player_vertical_displacement <= player_vertical_displacement; 
                     end
@@ -171,7 +189,7 @@ module map1(
                     end
                 end
                 else if(player_jump == 2) begin
-                    if(player_cnt_vertical < 25'd2500000) begin
+                    if(player_cnt_vertical < 25'd2000000) begin
                         player_cnt_vertical <= player_cnt_vertical + 1;
                         player_vertical_displacement <= player_vertical_displacement; 
                     end
@@ -183,12 +201,12 @@ module map1(
                 end
             end
             else if(player_state == 4'd7) begin
-                if(player_cnt_horizontal < 25'd1666666) begin
+                if(player_cnt_horizontal < 25'd1500000) begin
                     player_cnt_horizontal <= player_cnt_horizontal + 1;
                     player_horizontal_displacement <= player_horizontal_displacement;
                 end 
                 else begin
-                    if(player_horizontal_displacement <= 282) begin
+                    if(player_horizontal_displacement <= 282 && !p1_collision) begin
                         player_horizontal_displacement <= player_horizontal_displacement + 1;
                         player_cnt_horizontal <= 0;
                     end else begin
@@ -201,7 +219,7 @@ module map1(
                     player_cnt_vertical <= 0;
                 end
                 else if(player_jump == 1) begin
-                    if(player_cnt_vertical < 25'd2500000) begin
+                    if(player_cnt_vertical < 25'd2000000) begin
                         player_cnt_vertical <= player_cnt_vertical + 1;
                         player_vertical_displacement <= player_vertical_displacement; 
                     end
@@ -211,7 +229,7 @@ module map1(
                     end
                 end
                 else if(player_jump == 2) begin
-                    if(player_cnt_vertical < 25'd2500000) begin
+                    if(player_cnt_vertical < 25'd2000000) begin
                         player_cnt_vertical <= player_cnt_vertical + 1;
                         player_vertical_displacement <= player_vertical_displacement; 
                     end
@@ -223,7 +241,7 @@ module map1(
                 end
             end
             else if(player_state == 4'd8) begin
-                if(player_cnt_horizontal < 25'd1666666) begin
+                if(player_cnt_horizontal < 25'd1500000) begin
                     player_cnt_horizontal <= player_cnt_horizontal + 1;
                     player_horizontal_displacement <= player_horizontal_displacement;
                 end else begin
@@ -240,7 +258,7 @@ module map1(
                     player_cnt_vertical <= 0;
                 end
                 else if(player_jump == 1) begin
-                    if(player_cnt_vertical < 25'd2500000) begin
+                    if(player_cnt_vertical < 25'd2000000) begin
                         player_cnt_vertical <= player_cnt_vertical + 1;
                         player_vertical_displacement <= player_vertical_displacement; 
                     end
@@ -250,7 +268,7 @@ module map1(
                     end
                 end
                 else if(player_jump == 2) begin
-                    if(player_cnt_vertical < 25'd2500000) begin
+                    if(player_cnt_vertical < 25'd2000000) begin
                         player_cnt_vertical <= player_cnt_vertical + 1;
                         player_vertical_displacement <= player_vertical_displacement; 
                     end
@@ -521,9 +539,22 @@ module map1(
         .vga_v(vga_v),
         .collision_with_player1(collision_with_player1),
         .collision_with_player2(collision_with_player2)
-    );
+    );*/
 
-    player Player1(
+    /*player P1(
+        .clk(clk),
+        .rst(rst),
+        .en(en_stactic),
+        .addr(addr_stactic),
+        .vga_h(vga_h),
+        .vga_v(vga_v),
+        .player_state(player_state),
+        .player_jump(player_jump),
+        .collision_with_player1(collision_with_player1),
+        .collision_with_player2(collision_with_player2)    
+    );*/
+
+    /*player Player1(
         .clk(clk),
         .rst(rst),
         .key_down(key_down),
@@ -553,8 +584,7 @@ module map1(
                     (en_BlueDoor) ? addr_BlueDoor : 12900;*/
 
     /*always @* begin
-        if(en_stactic) addr = addr_stactic;
-        else if(en_ceiling) addr = addr_ceiling;
+        if(en_ceiling) addr = addr_ceiling;
         else if(en_RedRiver) addr = addr_RedRiver;
         else if(en_BlueRiver) addr = addr_BlueRiver;        
         else if(en_GreenRiver) addr = addr_GreenRiver;
