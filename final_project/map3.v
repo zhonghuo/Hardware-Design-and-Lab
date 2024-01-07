@@ -1,4 +1,4 @@
-module map2(
+module map3(
     input clk, 
     input rst, 
     input en, 
