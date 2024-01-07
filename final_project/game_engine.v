@@ -39,7 +39,7 @@ module map_switch(
 
     //map1 wires
     //wire map1_reg clear,
-    reg [15:0] map1_led;
+    wire [15:0] map1_led;
     wire map1_p1_collision, map1_p2_collision;
     wire map1_p1_land, map1_p2_land;
     wire map1_should_down, map1_should_down2;
@@ -47,7 +47,7 @@ module map_switch(
 
     //map2 wires
     //wire map2_reg clear,
-    reg [15:0] map2_led;
+    wire [15:0] map2_led;
     wire map2_p1_collision, map2_p2_collision;
     wire map2_p1_land, map2_p2_land;
     wire map2_should_down, map2_should_down2;
@@ -480,6 +480,8 @@ module map_switch(
                     ) : (
                         (select && map == 1) ? (
                             map1_addr
+                        ) : (select && map == 2) ?(
+                            map2_addr
                         ) : (
                             0
                         )
