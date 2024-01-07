@@ -28,7 +28,7 @@ module map1(
 
     wire dimond1_touch, button2_tounch, dimond2_touch;
     wire p1_on_mech1;
-    reg dimond1_flag = 1, botton1_flag = 1, botton2_flag = 1, dimond2_flag = 1;
+    reg dimond1_flag = 1, botton1_flag = 1, botton2_flag = 1, dimond2_flag = 1, fail_flag = 1;
     reg [9:0] player_horizontal_displacement = 0, player_vertical_displacement = 0, player2_h_dis = 0, player2_v_dis = 0;
     reg [24:0] player_cnt_horizontal = 25'b0, player_cnt_vertical = 25'b0, player2_cnt_h = 25'b0, player2_cnt_v = 25'b0;
     reg [9:0] mech_1_v_displacement = 0, mech_2_h_displacement = 0;
@@ -59,10 +59,14 @@ module map1(
         1
     );
 
-    assign fail = (player_horizontal_displacement >= 201 && player_horizontal_displacement <=208 && (230-player_vertical_displacement)==230) ||
-    (player2_h_dis >= 140 && player2_h_dis <= 143 && (230-player2_v_dis) == 230) ||
-    (player_horizontal_displacement >= 28 && player_horizontal_displacement <=49 && (230-player_vertical_displacement)==182) ||
-    (player2_h_dis >= 28 && player2_h_dis <= 49 && (230-player2_v_dis) == 182);
+    assign fail = (fail_flag) ? (
+        (player_horizontal_displacement >= 201 && player_horizontal_displacement <=208 && (230-player_vertical_displacement)==230) ||
+        (player2_h_dis >= 140 && player2_h_dis <= 143 && (230-player2_v_dis) == 230) ||
+        (player_horizontal_displacement >= 28 && player_horizontal_displacement <=49 && (230-player_vertical_displacement)==182) ||
+        (player2_h_dis >= 28 && player2_h_dis <= 49 && (230-player2_v_dis) == 182)
+    ) : (
+        1
+    );
 
     assign p1_collision = (player_jump == 1 && (199 - player_vertical_displacement) == 190 && (10 + player_horizontal_displacement) < 240) ||
     (player_state == right && (28+player_horizontal_displacement) >= 275 && (230-player_vertical_displacement) >= 220) ||     // wall 7
@@ -478,6 +482,15 @@ module map1(
             )
         )
     );
+
+    always @(posedge clk) begin
+        if(rst || !en) begin
+            fail_flag <= 1;
+        end else begin
+            if(fail_flag && fail) fail_flag <= 0;
+            else fail_flag <= fail_flag;
+        end
+    end
 
     always @(posedge clk) begin
         if(rst || !en) begin
