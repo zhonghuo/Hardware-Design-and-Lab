@@ -78,7 +78,8 @@ module map1(
     (player_jump == 2 && (230 -player_vertical_displacement) == 182 && (8+player_horizontal_displacement) >= 8 && (25+player_horizontal_displacement) < 255) ||
     (button1_tounch && player_jump == 2 && (230-player_vertical_displacement) == 161 && (8+player_horizontal_displacement) <= 40) ||  // mech 1
     (player_jump == 2 && (13+player_horizontal_displacement)>=80 && (13+player_horizontal_displacement)<310 && (230-player_vertical_displacement)==139) || // wall 2
-    (button2_tounch && player_jump == 2 && (230-player_vertical_displacement) == 124 && (8+player_horizontal_displacement) >= 295) // mech 2
+    (button2_tounch && player_jump == 2 && (230-player_vertical_displacement) == 124 && (8+player_horizontal_displacement) >= 295) || // mech 2
+    (player_jump == 2 && (13+player_horizontal_displacement)>=85 && (13+player_horizontal_displacement)<270 && (230-player_vertical_displacement)==96)   // wall 3
     ;
 
     assign p2_land = (player2_jump == 2 && (230-player2_v_dis) == 230 && (28+player2_h_dis) < 276) ||  // floor
@@ -86,7 +87,8 @@ module map1(
     (player2_jump == 2 && (230 -player2_v_dis) == 182 && (8+player2_h_dis) >= 8 && (25+player2_h_dis) < 255) ||
     (button1_tounch && player2_jump == 2 && (230-player2_v_dis) == 161 && (8+player2_h_dis) <= 40) ||   // mech 1
     (player2_jump == 2 && (13+player2_h_dis)>=80 && (13+player2_h_dis)<310 && (230-player2_v_dis)==139) || // wall 2
-    (button2_tounch && player2_jump == 2 && (230-player2_v_dis)==124 && (8+player2_h_dis) >= 295)  // mech 2
+    (button2_tounch && player2_jump == 2 && (230-player2_v_dis)==124 && (8+player2_h_dis) >= 295) || // mech 2
+    (player2_jump == 2 && (13+player2_h_dis)>=85 && (13+player2_h_dis)<270 && (230-player2_v_dis)==96)  // wall 3
     ;
 
     assign should_down = (player_state == left && (22+player_horizontal_displacement) <= 277 && (230-player_vertical_displacement)>= 210 && (230-player_vertical_displacement) < 212) ||
