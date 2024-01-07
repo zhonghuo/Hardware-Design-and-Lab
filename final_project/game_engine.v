@@ -68,6 +68,14 @@ module map_switch(
     reg should_down, should_down2;
     reg button1_tounch;
 
+    wire [16:0] map1_addr, map2_addr, map3_addr, map4_addr, map5_addr, menu_addr;
+    wire [5:0] map_en = 1<<map;
+    wire map1_clear, map2_clear, map3_clear, map4_clear, map5_clear;
+    wire map1_fail, map2_fail, map3_fail, map4_fail, map5_fail;
+    wire game_clear, game_fail;
+    assign game_clear = map1_clear || map2_clear || map3_clear || map4_clear || map5_clear;
+    assign game_fail = map1_fail || map2_fail || map3_fail || map4_fail || map5_fail;
+
     //game end related variables
     wire [15:0] game_clear_scene_addr, game_fail_scene_addr;
     clear_scene game_clear_scene(
@@ -134,6 +142,11 @@ module map_switch(
                 
                 map <= map;
                 if(key_down[8] && been_ready) select <= 0;
+                else if(game_clear || game_fail) begin
+                    player_state <= player_state;
+                    player_jump <= player_jump;
+                    cnt_player_jump <= cnt_player_jump;
+                end
                 else if(!key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
                     if(player_jump == 0) begin
                         player_state <= 4'd6;
@@ -253,8 +266,12 @@ module map_switch(
         end
         else begin
             if(select == 1) begin
-                map <= map;
-                if(!key_down[0] && !key_down[1] && !key_down[2] && !key_down[3]) begin
+                if(game_clear || game_fail) begin
+                    player2_state <= player2_state;
+                    player2_jump <= player2_jump;
+                    cnt_player2_jump <= cnt_player2_jump;
+                end
+                else if(!key_down[0] && !key_down[1] && !key_down[2] && !key_down[3]) begin
                     if(player2_jump == 0) begin
                         player2_state <= 4'd6;
                         player2_jump <= 0;
@@ -367,15 +384,6 @@ module map_switch(
             end
         end
     end 
-
-   
-    wire [16:0] map1_addr, map2_addr, map3_addr, map4_addr, map5_addr, menu_addr;
-    wire [5:0] map_en = 1<<map;
-    wire map1_clear, map2_clear, map3_clear, map4_clear, map5_clear;
-    wire map1_fail, map2_fail, map3_fail, map4_fail, map5_fail;
-    wire game_clear, game_fail;
-    assign game_clear = map1_clear || map2_clear || map3_clear || map4_clear || map5_clear;
-    assign game_fail = map1_fail || map2_fail || map3_fail || map4_fail || map5_fail;
     
     wire [9:0] h, v;
     assign h = vga_h >> 1;
