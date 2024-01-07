@@ -523,6 +523,7 @@ module map_switch(
 
     assign pixel_addr  = flag_cover ? {1'b0, cover_addr} : map_and_menu_addr;
 
+    //there are totally 5 maps in the project
     map1 Map1(
         .clk(clk), 
         .rst(rst), 
