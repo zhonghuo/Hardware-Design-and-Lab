@@ -80,7 +80,7 @@ module map_switch(
                             if(flag_cover) flag_cover <= 0;
                             else select <= 1;
                             map <= map;
-                            en_key <= en_key;
+                            en_key <= 0;
                         end
                     end
                 end
