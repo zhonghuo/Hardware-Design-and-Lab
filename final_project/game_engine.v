@@ -397,7 +397,7 @@ module map_switch(
     always @* begin
         if(flag_cover) pixel_addr = {1'b0, cover_addr};
         else if(game_clear) pixel_addr = {1'b0, game_clear_scene_addr};
-        else if(game_fail) pixel_addr = {1'b0, game_clear_scene_addr};
+        else if(game_fail) pixel_addr = {1'b0, game_fail_scene_addr};
         else pixel_addr = map_and_menu_addr;
     end 
 
