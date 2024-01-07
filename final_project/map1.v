@@ -180,7 +180,7 @@ module map1(
                                                                             (h>=244 && h<250 && v>=104 && v<=110) ? (
                                                                                 (button2_tounch) ? 60800 : 540
                                                                             ) : (
-                                                                                (h>=310 && h<325 && v>=124 && v<139) ? (
+                                                                                (h>=(310-mech_2_h_displacement) && h<(325-mech_2_h_displacement) && v>=124 && v<139) ? (
                                                                                     (button2_tounch) ? (
                                                                                         (310-mech_2_h_displacement) + v*320
                                                                                     ) : (
