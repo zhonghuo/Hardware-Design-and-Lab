@@ -29,7 +29,7 @@ module map2(
         .p1_collision(p1_collision), .p2_collision(p2_collision), 
         .p1_land(p1_land), .p2_land(p2_land), 
         .should_down(should_down), .should_down2(should_down2), 
-        .button1_touch(button1_touch), .dimond1_touch(dimond1_touch)
+        .button1_tounch(button1_touch), .dimond1_touch(dimond1_touch)
     );
 
     //part of terrain objs
