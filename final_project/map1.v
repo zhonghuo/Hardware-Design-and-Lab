@@ -13,7 +13,7 @@ module map1(
     output wire p1_collision, p2_collision,
     output wire p1_land, p2_land,
     output wire should_down, should_down2,
-    output wire button1_tounch,
+    output wire button1_tounch
 );
     parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
     wire collision_with_player1, collision_with_player2;
@@ -40,7 +40,7 @@ module map1(
     always @(posedge clk) begin
         if(rst || !en) led <= 16'b0000_0000_0000_1111;
         else begin
-            if(success) led <= 16'b1111_1111_1111_1111;
+            if(clear) led <= 16'b1111_1111_1111_1111;
             else if(fail) led <= 16'b1111_0000_1111_0000;
         end
     end
