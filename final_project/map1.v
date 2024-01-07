@@ -30,13 +30,13 @@ module map1(
     assign h = vga_h >> 1;
     assign v = vga_v >> 1;
 
-    wire dimond1_touch;
+    wire dimond1_touch, button2_tounch;
     wire p1_on_mech1;
-    reg dimond1_flag = 1, botton1_flag = 1;
+    reg dimond1_flag = 1, botton1_flag = 1, botton2_flag = 1;
     reg [9:0] player_horizontal_displacement = 0, player_vertical_displacement = 0, player2_h_dis = 0, player2_v_dis = 0;
     reg [24:0] player_cnt_horizontal = 25'b0, player_cnt_vertical = 25'b0, player2_cnt_h = 25'b0, player2_cnt_v = 25'b0;
-    reg [9:0] mech_1_v_displacement = 0;
-    reg [24:0] mech_cnt_v = 25'b0;
+    reg [9:0] mech_1_v_displacement = 0, mech_2_h_displacement = 0;
+    reg [24:0] mech_cnt_v = 25'b0, mech_2_cnt_h = 0;
 
     always @(posedge clk, posedge rst) begin
         if(rst) led <= 16'b0000_0000_0000_1111;
@@ -60,7 +60,8 @@ module map1(
     (player_jump == 1 && (199-player_vertical_displacement) == 147 && (10+player_horizontal_displacement) >= 90) ||   // wall 2
     (button1_tounch && player_state == left && (10+player_horizontal_displacement) <= 40 && (230-player_vertical_displacement) <= 182 && (230-player_vertical_displacement) >= 165) ||//mech 1
     (!button1_tounch && (10+player_horizontal_displacement)<40 && (199-player_vertical_displacement) <=147 && (199-player_vertical_displacement) >=139) ||
-    (player_jump == 1 && (199-player_vertical_displacement) == 104 && (10+player_horizontal_displacement) >= 75 && (10+player_horizontal_displacement) < 270) //wall 3
+    (player_jump == 1 && (199-player_vertical_displacement) == 104 && (10+player_horizontal_displacement) >= 75 && (10+player_horizontal_displacement) < 270) || //wall 3
+    (player_state == right && button2_tounch && (28+player_horizontal_displacement) >= 295 && (230-player_vertical_displacement) >= 130)   // mech 2
     ; 
 
     assign p2_collision = (player2_jump == 1 && (199 - player2_v_dis) == 190 && (10 + player2_h_dis) < 240) ||
@@ -68,33 +69,40 @@ module map1(
     (player2_jump == 1 && (199-player2_v_dis) == 147 && (10+player2_h_dis) >= 90) ||    // wall 2
     (button1_tounch && player2_state == left && (10+player2_h_dis) <= 40 && (230-player2_v_dis) <= 182 && (230-player2_v_dis) >= 165) ||//mech 1
     (!button1_tounch && (10+player2_h_dis)<40 && (199-player2_v_dis) <=147 && (199-player2_v_dis) >= 139) ||
-    (player2_jump == 1 && (199-player2_v_dis) == 104 && (10+player2_h_dis) >= 75 && (10+player2_h_dis) < 270) //wall 3
+    (player2_jump == 1 && (199-player2_v_dis) == 104 && (10+player2_h_dis) >= 75 && (10+player2_h_dis) < 270) || //wall 3
+    (player2_state == right && button2_tounch && (28+player2_h_dis)>=295 && (230-player2_v_dis) >= 130) // mech 2
     ; 
 
     assign p1_land = (player_jump == 2 && (230-player_vertical_displacement) == 230 && (28+player_horizontal_displacement) < 276) ||  // floor
     (player_jump == 2 && (13 + player_horizontal_displacement) >= 274 && (28+player_horizontal_displacement) <= 320 && (230-player_vertical_displacement) == 210) ||  // wall 7
     (player_jump == 2 && (230 -player_vertical_displacement) == 182 && (8+player_horizontal_displacement) >= 8 && (25+player_horizontal_displacement) < 255) ||
-    (button1_tounch && player_jump == 2 && (230-player_vertical_displacement) == 161 && (8+player_horizontal_displacement) <= 40) ||
-    (player_jump == 2 && (13+player_horizontal_displacement)>=80 && (13+player_horizontal_displacement)<310 && (230-player_vertical_displacement)==139) // wall 2
+    (button1_tounch && player_jump == 2 && (230-player_vertical_displacement) == 161 && (8+player_horizontal_displacement) <= 40) ||  // mech 1
+    (player_jump == 2 && (13+player_horizontal_displacement)>=80 && (13+player_horizontal_displacement)<310 && (230-player_vertical_displacement)==139) || // wall 2
+    (button2_tounch && player_jump == 2 && (230-player_vertical_displacement) == 124 && (8+player_horizontal_displacement) >= 295) || // mech 2
+    (player_jump == 2 && (13+player_horizontal_displacement)>=85 && (13+player_horizontal_displacement)<270 && (230-player_vertical_displacement)==96)   // wall 3
     ;
 
     assign p2_land = (player2_jump == 2 && (230-player2_v_dis) == 230 && (28+player2_h_dis) < 276) ||  // floor
     (player2_jump == 2 && (13 + player2_h_dis) >= 274 && (28+player2_h_dis) <= 320 && (230-player2_v_dis) == 210) ||  // wall 7
     (player2_jump == 2 && (230 -player2_v_dis) == 182 && (8+player2_h_dis) >= 8 && (25+player2_h_dis) < 255) ||
-    (button1_tounch && player2_jump == 2 && (230-player2_v_dis) == 161 && (8+player2_h_dis) <= 40) ||
-    (player2_jump == 2 && (13+player2_h_dis)>=80 && (13+player2_h_dis)<310 && (230-player2_v_dis)==139) // wall 2
+    (button1_tounch && player2_jump == 2 && (230-player2_v_dis) == 161 && (8+player2_h_dis) <= 40) ||   // mech 1
+    (player2_jump == 2 && (13+player2_h_dis)>=80 && (13+player2_h_dis)<310 && (230-player2_v_dis)==139) || // wall 2
+    (button2_tounch && player2_jump == 2 && (230-player2_v_dis)==124 && (8+player2_h_dis) >= 295) || // mech 2
+    (player2_jump == 2 && (13+player2_h_dis)>=85 && (13+player2_h_dis)<270 && (230-player2_v_dis)==96)  // wall 3
     ;
 
     assign should_down = (player_state == left && (22+player_horizontal_displacement) <= 277 && (230-player_vertical_displacement)>= 210 && (230-player_vertical_displacement) < 212) ||
     (player_state == right && (8+player_horizontal_displacement) >= 230 && (230-player_vertical_displacement) >= 182 && (230-player_vertical_displacement) < 184) ||
     (player_state == right && (8+player_horizontal_displacement) >= 35 &&  (230-player_vertical_displacement) >= 161 && (230-player_vertical_displacement) < 163) ||
-    (player_state == left && (22+player_horizontal_displacement) <= 90 && (230-player_vertical_displacement) >= 137 && (230-player_vertical_displacement) <= 139)
+    (player_state == left && (22+player_horizontal_displacement) <= 90 && (230-player_vertical_displacement) >= 137 && (230-player_vertical_displacement) <= 139) ||
+    (player_state == left && (22+player_horizontal_displacement)  <= 295 && (230-player_vertical_displacement) >= 122 && (230-player_vertical_displacement) <= 124)
     ;
 
     assign should_down2 = (player2_state == left && (22+player2_h_dis) <= 277 && (230-player2_v_dis)>= 210 && (230-player2_v_dis) < 212) ||
     (player2_state == right && (8+player2_h_dis) >= 230 && (230-player2_v_dis) >= 182 && (230-player2_v_dis) < 184) ||
     (player2_state == right && (8+player2_h_dis) >= 35 &&  (230-player2_v_dis) >= 161 && (230-player2_v_dis) < 163) ||
-    (player2_state == left && (22+player2_h_dis) <= 90 && (230-player2_v_dis) >= 137 && (230-player2_v_dis) <= 139)
+    (player2_state == left && (22+player2_h_dis) <= 90 && (230-player2_v_dis) >= 137 && (230-player2_v_dis) <= 139) ||
+    (player2_state == left && (22+player2_h_dis) <= 295 && (230-player2_v_dis) >= 122 && (230-player2_v_dis) <= 124)
     ;
 
     assign button1_tounch = (botton1_flag) ? (
@@ -104,6 +112,12 @@ module map1(
         1
     ) ;
 
+    assign button2_tounch = (botton2_flag) ? (
+        (((22+player_horizontal_displacement) >= 244 && (8+player_horizontal_displacement) <250 && (200-player_vertical_displacement) >= 104 && (200-player_vertical_displacement) <= 106) || 
+        ((30+player2_h_dis) >= 244 && (10+player2_h_dis) < 250 && (200-player2_v_dis) >= 104 && (200-player2_v_dis) <= 106)) ? 1 : 0
+    ) : (
+        1
+    );
 
     assign addr = (h>=0 && h <320 && v>=0 && v < 10) ? (   // ceiling
         h+(v+220)*320
@@ -160,106 +174,22 @@ module map1(
                                                                             540
                                                                         )
                                                                     ) : (
-                                                                        (h>=10 && h<40 && v>=(139+mech_1_v_displacement) && v<(147+mech_1_v_displacement)) ? (
-                                                                            48220
+                                                                        (h>=10 && h<40 && v>=(139+mech_1_v_displacement) && v<(147+mech_1_v_displacement)) ? (   //mech 1
+                                                                            h + (v+88-mech_1_v_displacement)*320
                                                                         ) : (
-                                                                            (player_state == right) ? (
-                                                                                ((h >= (8+player_horizontal_displacement)) && (h < (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
-                                                                                    (h+63-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
-                                                                                ) : (
-                                                                                    (player2_state == stactic) ? (
-                                                                                        (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
-                                                                                            (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
-                                                                                        ) : (
-                                                                                            12900
-                                                                                        )
-                                                                                    ) : (
-                                                                                        (player2_state == left) ? (
-                                                                                            (h>=(10+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
-                                                                                                (h+151-player2_h_dis) + (v+player2_v_dis-110) * 320
-                                                                                            ) : (
-                                                                                                12900
-                                                                                            )
-                                                                                        ) : (
-                                                                                            (player2_state == right) ? (
-                                                                                                (h>=(1+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
-                                                                                                    (h+175-player2_h_dis) + (v+player2_v_dis-142) * 320
-                                                                                                ) : (
-                                                                                                    12900
-                                                                                                )
-                                                                                            ) : (
-                                                                                                (player2_state == up) ? (
-                                                                                                    (player2_jump == 1) ? (
-                                                                                                        (h>=(9+player2_h_dis) && h<(25+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
-                                                                                                            (h+175-player2_h_dis) + (v+player2_v_dis-110) * 320
-                                                                                                        ) : (
-                                                                                                            12900
-                                                                                                        )
-                                                                                                    ) : (
-                                                                                                        (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
-                                                                                                            (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
-                                                                                                        ) : (
-                                                                                                            12900
-                                                                                                        )                                                                                                  
-                                                                                                    )
-                                                                                                ) : (
-                                                                                                    12900
-                                                                                                )
-                                                                                            )
-                                                                                        )
-                                                                                    )
-                                                                                )
+                                                                            (h>=244 && h<250 && v>=104 && v<=110) ? (
+                                                                                (button2_tounch) ? 60800 : 540
                                                                             ) : (
-                                                                                (player_state == stactic) ? (
-                                                                                    ((h >= (13+player_horizontal_displacement)) && (h < (28+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
-                                                                                        (h+40-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
+                                                                                (h>=310 && h<325 && v>=124 && v<139) ? (
+                                                                                    (button2_tounch) ? (
+                                                                                        (310-mech_2_h_displacement) + v*320
                                                                                     ) : (
-                                                                                        (player2_state == stactic) ? (
-                                                                                            (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
-                                                                                                (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
-                                                                                            ) : (
-                                                                                                12900
-                                                                                            )
-                                                                                        ) : (
-                                                                                            (player2_state == left) ? (
-                                                                                                (h>=(10+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
-                                                                                                    (h+151-player2_h_dis) + (v+player2_v_dis-110) * 320
-                                                                                                ) : (
-                                                                                                    12900
-                                                                                                )
-                                                                                            ) : (
-                                                                                                (player2_state == right) ? (
-                                                                                                    (h>=(1+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
-                                                                                                        (h+175-player2_h_dis) + (v+player2_v_dis-142) * 320
-                                                                                                    ) : (
-                                                                                                        12900
-                                                                                                    )
-                                                                                                ) : (
-                                                                                                    (player2_state == up) ? (
-                                                                                                        (player2_jump == 1) ? (
-                                                                                                            (h>=(9+player2_h_dis) && h<(25+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
-                                                                                                                (h+175-player2_h_dis) + (v+player2_v_dis-110) * 320
-                                                                                                            ) : (
-                                                                                                                12900
-                                                                                                            )
-                                                                                                        ) : (
-                                                                                                            (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
-                                                                                                                (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
-                                                                                                            ) : (
-                                                                                                                12900
-                                                                                                            )                                                                                                  
-                                                                                                        )
-                                                                                                    ) : (
-                                                                                                        12900
-                                                                                                    )
-                                                                                                )
-                                                                                            )
-                                                                                        )
+                                                                                        12900
                                                                                     )
                                                                                 ) : (
-                                                                                    (player_state == left) ? (
+                                                                                    (player_state == right) ? (
                                                                                         ((h >= (8+player_horizontal_displacement)) && (h < (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
-                                                                                            (h+78-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
+                                                                                            (h+63-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
                                                                                         ) : (
                                                                                             (player2_state == stactic) ? (
                                                                                                 (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
@@ -304,11 +234,57 @@ module map1(
                                                                                             )
                                                                                         )
                                                                                     ) : (
-                                                                                        (player_state == up) ? (
-                                                                                            (player_jump == 1) ? (
-                                                                                                ((h >= (10+player_horizontal_displacement)) && (h < (25+player_horizontal_displacement)) && (v >= (199-player_vertical_displacement)) && (v < (227-player_vertical_displacement))) ? (
-                                                                                                    (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-169) * 320
-                                                                                                ) : (   
+                                                                                        (player_state == stactic) ? (
+                                                                                            ((h >= (13+player_horizontal_displacement)) && (h < (28+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
+                                                                                                (h+40-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
+                                                                                            ) : (
+                                                                                                (player2_state == stactic) ? (
+                                                                                                    (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
+                                                                                                        (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
+                                                                                                    ) : (
+                                                                                                        12900
+                                                                                                    )
+                                                                                                ) : (
+                                                                                                    (player2_state == left) ? (
+                                                                                                        (h>=(10+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
+                                                                                                            (h+151-player2_h_dis) + (v+player2_v_dis-110) * 320
+                                                                                                        ) : (
+                                                                                                            12900
+                                                                                                        )
+                                                                                                    ) : (
+                                                                                                        (player2_state == right) ? (
+                                                                                                            (h>=(1+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
+                                                                                                                (h+175-player2_h_dis) + (v+player2_v_dis-142) * 320
+                                                                                                            ) : (
+                                                                                                                12900
+                                                                                                            )
+                                                                                                        ) : (
+                                                                                                            (player2_state == up) ? (
+                                                                                                                (player2_jump == 1) ? (
+                                                                                                                    (h>=(9+player2_h_dis) && h<(25+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
+                                                                                                                        (h+175-player2_h_dis) + (v+player2_v_dis-110) * 320
+                                                                                                                    ) : (
+                                                                                                                        12900
+                                                                                                                    )
+                                                                                                                ) : (
+                                                                                                                    (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
+                                                                                                                        (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
+                                                                                                                    ) : (
+                                                                                                                        12900
+                                                                                                                    )                                                                                                  
+                                                                                                                )
+                                                                                                            ) : (
+                                                                                                                12900
+                                                                                                            )
+                                                                                                        )
+                                                                                                    )
+                                                                                                )
+                                                                                            )
+                                                                                        ) : (
+                                                                                            (player_state == left) ? (
+                                                                                                ((h >= (8+player_horizontal_displacement)) && (h < (22+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
+                                                                                                    (h+78-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
+                                                                                                ) : (
                                                                                                     (player2_state == stactic) ? (
                                                                                                         (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
                                                                                                             (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
@@ -352,58 +328,108 @@ module map1(
                                                                                                     )
                                                                                                 )
                                                                                             ) : (
-                                                                                                ((h >= (10+player_horizontal_displacement)) && (h < (25+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
-                                                                                                    (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
-                                                                                                ) : (   
-                                                                                                    (player2_state == stactic) ? (
-                                                                                                        (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
-                                                                                                            (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
-                                                                                                        ) : (
-                                                                                                            12900
-                                                                                                        )
-                                                                                                    ) : (
-                                                                                                        (player2_state == left) ? (
-                                                                                                            (h>=(10+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
-                                                                                                                (h+151-player2_h_dis) + (v+player2_v_dis-110) * 320
-                                                                                                            ) : (
-                                                                                                                12900
-                                                                                                            )
-                                                                                                        ) : (
-                                                                                                            (player2_state == right) ? (
-                                                                                                                (h>=(1+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
-                                                                                                                    (h+175-player2_h_dis) + (v+player2_v_dis-142) * 320
+                                                                                                (player_state == up) ? (
+                                                                                                    (player_jump == 1) ? (
+                                                                                                        ((h >= (10+player_horizontal_displacement)) && (h < (25+player_horizontal_displacement)) && (v >= (199-player_vertical_displacement)) && (v < (227-player_vertical_displacement))) ? (
+                                                                                                            (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-169) * 320
+                                                                                                        ) : (   
+                                                                                                            (player2_state == stactic) ? (
+                                                                                                                (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
+                                                                                                                    (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
                                                                                                                 ) : (
                                                                                                                     12900
                                                                                                                 )
                                                                                                             ) : (
-                                                                                                                (player2_state == up) ? (
-                                                                                                                    (player2_jump == 1) ? (
-                                                                                                                        (h>=(9+player2_h_dis) && h<(25+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
-                                                                                                                            (h+175-player2_h_dis) + (v+player2_v_dis-110) * 320
+                                                                                                                (player2_state == left) ? (
+                                                                                                                    (h>=(10+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
+                                                                                                                        (h+151-player2_h_dis) + (v+player2_v_dis-110) * 320
+                                                                                                                    ) : (
+                                                                                                                        12900
+                                                                                                                    )
+                                                                                                                ) : (
+                                                                                                                    (player2_state == right) ? (
+                                                                                                                        (h>=(1+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
+                                                                                                                            (h+175-player2_h_dis) + (v+player2_v_dis-142) * 320
                                                                                                                         ) : (
                                                                                                                             12900
                                                                                                                         )
                                                                                                                     ) : (
-                                                                                                                        (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
-                                                                                                                            (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
+                                                                                                                        (player2_state == up) ? (
+                                                                                                                            (player2_jump == 1) ? (
+                                                                                                                                (h>=(9+player2_h_dis) && h<(25+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
+                                                                                                                                    (h+175-player2_h_dis) + (v+player2_v_dis-110) * 320
+                                                                                                                                ) : (
+                                                                                                                                    12900
+                                                                                                                                )
+                                                                                                                            ) : (
+                                                                                                                                (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
+                                                                                                                                    (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
+                                                                                                                                ) : (
+                                                                                                                                    12900
+                                                                                                                                )                                                                                                  
+                                                                                                                            )
                                                                                                                         ) : (
                                                                                                                             12900
-                                                                                                                        )                                                                                                  
+                                                                                                                        )
                                                                                                                     )
+                                                                                                                )
+                                                                                                            )
+                                                                                                        )
+                                                                                                    ) : (
+                                                                                                        ((h >= (10+player_horizontal_displacement)) && (h < (25+player_horizontal_displacement)) && (v >= (200-player_vertical_displacement)) && (v < (230-player_vertical_displacement))) ? (
+                                                                                                            (h+43-player_horizontal_displacement) + (v+player_vertical_displacement-200) * 320
+                                                                                                        ) : (   
+                                                                                                            (player2_state == stactic) ? (
+                                                                                                                (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
+                                                                                                                    (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
                                                                                                                 ) : (
                                                                                                                     12900
+                                                                                                                )
+                                                                                                            ) : (
+                                                                                                                (player2_state == left) ? (
+                                                                                                                    (h>=(10+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
+                                                                                                                        (h+151-player2_h_dis) + (v+player2_v_dis-110) * 320
+                                                                                                                    ) : (
+                                                                                                                        12900
+                                                                                                                    )
+                                                                                                                ) : (
+                                                                                                                    (player2_state == right) ? (
+                                                                                                                        (h>=(1+player2_h_dis) && h<(33+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
+                                                                                                                            (h+175-player2_h_dis) + (v+player2_v_dis-142) * 320
+                                                                                                                        ) : (
+                                                                                                                            12900
+                                                                                                                        )
+                                                                                                                    ) : (
+                                                                                                                        (player2_state == up) ? (
+                                                                                                                            (player2_jump == 1) ? (
+                                                                                                                                (h>=(9+player2_h_dis) && h<(25+player2_h_dis) && v>=(200-player2_v_dis) && v<(229-player2_v_dis)) ? (
+                                                                                                                                    (h+175-player2_h_dis) + (v+player2_v_dis-110) * 320
+                                                                                                                                ) : (
+                                                                                                                                    12900
+                                                                                                                                )
+                                                                                                                            ) : (
+                                                                                                                                (h>=(13+player2_h_dis) && h<(27+player2_h_dis) && v>=(200-player2_v_dis) && v<(230-player2_v_dis)) ? (
+                                                                                                                                    (h+148-player2_h_dis) + (v+player2_v_dis-141) * 320
+                                                                                                                                ) : (
+                                                                                                                                    12900
+                                                                                                                                )                                                                                                  
+                                                                                                                            )
+                                                                                                                        ) : (
+                                                                                                                            12900
+                                                                                                                        )
+                                                                                                                    )
                                                                                                                 )
                                                                                                             )
                                                                                                         )
                                                                                                     )
+                                                                                                ) : (
+                                                                                                    12900
                                                                                                 )
                                                                                             )
-                                                                                        ) : (
-                                                                                            12900
                                                                                         )
-                                                                                    )
+                                                                                    )        
                                                                                 )
-                                                                            )                                                                                  
+                                                                            )                                                                          
                                                                         )
                                                                     )
                                                                 )                                                         
@@ -443,6 +469,15 @@ module map1(
 
     always @(posedge clk, posedge rst) begin
         if(rst) begin
+            botton2_flag <= 1;
+        end else begin
+            if(botton2_flag && button2_tounch) botton2_flag <= 0;
+            else botton2_flag <= botton2_flag;
+        end
+    end
+
+    always @(posedge clk, posedge rst) begin
+        if(rst) begin
             mech_1_v_displacement <= 0;
             mech_cnt_v <= 0;
         end else begin
@@ -459,6 +494,28 @@ module map1(
             end else begin
                     mech_1_v_displacement <= mech_1_v_displacement;
                     mech_cnt_v <= 0;         
+            end
+        end
+    end
+
+    always @(posedge clk, posedge rst) begin
+        if(rst) begin
+            mech_2_h_displacement <= 0;
+            mech_2_cnt_h <= 0;
+        end else begin
+            if(button2_tounch) begin
+                if(mech_2_cnt_h < 25'd2000000) begin
+                    mech_2_cnt_h <= mech_2_cnt_h + 1;
+                    mech_2_h_displacement <= mech_2_h_displacement;
+                end
+                else begin
+                    if(mech_2_h_displacement < 15) mech_2_h_displacement <= mech_2_h_displacement + 1;
+                    else mech_2_h_displacement <= mech_2_h_displacement;
+                    mech_2_cnt_h <= 0;
+                end
+            end else begin
+                    mech_2_h_displacement <= mech_2_h_displacement;
+                    mech_2_cnt_h <= 0;         
             end
         end
     end

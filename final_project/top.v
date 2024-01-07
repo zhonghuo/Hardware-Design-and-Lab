@@ -120,7 +120,7 @@ module final_project(
     //music choose
     wire [2:0] select;
     wire is_menu;
-    assign is_menu = (select != 0);
+    assign is_menu = (select == 0);
     wire mclk1, mclk2, lrck1, lrck2, sck1, sck2, sdin1, sdin2;
     assign audio_lrck = is_menu ? lrck2 : lrck1;
     assign audio_mclk = is_menu ? mclk2 : mclk1;
