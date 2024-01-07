@@ -59,10 +59,10 @@ module map1(
         1
     );
 
-    assign fail = ((10+player_horizontal_displacement >= 225) && (10+player_horizontal_displacement <=235) && (230-player_vertical_displacement)==230) ||
-    ((10+player2_h_dis) >= 165 && (10+player2_h_dis) <= 175 && (230-player2_v_dis) == 230) ||
-    ((10+player_horizontal_displacement >= 191) && (10+player_horizontal_displacement <=201) && (230-player_vertical_displacement)==182) ||
-    ((10+player2_h_dis) >= 191 && (10+player2_h_dis) <= 201 && (230-player2_v_dis) == 182);
+    assign fail = (player_horizontal_displacement >= 201 && player_horizontal_displacement <=208 && (230-player_vertical_displacement)==230) ||
+    (player2_h_dis >= 137 && player2_h_dis <= 143 && (230-player2_v_dis) == 230) ||
+    (player_horizontal_displacement >= 168 && player_horizontal_displacement <=174 && (230-player_vertical_displacement)==182) ||
+    (player2_h_dis >= 168 && player2_h_dis <= 174 && (230-player2_v_dis) == 182);
 
     assign p1_collision = (player_jump == 1 && (199 - player_vertical_displacement) == 190 && (10 + player_horizontal_displacement) < 240) ||
     (player_state == right && (28+player_horizontal_displacement) >= 275 && (230-player_vertical_displacement) >= 220) ||     // wall 7
