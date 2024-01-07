@@ -56,26 +56,26 @@ module map_switch(
     //map3_ wires
     //wire map3_clear
     wire [15:0] map3_led;
-    reg map3_p1_collision, map3_p2_collision;
-    reg map3_p1_land, map3_p2_land;
-    reg map3_should_down, map3_should_down2;
-    reg map3_button1_tounch;
+    wire map3_p1_collision, map3_p2_collision;
+    wire map3_p1_land, map3_p2_land;
+    wire map3_should_down, map3_should_down2;
+    wire map3_button1_tounch;
 
     //map4_ wires
     //wire map4_clear
     wire [15:0] map4_led;
-    reg map4_p1_collision, map4_p2_collision;
-    reg map4_p1_land, map4_p2_land;
-    reg map4_should_down, map4_should_down2;
-    reg map4_button1_tounch;
+    wire map4_p1_collision, map4_p2_collision;
+    wire map4_p1_land, map4_p2_land;
+    wire map4_should_down, map4_should_down2;
+    wire map4_button1_tounch;
 
     //map5_ wires
     //wire map5_clear
     wire [15:0] map5_led;
-    reg map5_p1_collision, map5_p2_collision;
-    reg map5_p1_land, map5_p2_land;
-    reg map5_should_down, map5_should_down2;
-    reg map5_button1_tounch;
+    wire map5_p1_collision, map5_p2_collision;
+    wire map5_p1_land, map5_p2_land;
+    wire map5_should_down, map5_should_down2;
+    wire map5_button1_tounch;
 
     //wires of maps
     //using selector to choose the final output
