@@ -543,7 +543,7 @@ module map_switch(
         .should_down(map1_should_down),
         .should_down2(map1_should_down2),
         .button1_tounch(map1_button1_tounch),
-        .success(success),
+        .clear(clear),
         .fail(fail)
     );
 
