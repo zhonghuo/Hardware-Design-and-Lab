@@ -509,7 +509,7 @@ module map_switch(
                         ) : (select && map == 3) ?(
                             map3_addr
                         ) : (select && map == 4) ?(
-                            map5_addr
+                            map4_addr
                         ) : (select && map == 5) ?(
                             map5_addr
                         ) :(
