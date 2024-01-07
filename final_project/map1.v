@@ -41,8 +41,8 @@ module map1(
     always @(posedge clk) begin
         if(rst || !en) led <= 16'b0000_0000_0000_1111;
         else begin
-            if(p1_on_mech1) led <= 16'b1111_1111_1111_1111;
-            else if(p1_collision) led <= 16'b0000_1111_1111_1111;
+            if(p1_land) led <= 16'b1111_1111_1111_1111;
+            else if(p2_land) led <= 16'b0000_1111_1111_1111;
             else led <= 16'b0000_0000_0000_1111;
         end
     end
@@ -61,7 +61,8 @@ module map1(
     (button1_tounch && player_state == left && (10+player_horizontal_displacement) <= 40 && (230-player_vertical_displacement) <= 182 && (230-player_vertical_displacement) >= 165) ||//mech 1
     (!button1_tounch && (10+player_horizontal_displacement)<40 && (199-player_vertical_displacement) <=147 && (199-player_vertical_displacement) >=139) ||
     (player_jump == 1 && (199-player_vertical_displacement) == 104 && (10+player_horizontal_displacement) >= 75 && (10+player_horizontal_displacement) < 270) || //wall 3
-    (player_state == right && button2_tounch && (28+player_horizontal_displacement) >= 295 && (230-player_vertical_displacement) >= 130)   // mech 2
+    (player_state == right && button2_tounch && (28+player_horizontal_displacement) >= 295 && (230-player_vertical_displacement) >= 130) ||   // mech 2
+    (player2_state == left && (10+player2_h_dis) <= 211 && (10+player2_h_dis) >= 209 && (230-player2_v_dis) <= 96 && (230-player2_v_dis) >= 93)  // wall 4
     ; 
 
     assign p2_collision = (player2_jump == 1 && (199 - player2_v_dis) == 190 && (10 + player2_h_dis) < 240) ||
@@ -70,7 +71,8 @@ module map1(
     (button1_tounch && player2_state == left && (10+player2_h_dis) <= 40 && (230-player2_v_dis) <= 182 && (230-player2_v_dis) >= 165) ||//mech 1
     (!button1_tounch && (10+player2_h_dis)<40 && (199-player2_v_dis) <=147 && (199-player2_v_dis) >= 139) ||
     (player2_jump == 1 && (199-player2_v_dis) == 104 && (10+player2_h_dis) >= 75 && (10+player2_h_dis) < 270) || //wall 3
-    (player2_state == right && button2_tounch && (28+player2_h_dis)>=295 && (230-player2_v_dis) >= 130) // mech 2
+    (player2_state == right && button2_tounch && (28+player2_h_dis)>=295 && (230-player2_v_dis) >= 130) || // mech 2
+    (player_state == left && (10+player_horizontal_displacement) <= 211 && (10+player_horizontal_displacement) >= 209 && (230-player_vertical_displacement) <= 96 && (230-player_vertical_displacement) >= 93)  // wall 4
     ; 
 
     assign p1_land = (player_jump == 2 && (230-player_vertical_displacement) == 230 && (28+player_horizontal_displacement) < 276) ||  // floor
@@ -78,8 +80,9 @@ module map1(
     (player_jump == 2 && (230 -player_vertical_displacement) == 182 && (8+player_horizontal_displacement) >= 8 && (25+player_horizontal_displacement) < 255) ||
     (button1_tounch && player_jump == 2 && (230-player_vertical_displacement) == 161 && (8+player_horizontal_displacement) <= 40) ||  // mech 1
     (player_jump == 2 && (13+player_horizontal_displacement)>=80 && (13+player_horizontal_displacement)<310 && (230-player_vertical_displacement)==139) || // wall 2
-    (button2_tounch && player_jump == 2 && (230-player_vertical_displacement) == 124 && (8+player_horizontal_displacement) >= 295) || // mech 2
-    (player_jump == 2 && (13+player_horizontal_displacement)>=85 && (13+player_horizontal_displacement)<270 && (230-player_vertical_displacement)==96)   // wall 3
+    (button2_tounch && player_jump == 2 && (230-player_vertical_displacement) == 124 && (28+player_horizontal_displacement) >= 295) || // mech 2
+    (player_jump == 2 && (13+player_horizontal_displacement)>=210 && (13+player_horizontal_displacement)<270 && (230-player_vertical_displacement)==96) ||  // wall 3
+    (player_jump == 2 && (13+player_horizontal_displacement)>= 160 && (13+player_horizontal_displacement)<210 && (230-player_vertical_displacement)==89)  // wall 4
     ;
 
     assign p2_land = (player2_jump == 2 && (230-player2_v_dis) == 230 && (28+player2_h_dis) < 276) ||  // floor
@@ -87,22 +90,27 @@ module map1(
     (player2_jump == 2 && (230 -player2_v_dis) == 182 && (8+player2_h_dis) >= 8 && (25+player2_h_dis) < 255) ||
     (button1_tounch && player2_jump == 2 && (230-player2_v_dis) == 161 && (8+player2_h_dis) <= 40) ||   // mech 1
     (player2_jump == 2 && (13+player2_h_dis)>=80 && (13+player2_h_dis)<310 && (230-player2_v_dis)==139) || // wall 2
-    (button2_tounch && player2_jump == 2 && (230-player2_v_dis)==124 && (8+player2_h_dis) >= 295) || // mech 2
-    (player2_jump == 2 && (13+player2_h_dis)>=85 && (13+player2_h_dis)<270 && (230-player2_v_dis)==96)  // wall 3
+    (button2_tounch && player2_jump == 2 && (230-player2_v_dis)==124 && (28+player2_h_dis) >= 295) || // mech 2
+    (player2_jump == 2 && (13+player2_h_dis)>=85 && (13+player2_h_dis)<270 && (230-player2_v_dis)==96) ||  // wall 3
+    (player2_jump == 2 && (13+player2_h_dis)>= 160 && (13+player2_h_dis)<210 && (230-player2_v_dis)==89)  // wall 4
     ;
 
     assign should_down = (player_state == left && (22+player_horizontal_displacement) <= 277 && (230-player_vertical_displacement)>= 210 && (230-player_vertical_displacement) < 212) ||
     (player_state == right && (8+player_horizontal_displacement) >= 230 && (230-player_vertical_displacement) >= 182 && (230-player_vertical_displacement) < 184) ||
     (player_state == right && (8+player_horizontal_displacement) >= 35 &&  (230-player_vertical_displacement) >= 161 && (230-player_vertical_displacement) < 163) ||
     (player_state == left && (22+player_horizontal_displacement) <= 90 && (230-player_vertical_displacement) >= 137 && (230-player_vertical_displacement) <= 139) ||
-    (player_state == left && (22+player_horizontal_displacement)  <= 295 && (230-player_vertical_displacement) >= 122 && (230-player_vertical_displacement) <= 124)
+    (player_state == left && (22+player_horizontal_displacement)  <= 296 && (230-player_vertical_displacement) >= 122 && (230-player_vertical_displacement) <= 124) ||
+    (player_state == right && (8+player_horizontal_displacement) >= 270 && (230-player_vertical_displacement) >= 268 && (230-player_vertical_displacement) <= 270) ||
+    (player_state == left && (22+player_horizontal_displacement)<=160 && (230-player_vertical_displacement) >= 87 && (230-player_vertical_displacement) <= 89)
     ;
 
     assign should_down2 = (player2_state == left && (22+player2_h_dis) <= 277 && (230-player2_v_dis)>= 210 && (230-player2_v_dis) < 212) ||
     (player2_state == right && (8+player2_h_dis) >= 230 && (230-player2_v_dis) >= 182 && (230-player2_v_dis) < 184) ||
     (player2_state == right && (8+player2_h_dis) >= 35 &&  (230-player2_v_dis) >= 161 && (230-player2_v_dis) < 163) ||
     (player2_state == left && (22+player2_h_dis) <= 90 && (230-player2_v_dis) >= 137 && (230-player2_v_dis) <= 139) ||
-    (player2_state == left && (22+player2_h_dis) <= 295 && (230-player2_v_dis) >= 122 && (230-player2_v_dis) <= 124)
+    (player2_state == left && (22+player2_h_dis) <= 296 && (230-player2_v_dis) >= 122 && (230-player2_v_dis) <= 124) ||
+    (player2_state == right && (8+player2_h_dis) >=270 && (230-player2_v_dis) >=268 && (230-player2_v_dis)<=270) ||
+    (player2_state == left && (22+player2_h_dis)<=160 && (230-player2_v_dis) >= 87 && (230-player2_v_dis) <= 89)
     ;
 
     assign button1_tounch = (botton1_flag) ? (
@@ -182,7 +190,7 @@ module map1(
                                                                             ) : (
                                                                                 (h>=(310-mech_2_h_displacement) && h<(325-mech_2_h_displacement) && v>=124 && v<139) ? (
                                                                                     (button2_tounch) ? (
-                                                                                        (310-mech_2_h_displacement) + v*320
+                                                                                        (310-mech_2_h_displacement) + (v+100)*320
                                                                                     ) : (
                                                                                         12900
                                                                                     )
