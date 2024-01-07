@@ -40,7 +40,7 @@ module fail_scene(
         .vga_v(vga_v), 
         .mem_pivot_h(5), 
         .mem_pivot_v(90),
-        .pivot_h(95),
+        .pivot_h(120),
         .pivot_v(60),
         .width(23),
         .height(40)
@@ -53,7 +53,7 @@ module fail_scene(
         .vga_v(vga_v), 
         .mem_pivot_h(5), 
         .mem_pivot_v(90),
-        .pivot_h(120),
+        .pivot_h(145),
         .pivot_v(60),
         .width(23),
         .height(40)
