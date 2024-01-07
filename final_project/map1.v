@@ -61,8 +61,8 @@ module map1(
 
     assign fail = (player_horizontal_displacement >= 201 && player_horizontal_displacement <=208 && (230-player_vertical_displacement)==230) ||
     (player2_h_dis >= 140 && player2_h_dis <= 143 && (230-player2_v_dis) == 230) ||
-    (player_horizontal_displacement >= 28 && player_horizontal_displacement <=42 && (230-player_vertical_displacement)==182) ||
-    (player2_h_dis >= 28 && player2_h_dis <= 42 && (230-player2_v_dis) == 182);
+    (player_horizontal_displacement >= 28 && player_horizontal_displacement <=49 && (230-player_vertical_displacement)==182) ||
+    (player2_h_dis >= 28 && player2_h_dis <= 49 && (230-player2_v_dis) == 182);
 
     assign p1_collision = (player_jump == 1 && (199 - player_vertical_displacement) == 190 && (10 + player_horizontal_displacement) < 240) ||
     (player_state == right && (28+player_horizontal_displacement) >= 275 && (230-player_vertical_displacement) >= 220) ||     // wall 7
@@ -154,7 +154,7 @@ module map1(
                 22470
             ) : (
                 (h >= 50 && h < 70 && v >= 182 && v < 188) ? (  // green river
-                    (h-190+165) + (v-182+1)*320
+                    60910
                 ) : (
                     (h >=0 && h < 320 && v >= 230 && v < 240) ? (   // floor
                         h + (v-230+220)*320
