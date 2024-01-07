@@ -156,7 +156,8 @@ module final_project(
         .pixel_addr(pixel_addr),
         .led(led), 
         .select(select), 
-        .flag_cover(flag_cover)
+        .flag_cover(flag_cover), 
+        .been_ready(been_ready)
     );
 
 endmodule

@@ -2,7 +2,7 @@ module map1(
     input clk, 
     input rst, 
     //input wire [9:0] key_down, 
-    //input en, 
+    input en, 
     //input [2:0] level,
     //input [2:0] map,
     input wire [9:0] vga_h, 
@@ -38,8 +38,8 @@ module map1(
     reg [9:0] mech_1_v_displacement = 0, mech_2_h_displacement = 0;
     reg [24:0] mech_cnt_v = 25'b0, mech_2_cnt_h = 0;
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) led <= 16'b0000_0000_0000_1111;
+    always @(posedge clk) begin
+        if(rst || !en) led <= 16'b0000_0000_0000_1111;
         else begin
             if(p1_on_mech1) led <= 16'b1111_1111_1111_1111;
             else if(p1_collision) led <= 16'b0000_1111_1111_1111;
@@ -449,8 +449,8 @@ module map1(
         )
     );
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) begin
+    always @(posedge clk) begin
+        if(rst || !en) begin
             dimond1_flag <= 1;
         end else begin
             if(dimond1_flag && dimond1_touch) dimond1_flag <= 0;
@@ -458,8 +458,8 @@ module map1(
         end
     end
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) begin
+    always @(posedge clk) begin
+        if(rst || !en) begin
             botton1_flag <= 1;
         end else begin
             if(botton1_flag && button1_tounch) botton1_flag <= 0;
@@ -467,8 +467,8 @@ module map1(
         end
     end
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) begin
+    always @(posedge clk) begin
+        if(rst || !en) begin
             botton2_flag <= 1;
         end else begin
             if(botton2_flag && button2_tounch) botton2_flag <= 0;
@@ -476,8 +476,8 @@ module map1(
         end
     end
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) begin
+    always @(posedge clk) begin
+        if(rst || !en) begin
             mech_1_v_displacement <= 0;
             mech_cnt_v <= 0;
         end else begin
@@ -498,8 +498,8 @@ module map1(
         end
     end
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) begin
+    always @(posedge clk) begin
+        if(rst || !en) begin
             mech_2_h_displacement <= 0;
             mech_2_cnt_h <= 0;
         end else begin
@@ -520,8 +520,8 @@ module map1(
         end
     end
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) begin
+    always @(posedge clk) begin
+        if(rst || !en) begin
             player_horizontal_displacement <= 0;
             player_vertical_displacement <= 0;
             player_cnt_horizontal <= 25'b0;
@@ -645,8 +645,8 @@ module map1(
         end
     end
 
-    always @(posedge clk, posedge rst) begin
-        if(rst) begin
+    always @(posedge clk) begin
+        if(rst || !en) begin
             player2_h_dis <= 0;
             player2_v_dis <= 0;
             player2_cnt_h <= 0;
