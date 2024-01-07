@@ -257,11 +257,13 @@ module map3(
 
         //obj without obj oriented ctrl
         //player diamond button mech 
+        /*
         else if((h>=194 && h <206 && v>=203 && v<220)) //red diamond 1
             addr = dimond1_touch ? 12900 : (((h-99)+(v-66)*320));
         else if((h>=100 && h<105 && v>=177 && v<182)) // button1
             addr = button1_touch ? 60800 : 540;
         else addr = 12900;
+        */
     end
     
 
