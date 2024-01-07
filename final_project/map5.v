@@ -12,7 +12,7 @@ module map5(
     output wire p1_collision, p2_collision,
     output wire p1_land, p2_land,
     output wire should_down, should_down2,
-    output wire button1_touch, 
+    output wire button1_tounch, 
     output wire dimond1_touch
 );
     wire [9:0] h, v;
@@ -29,7 +29,7 @@ module map5(
         .p1_collision(p1_collision), .p2_collision(p2_collision), 
         .p1_land(p1_land), .p2_land(p2_land), 
         .should_down(should_down), .should_down2(should_down2), 
-        .button1_tounch(button1_touch), .dimond1_touch(dimond1_touch)
+        .button1_tounch(button1_tounch), .dimond1_touch(dimond1_touch)
     );
 
     //part of terrain objs
@@ -261,7 +261,7 @@ module map5(
         else if((h>=194 && h <206 && v>=203 && v<220)) //red diamond 1
             addr = dimond1_touch ? 12900 : (((h-99)+(v-66)*320));
         else if((h>=100 && h<105 && v>=177 && v<182)) // button1
-            addr = button1_touch ? 60800 : 540;
+            addr = button1_tounch ? 60800 : 540;
         else addr = 12900;
         */
     end
