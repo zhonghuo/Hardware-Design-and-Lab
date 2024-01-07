@@ -480,6 +480,8 @@ module map_switch(
                     ) : (
                         (select && map == 1) ? (
                             map1_addr
+                        ) : (select && map == 2) ?(
+                            map2_addr
                         ) : (
                             0
                         )
