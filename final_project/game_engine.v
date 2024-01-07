@@ -8,7 +8,8 @@ module map_switch(
     input wire [9:0] vga_v,  //480 
     output [16:0] pixel_addr,
     output wire [15:0] led, 
-    output reg [2:0] select
+    output reg [2:0] select,
+    output reg flag_cover
 );
     parameter menu_state = 3'b000;
     parameter level_1_state = 3'd1;
@@ -27,19 +28,6 @@ module map_switch(
         .clk22(clk_22)
     );
 
-    //keyboard
-    //wire [9:0] key_down;
-    wire [8:0] last_change;
-    wire been_ready;
-    /*KeyboardDecoder kd1(
-		.key_down(key_down),
-		.last_change(last_change),
-		.key_valid(been_ready),
-		.PS2_DATA(PS2_DATA),
-		.PS2_CLK(PS2_CLK),
-		.rst(rst),
-		.clk(clk)
-	);*/
 
     //map
     reg [2:0] map = 1;
@@ -47,6 +35,16 @@ module map_switch(
     reg [3:0] player_state = 4'd6, player2_state = 4'd6;
     reg [1:0] player_jump = 2'b0, player2_jump = 2'b0;
     reg [29:0] cnt_player_jump = 0, cnt_player2_jump = 0;
+
+    //cover related variables
+    //cover_gen
+    wire [15:0] cover_addr;
+    game_cover escape_from_NTHU(
+        .clk(clk), 
+        .vga_h(vga_h), 
+        .vga_v(vga_v), 
+        .addr(cover_addr)
+    );
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
@@ -56,6 +54,7 @@ module map_switch(
             player_state <= 4'd6;
             player_jump <= 2'b0;
             cnt_player_jump <= 0;
+            flag_cover <= 1;
         end
         else begin
             if(select == 0) begin
@@ -78,7 +77,8 @@ module map_switch(
                             en_key <= 0;
                         end
                         else if(key_down[8]) begin
-                            select <= 1;
+                            if(flag_cover) flag_cover <= 0;
+                            else select <= 1;
                             map <= map;
                             en_key <= en_key;
                         end
@@ -321,30 +321,11 @@ module map_switch(
         end
     end 
 
-    //?U??map module?????
-    //reg [16:0] pixel_addr;
+   
     wire [16:0] map1_addr, map2_addr, map3_addr, map4_addr, map5_addr, menu_addr;
     wire [5:0] map_en = 1<<map;
     wire map1_clear, map2_clear, map3_clear, map4_clear, map5_clear;
-        //addr switch
-    /*always @(posedge clk, posedge rst) begin
-        if(rst) begin
-            pixel_addr <= menu_addr;
-        end else begin
-            if(!select) begin
-                pixel_addr <= menu_addr;
-            end else begin
-                case(map)
-                1: pixel_addr <= map1_addr;
-                2: pixel_addr <= map2_addr;
-                3: pixel_addr <= map3_addr;
-                4: pixel_addr <= map4_addr;
-                5: pixel_addr <= map5_addr;
-                default: pixel_addr <= menu_addr;
-                endcase                
-            end
-        end
-    end*/
+    
     wire [9:0] h, v;
     assign h = vga_h >> 1;
     assign v = vga_v >> 1;
@@ -354,8 +335,8 @@ module map_switch(
                         (map==2) ? map2_addr :
                         (map==3) ? map3_addr :
                         (map==4) ? map4_addr : map5_addr;*/
-
-    assign pixel_addr = (!select && map == 1) ? (
+    wire [16:0] map_and_menu_addr;
+    assign map_and_menu_addr = (!select && map == 1) ? (
         (h >= 150 && h < 170 && v >= 40 && v < 65) ? (
             (h-150)+(v-39)*320
         ) : (
@@ -481,32 +462,8 @@ module map_switch(
         )
     );
 
-    //map choose
+    assign pixel_addr  = flag_cover ? {1'b0, cover_addr} : map_and_menu_addr;
 
-    //map modules~~
-    /*map menu(
-        .clk(clk), 
-        .rst(rst), 
-        .en(map_en[0] && !select), 
-        .level(3'd0), 
-        .map(map),
-        .PS2_CLK(PS2_CLK), 
-        .PS2_DATA(PS2_DATA), 
-        .addr(menu_addr), 
-        .vga_h(vga_h), 
-        .vga_v(vga_v)
-    );*/
-
-    /*menu Menu(
-        .clk(clk),
-        .rst(rst),
-        .level(level),
-        .map(map),
-        .vga_h(vga_h),
-        .vga_v(vga_v),
-        .key_down(key_down),
-        .addr(menu_addr)
-    );*/
 
     map1 Map1(
         .clk(clk), 
@@ -528,57 +485,5 @@ module map_switch(
         .button1_tounch(button1_tounch)
     );
 
-    /*map map2(
-        .clk(clk), 
-        .rst(rst), 
-        .en(map_en[2] && select), 
-        .level(3'd2), 
-        .map(map),
-        .PS2_CLK(PS2_CLK), 
-        .PS2_DATA(PS2_DATA), 
-        .addr(map2_addr), 
-        .clear(map2_clear),
-        .vga_h(vga_h), 
-        .vga_v(vga_v)
-    );
-    map map3(
-        .clk(clk), 
-        .rst(rst), 
-        .en(map_en[3] && select), 
-        .level(3'd3), 
-        .map(map),
-        .PS2_CLK(PS2_CLK), 
-        .PS2_DATA(PS2_DATA), 
-        .addr(map3_addr), 
-        .clear(map3_clear),
-        .vga_h(vga_h), 
-        .vga_v(vga_v)
-    );
-    map map4(
-        .clk(clk), 
-        .rst(rst), 
-        .en(map_en[4] && select), 
-        .level(3'd4), 
-        .map(map),
-        .PS2_CLK(PS2_CLK), 
-        .PS2_DATA(PS2_DATA), 
-        .addr(map4_addr), 
-        .clear(map4_clear),
-        .vga_h(vga_h), 
-        .vga_v(vga_v)
-    );
-    map map5(
-        .clk(clk), 
-        .rst(rst), 
-        .en(map_en[5] && select), 
-        .level(3'd5), 
-        .map(map),
-        .PS2_CLK(PS2_CLK), 
-        .PS2_DATA(PS2_DATA), 
-        .addr(map5_addr), 
-        .clear(map5_clear),
-        .vga_h(vga_h), 
-        .vga_v(vga_v)
-    );*/
 
 endmodule

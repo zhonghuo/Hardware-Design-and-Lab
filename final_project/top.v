@@ -29,7 +29,7 @@ module final_project(
     wire clk_25MHz;
     wire clk_22;
     wire [16:0] pixel_addr;
-    wire [11:0] pixel;
+    wire [11:0] pixel, background_pixel, cover_pixel;
     wire valid;
     wire [9:0] h_cnt; //640
     wire [9:0] v_cnt;  //480
@@ -42,6 +42,8 @@ module final_project(
     reg [1:0] player1_jump = 2'b0, player2_jump = 2'b0;
     reg [29:0] cnt_player1_jump = 30'b0, cnt_player2_jump = 30'b0;
 
+    wire flag_cover;//to show cover or not
+    assign pixel = flag_cover ? cover_pixel : background_pixel;
     assign {vgaRed, vgaGreen, vgaBlue} = (valid==1'b1) ? pixel:12'h0;
     wire [9:0] key_down;
     wire [8:0] last_change;
@@ -57,17 +59,7 @@ module final_project(
 					(last_change == DOWN_code) ? 6 :
 					(last_change == RIGHT_code) ? 7 :
                     (last_change == ENTER_code) ? 8 : 9;
-    /*
-    W -> key_down[0]
-    A -> 1
-    S -> 2
-    D -> 3
-    up -> 4
-    left -> 5
-    down -> 6
-    right -> 7
-    enter -> 8 9
-    */
+
     parameter menu_state = 3'b000;
     parameter level_1_state = 3'd1;
     parameter level_2_state = 3'd2;
@@ -92,29 +84,20 @@ module final_project(
         .clk22(clk_22)
     );
 
-    /*mem_addr_gen mem_addr_gen_inst(
-        .clk(clk_22),
-        .origine_clk(clk),
-        .rst(rst),
-        .player1_jump(player1_jump),
-        .player2_jump(player2_jump),
-        .h_cnt(h_cnt),
-        .v_cnt(v_cnt),
-        .state(state),
-        .player1_state(player1_state),
-        .player2_state(player2_state),
-        .select_level(select_level),
-        .pixel_addr(pixel_addr),
-        .player1_collide(player1_collide),
-        .led(led)
-    );*/
+    blk_mem_gen_1 alphabet(
+        .clka(clk_25MHz),
+        .wea(0),
+        .addra(pixel_addr[15:0]),
+        .dina(data[11:0]),
+        .douta(cover_pixel)
+    );
 
     blk_mem_gen_0 blk_mem_gen_0_inst(
         .clka(clk_25MHz),
         .wea(0),
         .addra(pixel_addr),
         .dina(data[11:0]),
-        .douta(pixel)
+        .douta(background_pixel)
     );
 
     vga_controller   vga_inst(
@@ -172,7 +155,8 @@ module final_project(
         .vga_v(v_cnt),
         .pixel_addr(pixel_addr),
         .led(led), 
-        .select(select)
+        .select(select), 
+        .flag_cover(flag_cover)
     );
 
 endmodule
