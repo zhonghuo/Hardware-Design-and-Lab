@@ -4,6 +4,7 @@ module map_switch(
     inout PS2_DATA, 
     inout PS2_CLK, 
     input [9:0] key_down,
+    input been_ready,
     input wire [9:0] vga_h, //640 
     input wire [9:0] vga_v,  //480 
     output [16:0] pixel_addr,
@@ -46,6 +47,7 @@ module map_switch(
         .addr(cover_addr)
     );
 
+    //map choose
     always @(posedge clk or posedge rst) begin
         if(rst) begin
             map <= 1;
@@ -87,7 +89,8 @@ module map_switch(
             end
             else begin
                 map <= map;
-                if(!key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
+                if(key_down[9:8] && been_ready) select <= 0;
+                else if(!key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
                     if(player_jump == 0) begin
                         player_state <= 4'd6;
                         player_jump <= 0;
@@ -468,6 +471,7 @@ module map_switch(
     map1 Map1(
         .clk(clk), 
         .rst(rst), 
+        .en((map == 1) && select),
         .addr(map1_addr), 
         .vga_h(vga_h), 
         .vga_v(vga_v),
