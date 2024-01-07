@@ -7,14 +7,13 @@ module map1(
     input [3:0] player_state, player2_state,
     input [1:0] player_jump, player2_jump,
     output wire [16:0] addr, 
-    output wire success,
-    //output reg clear,
+    output wire clear,
+    output wire fail,
     output reg [15:0] led,
     output wire p1_collision, p2_collision,
     output wire p1_land, p2_land,
     output wire should_down, should_down2,
     output wire button1_tounch,
-    output wire fail
 );
     parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
     wire collision_with_player1, collision_with_player2;
@@ -35,7 +34,7 @@ module map1(
     reg [9:0] mech_1_v_displacement = 0, mech_2_h_displacement = 0;
     reg [24:0] mech_cnt_v = 25'b0, mech_2_cnt_h = 0;
 
-    assign success = (player_state == stactic && (13+player_horizontal_displacement)>=250 && (28+player_horizontal_displacement) <273 && (230-player_vertical_displacement) == 48) &&
+    assign clear = (player_state == stactic && (13+player_horizontal_displacement)>=250 && (28+player_horizontal_displacement) <273 && (230-player_vertical_displacement) == 48) &&
     (player2_state == stactic && (13+player2_h_dis)>=280 && (27+player2_h_dis) <301 && (230-player2_v_dis) == 48) && dimond1_touch && dimond2_touch;
 
     always @(posedge clk) begin
