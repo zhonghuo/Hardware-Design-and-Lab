@@ -254,7 +254,7 @@ module map5(
         else if(en_Wall_6) addr = addr_Wall_6;
         else if(en_red_door) addr = addr_red_door;
         else if(en_blue_door) addr = addr_blue_door;
-
+        else addr = 12900;
         //obj without obj oriented ctrl
         //player diamond button mech 
         /*
@@ -262,7 +262,6 @@ module map5(
             addr = dimond1_touch ? 12900 : (((h-99)+(v-66)*320));
         else if((h>=100 && h<105 && v>=177 && v<182)) // button1
             addr = button1_tounch ? 60800 : 540;
-        else addr = 12900;
         */
     end
     
