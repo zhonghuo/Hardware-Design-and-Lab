@@ -62,7 +62,7 @@ module map1(
     (!button1_tounch && (10+player_horizontal_displacement)<40 && (199-player_vertical_displacement) <=147 && (199-player_vertical_displacement) >=139) ||
     (player_jump == 1 && (199-player_vertical_displacement) == 104 && (10+player_horizontal_displacement) >= 75 && (10+player_horizontal_displacement) < 270) || //wall 3
     (player_state == right && button2_tounch && (28+player_horizontal_displacement) >= 295 && (230-player_vertical_displacement) >= 130) ||   // mech 2
-    (player2_state == left && (10+player2_h_dis) <= 211 && (10+player2_h_dis) >= 209 && (230-player2_v_dis) <= 96 && (230-player2_v_dis) >= 93)  // wall 4
+    (player_state == left && (10+player_horizontal_displacement) <= 211 && (10+player_horizontal_displacement) >= 209 && (230-player_vertical_displacement) <= 96 && (230-player_vertical_displacement) >= 93)  // wall 4
     ; 
 
     assign p2_collision = (player2_jump == 1 && (199 - player2_v_dis) == 190 && (10 + player2_h_dis) < 240) ||
@@ -72,7 +72,7 @@ module map1(
     (!button1_tounch && (10+player2_h_dis)<40 && (199-player2_v_dis) <=147 && (199-player2_v_dis) >= 139) ||
     (player2_jump == 1 && (199-player2_v_dis) == 104 && (10+player2_h_dis) >= 75 && (10+player2_h_dis) < 270) || //wall 3
     (player2_state == right && button2_tounch && (28+player2_h_dis)>=295 && (230-player2_v_dis) >= 130) || // mech 2
-    (player_state == left && (10+player_horizontal_displacement) <= 211 && (10+player_horizontal_displacement) >= 209 && (230-player_vertical_displacement) <= 96 && (230-player_vertical_displacement) >= 93)  // wall 4
+    (player2_state == left && (10+player2_h_dis) <= 211 && (10+player2_h_dis) >= 209 && (230-player2_v_dis) <= 96 && (230-player2_v_dis) >= 93)  // wall 4
     ; 
 
     assign p1_land = (player_jump == 2 && (230-player_vertical_displacement) == 230 && (28+player_horizontal_displacement) < 276) ||  // floor
