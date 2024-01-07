@@ -38,7 +38,7 @@ module map_switch(
     reg [29:0] cnt_player_jump = 0, cnt_player2_jump = 0;
 
     //map1 wires
-    //wire map1_clear,
+    //wire map1_reg clear,
     wire [15:0] map1_led;
     wire map1_p1_collision, map1_p2_collision;
     wire map1_p1_land, map1_p2_land;
@@ -46,36 +46,12 @@ module map_switch(
     wire map1_button1_tounch;
 
     //map2 wires
-    //wire map2_clear,
+    //wire map2_reg clear,
     wire [15:0] map2_led;
     wire map2_p1_collision, map2_p2_collision;
     wire map2_p1_land, map2_p2_land;
     wire map2_should_down, map2_should_down2;
     wire map2_button1_tounch;
-
-    //map3_ wires
-    //wire map3_clear
-    wire [15:0] map3_led;
-    wire map3_p1_collision, map3_p2_collision;
-    wire map3_p1_land, map3_p2_land;
-    wire map3_should_down, map3_should_down2;
-    wire map3_button1_tounch;
-
-    //map4_ wires
-    //wire map4_clear
-    wire [15:0] map4_led;
-    wire map4_p1_collision, map4_p2_collision;
-    wire map4_p1_land, map4_p2_land;
-    wire map4_should_down, map4_should_down2;
-    wire map4_button1_tounch;
-
-    //map5_ wires
-    //wire map5_clear
-    wire [15:0] map5_led;
-    wire map5_p1_collision, map5_p2_collision;
-    wire map5_p1_land, map5_p2_land;
-    wire map5_should_down, map5_should_down2;
-    wire map5_button1_tounch;
 
     //wires of maps
     //using selector to choose the final output
@@ -506,13 +482,7 @@ module map_switch(
                             map1_addr
                         ) : (select && map == 2) ?(
                             map2_addr
-                        ) : (select && map == 3) ?(
-                            map3_addr
-                        ) : (select && map == 4) ?(
-                            map5_addr
-                        ) : (select && map == 5) ?(
-                            map5_addr
-                        ) :(
+                        ) : (
                             0
                         )
                     )
@@ -565,69 +535,6 @@ module map_switch(
         .button1_tounch(map2_button1_tounch)
     );
 
-    map3 Map3(
-        .clk(clk), 
-        .rst(rst), 
-        .en((map == 3) && select),
-        .addr(map3_addr), 
-        .vga_h(vga_h), 
-        .vga_v(vga_v),
-        .player_state(player_state),
-        .player2_state(player2_state),
-        .player_jump(player_jump),
-        .player2_jump(player2_jump),
-        .led(map3_led),
-        .p1_collision(map3_p1_collision),
-        .p2_collision(map3_p2_collision),
-        .p1_land(map3_p1_land),
-        .p2_land(map3_p2_land),
-        .should_down(map3_should_down),
-        .should_down2(map3_should_down2),
-        .button1_tounch(map3_button1_tounch)
-    );
-
-    map4 Map4(
-        .clk(clk), 
-        .rst(rst), 
-        .en((map == 4) && select),
-        .addr(map4_addr), 
-        .vga_h(vga_h), 
-        .vga_v(vga_v),
-        .player_state(player_state),
-        .player2_state(player2_state),
-        .player_jump(player_jump),
-        .player2_jump(player2_jump),
-        .led(map4_led),
-        .p1_collision(map4_p1_collision),
-        .p2_collision(map4_p2_collision),
-        .p1_land(map4_p1_land),
-        .p2_land(map4_p2_land),
-        .should_down(map4_should_down),
-        .should_down2(map4_should_down2),
-        .button1_tounch(map4_button1_tounch)
-    );
-
-    map5 Map5(
-        .clk(clk), 
-        .rst(rst), 
-        .en((map == 5) && select),
-        .addr(map5_addr), 
-        .vga_h(vga_h), 
-        .vga_v(vga_v),
-        .player_state(player_state),
-        .player2_state(player2_state),
-        .player_jump(player_jump),
-        .player2_jump(player2_jump),
-        .led(map5_led),
-        .p1_collision(map5_p1_collision),
-        .p2_collision(map5_p2_collision),
-        .p1_land(map5_p1_land),
-        .p2_land(map5_p2_land),
-        .should_down(map5_should_down),
-        .should_down2(map5_should_down2),
-        .button1_tounch(map5_button1_tounch)
-    );
-
     //wires of maps selector
     /*
     //wires of maps
@@ -663,36 +570,9 @@ module map_switch(
                 should_down2 <= map2_should_down2;
                 button1_tounch <= map2_button1_tounch;
             end
-            3: begin
-                led <= map3_led;
-                p1_collision <= map3_p1_collision;
-                p2_collision <= map3_p2_collision;
-                p1_land <= map3_p1_land;
-                p2_land <= map3_p2_land;
-                should_down <= map3_should_down;
-                should_down2 <= map3_should_down2;
-                button1_tounch <= map3_button1_tounch;
-            end
-            4: begin
-                led <= map4_led;
-                p1_collision <= map4_p1_collision;
-                p2_collision <= map4_p2_collision;
-                p1_land <= map4_p1_land;
-                p2_land <= map4_p2_land;
-                should_down <= map4_should_down;
-                should_down2 <= map4_should_down2;
-                button1_tounch <= map4_button1_tounch;
-            end
-            5: begin
-                led <= map5_led;
-                p1_collision <= map5_p1_collision;
-                p2_collision <= map5_p2_collision;
-                p1_land <= map5_p1_land;
-                p2_land <= map5_p2_land;
-                should_down <= map5_should_down;
-                should_down2 <= map5_should_down2;
-                button1_tounch <= map5_button1_tounch;
-            end
+            //3: 
+            //4: 
+            //5:
             default: begin
                 led <= led;
                 p1_collision <= p1_collision;

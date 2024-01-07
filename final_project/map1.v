@@ -62,9 +62,7 @@ module map1(
     (!button1_tounch && (10+player_horizontal_displacement)<40 && (199-player_vertical_displacement) <=147 && (199-player_vertical_displacement) >=139) ||
     (player_jump == 1 && (199-player_vertical_displacement) == 104 && (10+player_horizontal_displacement) >= 75 && (10+player_horizontal_displacement) < 270) || //wall 3
     (player_state == right && button2_tounch && (28+player_horizontal_displacement) >= 295 && (230-player_vertical_displacement) >= 130) ||   // mech 2
-    (player_state == left && (10+player_horizontal_displacement) <= 211 && (10+player_horizontal_displacement) >= 209 && (230-player_vertical_displacement) <= 96 && (230-player_vertical_displacement) >= 93) ||  // wall 4
-    (player_jump == 1 && (199 - player_vertical_displacement) == 56 && (10 + player_horizontal_displacement) >= 110) ||  // wall 6
-    (player_state == right && (28+player_horizontal_displacement) >= 160 && (28+player_horizontal_displacement) <= 162 && (230-player_vertical_displacement) <= 96 && (230-player_vertical_displacement) >= 93)  // wall 4
+    (player_jump == 1 && (199 - player_vertical_displacement) == 56 && (10 + player_horizontal_displacement) >= 110)  // wall 6
     ; 
 
     assign p2_collision = (player2_jump == 1 && (199 - player2_v_dis) == 190 && (10 + player2_h_dis) < 240) ||
@@ -74,9 +72,7 @@ module map1(
     (!button1_tounch && (10+player2_h_dis)<40 && (199-player2_v_dis) <=147 && (199-player2_v_dis) >= 139) ||
     (player2_jump == 1 && (199-player2_v_dis) == 104 && (10+player2_h_dis) >= 75 && (10+player2_h_dis) < 270) || //wall 3
     (player2_state == right && button2_tounch && (28+player2_h_dis)>=295 && (230-player2_v_dis) >= 130) || // mech 2
-    (player2_state == left && (10+player2_h_dis) <= 211 && (10+player2_h_dis) >= 209 && (230-player2_v_dis) <= 96 && (230-player2_v_dis) >= 93) ||  // wall 4
-    (player2_jump == 1 && (199 - player2_v_dis) == 56 && (10 + player2_h_dis) >= 110) ||   // wall 6
-    (player2_state == right && (28+player2_h_dis) >= 160 && (28+player2_h_dis) <= 162 && (230-player2_v_dis) <= 96 && (230-player2_v_dis) >= 93) // wall 4
+    (player2_jump == 1 && (199 - player2_v_dis) == 56 && (10 + player2_h_dis) >= 110)   // wall 6
     ; 
 
     assign p1_land = (player_jump == 2 && (230-player_vertical_displacement) == 230 && (28+player_horizontal_displacement) < 276) ||  // floor
@@ -85,9 +81,7 @@ module map1(
     (button1_tounch && player_jump == 2 && (230-player_vertical_displacement) == 161 && (8+player_horizontal_displacement) <= 40) ||  // mech 1
     (player_jump == 2 && (13+player_horizontal_displacement)>=80 && (13+player_horizontal_displacement)<310 && (230-player_vertical_displacement)==139) || // wall 2
     (button2_tounch && player_jump == 2 && (230-player_vertical_displacement) == 124 && (28+player_horizontal_displacement) >= 295) || // mech 2
-    ((player_jump == 2 || player_state == right) && (13+player_horizontal_displacement)>=210 && (13+player_horizontal_displacement)<270 && (230-player_vertical_displacement)==96) ||  // wall 3
-    (player_jump == 2 && (13+player_horizontal_displacement)>= 160 && (13+player_horizontal_displacement)<210 && (230-player_vertical_displacement)==89)  ||// wall 4
-    (player_jump == 2 && (230-player_vertical_displacement) == 96 && (28+player_horizontal_displacement) < 160 && (28+player_horizontal_displacement) >= 85) //wall 4
+    (player_jump == 2 && (13+player_horizontal_displacement)>=85 && (13+player_horizontal_displacement)<270 && (230-player_vertical_displacement)==96)  // wall 3
     ;
 
     assign p2_land = (player2_jump == 2 && (230-player2_v_dis) == 230 && (28+player2_h_dis) < 276) ||  // floor
@@ -96,9 +90,7 @@ module map1(
     (button1_tounch && player2_jump == 2 && (230-player2_v_dis) == 161 && (8+player2_h_dis) <= 40) ||   // mech 1
     (player2_jump == 2 && (13+player2_h_dis)>=80 && (13+player2_h_dis)<310 && (230-player2_v_dis)==139) || // wall 2
     (button2_tounch && player2_jump == 2 && (230-player2_v_dis)==124 && (28+player2_h_dis) >= 295) || // mech 2
-    ((player2_jump == 2 || player2_state == right) && (13+player2_h_dis)>=85 && (13+player2_h_dis)<270 && (230-player2_v_dis)==96) ||  // wall 3
-    (player2_jump == 2 && (13+player2_h_dis)>= 160 && (13+player2_h_dis)<210 && (230-player2_v_dis)==89) || // wall 4
-    (player2_jump == 2 && (230-player2_v_dis) == 96 && (28+player2_h_dis) < 160 && (28+player2_h_dis) >= 85) //wall 4
+    (player2_jump == 2  && (13+player2_h_dis)>=85 && (13+player2_h_dis)<270 && (230-player2_v_dis)==96)  // wall 3
     ;
 
     assign should_down = (player_state == left && (22+player_horizontal_displacement) <= 277 && (230-player_vertical_displacement)>= 210 && (230-player_vertical_displacement) < 212) ||
@@ -107,7 +99,6 @@ module map1(
     (player_state == left && (22+player_horizontal_displacement) <= 90 && (230-player_vertical_displacement) >= 137 && (230-player_vertical_displacement) <= 139) ||
     (player_state == left && (22+player_horizontal_displacement)  <= 296 && (230-player_vertical_displacement) >= 122 && (230-player_vertical_displacement) <= 124) ||
     (player_state == right && (8+player_horizontal_displacement) >= 270 && (230-player_vertical_displacement) >= 268 && (230-player_vertical_displacement) <= 270) ||
-    (player_state == left && (22+player_horizontal_displacement)<=160 && (230-player_vertical_displacement) >= 87 && (230-player_vertical_displacement) <= 89) ||
     (player_state == left && (22+player_horizontal_displacement) <=85 && (230-player_vertical_displacement) >= 94 && (230-player_vertical_displacement) <= 96)
     ;
 
@@ -117,7 +108,6 @@ module map1(
     (player2_state == left && (22+player2_h_dis) <= 90 && (230-player2_v_dis) >= 137 && (230-player2_v_dis) <= 139) ||
     (player2_state == left && (22+player2_h_dis) <= 296 && (230-player2_v_dis) >= 122 && (230-player2_v_dis) <= 124) ||
     (player2_state == right && (8+player2_h_dis) >=270 && (230-player2_v_dis) >=268 && (230-player2_v_dis)<=270) ||
-    (player2_state == left && (22+player2_h_dis)<=160 && (230-player2_v_dis) >= 87 && (230-player2_v_dis) <= 89) ||
     (player2_state == left && (22+player2_h_dis) <=85 && (230-player2_v_dis) >= 94 && (230-player2_v_dis) <= 96)
     ;
 
@@ -165,9 +155,6 @@ module map1(
                                         (h>=85 && h < 270 && v >= 96 && v<104) ? (  // wall 3
                                             (h-85) + (v-96+220)*320
                                         ) : (
-                                            (h>=160 && h<210 && v>=89 && v<96) ? (  // wall 4
-                                                (h-160)+(v-89+220)*320
-                                            ) : (
                                                 (h>=110 && h<310 && v>=48 && v<56) ? (  // wall 6
                                                     (h-110) + (v-48+220)*320
                                                 ) : (
@@ -453,7 +440,7 @@ module map1(
                                                         )
                                                     )
                                                 )
-                                            )
+                                            
                                         )
                                     )
                                 )
