@@ -8,7 +8,7 @@ module map_switch(
     input wire [9:0] vga_h, //640 
     input wire [9:0] vga_v,  //480 
     output [16:0] pixel_addr,
-    output wire [15:0] led, 
+    output reg [15:0] led, 
     output reg [2:0] select,
     output reg flag_cover
 );
@@ -36,6 +36,30 @@ module map_switch(
     reg [3:0] player_state = 4'd6, player2_state = 4'd6;
     reg [1:0] player_jump = 2'b0, player2_jump = 2'b0;
     reg [29:0] cnt_player_jump = 0, cnt_player2_jump = 0;
+
+    //map1 wires
+    //wire map1_reg clear,
+    reg [15:0] map1_led;
+    wire map1_p1_collision, map1_p2_collision;
+    wire map1_p1_land, map1_p2_land;
+    wire map1_should_down, map1_should_down2;
+    wire map1_button1_tounch;
+
+    //map2 wires
+    //wire map2_reg clear,
+    reg [15:0] map2_led;
+    wire map2_p1_collision, map2_p2_collision;
+    wire map2_p1_land, map2_p2_land;
+    wire map2_should_down, map2_should_down2;
+    wire map2_button1_tounch;
+
+    //wires of maps
+    //using selector to choose the final output
+    reg p1_collision, p2_collision;
+    reg p1_land, p2_land;
+    reg should_down, should_down2;
+    reg button1_tounch;
+
 
     //cover related variables
     //cover_gen
@@ -467,7 +491,6 @@ module map_switch(
 
     assign pixel_addr  = flag_cover ? {1'b0, cover_addr} : map_and_menu_addr;
 
-
     map1 Map1(
         .clk(clk), 
         .rst(rst), 
@@ -479,15 +502,96 @@ module map_switch(
         .player2_state(player2_state),
         .player_jump(player_jump),
         .player2_jump(player2_jump),
-        .led(led),
-        .p1_collision(p1_collision),
-        .p2_collision(p2_collision),
-        .p1_land(p1_land),
-        .p2_land(p2_land),
-        .should_down(should_down),
-        .should_down2(should_down2),
-        .button1_tounch(button1_tounch)
+        .led(map1_led),
+        .p1_collision(map1_p1_collision),
+        .p2_collision(map1_p2_collision),
+        .p1_land(map1_p1_land),
+        .p2_land(map1_p2_land),
+        .should_down(map1_should_down),
+        .should_down2(map1_should_down2),
+        .button1_tounch(map1_button1_tounch)
     );
 
+    map2 Map2(
+        .clk(clk), 
+        .rst(rst), 
+        .en((map == 2) && select),
+        .addr(map2_addr), 
+        .vga_h(vga_h), 
+        .vga_v(vga_v),
+        .player_state(player_state),
+        .player2_state(player2_state),
+        .player_jump(player_jump),
+        .player2_jump(player2_jump),
+        .led(map2_led),
+        .p1_collision(map2_p1_collision),
+        .p2_collision(map2_p2_collision),
+        .p1_land(map2_p1_land),
+        .p2_land(map2_p2_land),
+        .should_down(map2_should_down),
+        .should_down2(map2_should_down2),
+        .button1_tounch(map2_button1_tounch)
+    );
+
+    //wires of maps selector
+    /*
+    //wires of maps
+    //using selector to choose the final output
+    led
+    reg p1_collision, p2_collision;
+    reg p1_land, p2_land;
+    reg should_down, should_down2;
+    reg button1_tounch;
+    */
+    //map1_
+    //map2_
+    always @* begin
+        if(select) begin
+            case(map)
+            1: begin
+                led <= led;
+                p1_collision <= map1_p1_collision;
+                p2_collision <= map1_p2_collision;
+                p1_land <= map1_p1_land;
+                p2_land <= map1_p2_land;
+                should_down <= map1_should_down;
+                should_down2 <= map1_should_down2;
+                button1_tounch <= map1_button1_tounch;
+            end
+            2: begin
+                led <= led;
+                p1_collision <= map2_p1_collision;
+                p2_collision <= map2_p2_collision;
+                p1_land <= map2_p1_land;
+                p2_land <= map2_p2_land;
+                should_down <= map2_should_down;
+                should_down2 <= map2_should_down2;
+                button1_tounch <= map2_button1_tounch;
+            end
+            //3: 
+            //4: 
+            //5:
+            default: begin
+                led <= led;
+                p1_collision <= p1_collision;
+                p2_collision <= p2_collision;
+                p1_land <= p1_land;
+                p2_land <= p2_land;
+                should_down <= should_down;
+                should_down2 <= should_down2;
+                button1_tounch <= button1_tounch;
+            end
+            endcase
+        end else begin
+            led <= 16'b0000_0000_0000_1111;
+            p1_collision <= 0;
+            p2_collision <= 0;
+            p1_land <= 0;
+            p2_land <= 0;
+            should_down <= 0;
+            should_down2 <= 0;
+            button1_tounch <= 0;
+        end
+    end
 
 endmodule
