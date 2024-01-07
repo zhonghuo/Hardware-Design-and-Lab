@@ -120,7 +120,7 @@ module map_switch(
                         en_key <= en_key;
                     end else begin
                         if(key_down[0] || key_down[4]) begin   
-                            if(map < 5) map <= map + 1;
+                            if(map < 3) map <= map + 1;
                             else map <= map;
                             en_key <= 0;
                         end
