@@ -7,28 +7,12 @@ module map_switch(
     input been_ready,
     input wire [9:0] vga_h, //640 
     input wire [9:0] vga_v,  //480 
-    output [16:0] pixel_addr,
+    output reg [16:0] pixel_addr,
     output reg [15:0] led, 
     output reg [2:0] select,
-    output reg flag_cover
+    output wire flag_alphabet
 );
-    parameter menu_state = 3'b000;
-    parameter level_1_state = 3'd1;
-    parameter level_2_state = 3'd2;
-    parameter level_3_state = 3'd3;
-    parameter level_4_state = 3'd4;
-    parameter level_5_state = 3'd5;
     parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
-
-    //clk_div
-    wire clk_25MHz;
-    wire clk_22;
-    clock_divider clk_wiz_0_inst(
-        .clk(clk),
-        .clk1(clk_25MHz),
-        .clk22(clk_22)
-    );
-
 
     //map
     reg [2:0] map = 1;
@@ -84,6 +68,16 @@ module map_switch(
     reg should_down, should_down2;
     reg button1_tounch;
 
+    //game end related variables
+    wire [15:0] game_clear_scene_addr, game_fail_scene_addr;
+    clear_scene game_clear_scene(
+        .clk(clk), .vga_h(vga_h), .vga_v(vga_v),
+        .addr(game_clear_scene_addr)
+    );
+    fail_scene game_fail_scene(
+        .clk(clk), .vga_h(vga_h), .vga_v(vga_v),
+        .addr(game_fail_scene_addr)
+    );
 
     //cover related variables
     //cover_gen
@@ -96,6 +90,7 @@ module map_switch(
     );
 
     //map choose
+    reg flag_cover;
     always @(posedge clk or posedge rst) begin
         if(rst) begin
             map <= 1;
@@ -136,6 +131,7 @@ module map_switch(
                 end
             end
             else begin
+                
                 map <= map;
                 if(key_down[8] && been_ready) select <= 0;
                 else if(!key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
@@ -376,152 +372,34 @@ module map_switch(
     wire [16:0] map1_addr, map2_addr, map3_addr, map4_addr, map5_addr, menu_addr;
     wire [5:0] map_en = 1<<map;
     wire map1_clear, map2_clear, map3_clear, map4_clear, map5_clear;
+    wire map1_fail, map2_fail, map3_fail, map4_fail, map5_fail;
+    wire game_clear, game_fail;
+    assign game_clear = map1_clear || map2_clear || map3_clear || map4_clear || map5_clear;
+    assign game_fail = map1_fail || map2_fail || map3_fail || map4_fail || map5_fail;
     
     wire [9:0] h, v;
     assign h = vga_h >> 1;
     assign v = vga_v >> 1;
 
-    /*assign pixel_addr = (!select) ? menu_addr :
-                        (map==1) ? map1_addr :
-                        (map==2) ? map2_addr :
-                        (map==3) ? map3_addr :
-                        (map==4) ? map4_addr : map5_addr;*/
     wire [16:0] map_and_menu_addr;
-    assign map_and_menu_addr = (!select && map == 1) ? (
-        (h >= 150 && h < 170 && v >= 40 && v < 65) ? (
-            (h-150)+(v-39)*320
-        ) : (
-            (h >= 150 && h < 170 && v >= 80 && v < 105) ? (
-                (h-150)+(v-79)*320
-            ) : (
-                (h >= 150 && h < 170 && v >= 120 && v < 145) ? (
-                    (h-150)+(v-119)*320
-                ) : (
-                    (h >= 150 && h < 170 && v >= 160 && v < 185) ? (
-                        (h-150)+(v-159)*320
-                    ) : (
-                        (h >= 148 && h < 170 && v >= 200 && v < 225) ? (
-                            (h-127)+(v-199)*320
-                        ) : (
-                            0
-                        )
-                    )
-                )
-            )
-        )
-    ) : (
-        (!select && map == 2) ? (
-            (h >= 150 && h < 170 && v >= 40 && v < 65) ? (
-                (h-150)+(v-39)*320
-            ) : (
-                (h >= 150 && h < 170 && v >= 80 && v < 105) ? (
-                    (h-150)+(v-79)*320
-                ) : (
-                    (h >= 150 && h < 170 && v >= 120 && v < 145) ? (
-                        (h-150)+(v-119)*320
-                    ) : (
-                        (h >= 148 && h < 170 && v >= 160 && v < 185) ? (
-                            (h-127)+(v-159)*320
-                        ) : (
-                            (h >= 150 && h < 170 && v >= 200 && v < 225) ? (
-                                (h-150)+(v-199)*320
-                            ) : (
-                                0
-                            )
-                        )
-                    )
-                )
-            )
-        )  : (
-            (!select && map == 3) ? (
-                (h >= 150 && h < 170 && v >= 40 && v < 65) ? (
-                    (h-150)+(v-39)*320
-                ) : (
-                    (h >= 150 && h < 170 && v >= 80 && v < 105) ? (
-                        (h-150)+(v-79)*320
-                    ) : (
-                        (h >= 148 && h < 170 && v >= 120 && v < 145) ? (
-                            (h-127)+(v-119)*320
-                        ) : (
-                            (h >= 150 && h < 170 && v >= 160 && v < 185) ? (
-                                (h-150)+(v-159)*320
-                            ) : (
-                                (h >= 150 && h < 170 && v >= 200 && v < 225) ? (
-                                    (h-150)+(v-199)*320
-                                ) : (
-                                    0
-                                )
-                            )
-                        )
-                    )
-                )
-            ) : (
-                (!select && map == 4) ? (
-                    (h >= 150 && h < 170 && v >= 40 && v < 65) ? (
-                        (h-150)+(v-39)*320
-                    ) : (
-                        (h >= 148 && h < 170 && v >= 80 && v < 105) ? (
-                            (h-127)+(v-79)*320
-                        ) : (
-                            (h >= 150 && h < 170 && v >= 120 && v < 145) ? (
-                                (h-150)+(v-119)*320
-                            ) : (
-                                (h >= 150 && h < 170 && v >= 160 && v < 185) ? (
-                                    (h-150)+(v-159)*320
-                                ) : (
-                                    (h >= 150 && h < 170 && v >= 200 && v < 225) ? (
-                                        (h-150)+(v-199)*320
-                                    ) : (
-                                        0
-                                    )
-                                )
-                            )
-                        )
-                    )
-                ) : (
-                    (!select && map == 5) ? (
-                        (h >= 148 && h < 170 && v >= 40 && v < 65) ? (
-                            (h-127)+(v-39)*320
-                        ) : (
-                            (h >= 150 && h < 170 && v >= 80 && v < 105) ? (
-                                (h-150)+(v-79)*320
-                            ) : (
-                                (h >= 150 && h < 170 && v >= 120 && v < 145) ? (
-                                    (h-150)+(v-119)*320
-                                ) : (
-                                    (h >= 150 && h < 170 && v >= 160 && v < 185) ? (
-                                        (h-150)+(v-159)*320
-                                    ) : (
-                                        (h >= 150 && h < 170 && v >= 200 && v < 225) ? (
-                                            (h-150)+(v-199)*320
-                                        ) : (
-                                            0
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    ) : (
-                        (select && map == 1) ? (
-                            map1_addr
-                        ) : (select && map == 2) ?(
-                            map2_addr
-                        ) : (select && map == 3) ?(
-                            map3_addr
-                        ) : (select && map == 4) ?(
-                            map4_addr
-                        ) : (select && map == 5) ?(
-                            map5_addr
-                        ) :(
-                            0
-                        )
-                    )
-                )
-            )
-        )
+    map_and_menu_addr_gen MAMAG(
+        .h(h), .v(v), .select(select), .map(map), 
+        .map1_addr(map1_addr), 
+        .map2_addr(map2_addr), 
+        .map3_addr(map3_addr), 
+        .map4_addr(map4_addr), 
+        .map5_addr(map5_addr), 
+        .map_and_menu_addr(map_and_menu_addr)
     );
 
-    assign pixel_addr  = flag_cover ? {1'b0, cover_addr} : map_and_menu_addr;
+    //indicate which blk_mem to connect
+    assign flag_alphabet = flag_cover || game_clear || game_fail;
+    always @* begin
+        if(flag_cover) pixel_addr = {1'b0, cover_addr};
+        else if(game_clear) pixel_addr = {1'b0, game_clear_scene_addr};
+        else if(game_fail) pixel_addr = {1'b0, game_clear_scene_addr};
+        else pixel_addr = map_and_menu_addr;
+    end 
 
     //there are totally 5 maps in the project
     map1 Map1(
@@ -542,7 +420,8 @@ module map_switch(
         .p2_land(map1_p2_land),
         .should_down(map1_should_down),
         .should_down2(map1_should_down2),
-        .button1_tounch(map1_button1_tounch)
+        .button1_tounch(map1_button1_tounch), 
+        .clear(map1_clear), .fail(map1_fail)
     );
 
     map2 Map2(
@@ -563,7 +442,8 @@ module map_switch(
         .p2_land(map2_p2_land),
         .should_down(map2_should_down),
         .should_down2(map2_should_down2),
-        .button1_tounch(map2_button1_tounch)
+        .button1_tounch(map2_button1_tounch), 
+        .clear(map2_clear), .fail(map2_fail)
     );
 
     map3 Map3(
@@ -584,7 +464,8 @@ module map_switch(
         .p2_land(map3_p2_land),
         .should_down(map3_should_down),
         .should_down2(map3_should_down2),
-        .button1_tounch(map3_button1_tounch)
+        .button1_tounch(map3_button1_tounch), 
+        .clear(map3_clear), .fail(map3_fail)
     );
 
     map4 Map4(
@@ -605,7 +486,8 @@ module map_switch(
         .p2_land(map4_p2_land),
         .should_down(map4_should_down),
         .should_down2(map4_should_down2),
-        .button1_tounch(map4_button1_tounch)
+        .button1_tounch(map4_button1_tounch), 
+        .clear(map4_clear), .fail(map4_fail)
     );
 
     map5 Map5(
@@ -626,21 +508,12 @@ module map_switch(
         .p2_land(map5_p2_land),
         .should_down(map5_should_down),
         .should_down2(map5_should_down2),
-        .button1_tounch(map5_button1_tounch)
+        .button1_tounch(map5_button1_tounch), 
+        .clear(map5_clear), .fail(map5_fail)
     );
 
     //wires of maps selector
-    /*
-    //wires of maps
-    //using selector to choose the final output
-    led
-    reg p1_collision, p2_collision;
-    reg p1_land, p2_land;
-    reg should_down, should_down2;
-    reg button1_tounch;
-    */
-    //map1_
-    //map2_
+    //choose the final output to vga
     always @* begin
         if(select) begin
             case(map)
