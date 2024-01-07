@@ -137,7 +137,7 @@ module map_switch(
             end
             else begin
                 map <= map;
-                if(key_down[9:8] && been_ready) select <= 0;
+                if(key_down[8] && been_ready) select <= 0;
                 else if(!key_down[4] && !key_down[5] && !key_down[6] && !key_down[7]) begin
                     if(player_jump == 0) begin
                         player_state <= 4'd6;
