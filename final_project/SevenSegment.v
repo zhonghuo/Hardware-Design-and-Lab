@@ -1,6 +1,9 @@
 module T(
     input clk,
     input rst,
+    input game_clear,
+    input game_fail,
+    input select,
     output wire [6:0] DISPLAY, 
     output wire [3:0] DIGIT
 );
@@ -23,35 +26,48 @@ module T(
             second_UnitsDigit <= 0;
             cnt <= 0;
         end else begin
-            if(cnt < 30'd100000000) begin
-                cnt <= cnt + 1;
+            if(!select) begin
+                minute <= 0;
+                second_TensDigit <= 0;
+                second_UnitsDigit <= 0;
+                cnt <= 0;
+            end else if(game_clear || game_fail) begin
+                minute <= minute;
+                second_TensDigit <= second_TensDigit;
+                second_UnitsDigit <= second_UnitsDigit;
+                cnt <= 0;
             end
             else begin
-                if(second_TensDigit == 4'd5 && second_UnitsDigit == 4'd9) begin
-                    if(minute == 4'd9) begin
-                        second_TensDigit <= 4'd5;
-                        second_UnitsDigit <= 4'd9;
+                if(cnt < 30'd100000000) begin
+                    cnt <= cnt + 1;
+                end
+                else begin
+                    if(second_TensDigit == 4'd5 && second_UnitsDigit == 4'd9) begin
+                        if(minute == 4'd9) begin
+                            second_TensDigit <= 4'd5;
+                            second_UnitsDigit <= 4'd9;
+                            minute <= minute;
+                            cnt <= 0;
+                        end
+                        else begin
+                            second_TensDigit <= 0;
+                            second_UnitsDigit <= 0;
+                            minute <= minute + 1;
+                            cnt <= 0;
+                        end
+                    end
+                    else if(second_TensDigit != 4'd5 && second_UnitsDigit == 4'd9) begin
+                        second_UnitsDigit <= 0;
+                        second_TensDigit <= second_TensDigit + 1;
                         minute <= minute;
                         cnt <= 0;
                     end
                     else begin
-                        second_TensDigit <= 0;
-                        second_UnitsDigit <= 0;
-                        minute <= minute + 1;
+                        second_UnitsDigit <= second_UnitsDigit + 1;
+                        second_TensDigit <= second_TensDigit;
+                        minute <= minute;
                         cnt <= 0;
                     end
-                end
-                else if(second_TensDigit != 4'd5 && second_UnitsDigit == 4'd9) begin
-                    second_UnitsDigit <= 0;
-                    second_TensDigit <= second_TensDigit + 1;
-                    minute <= minute;
-                    cnt <= 0;
-                end
-                else begin
-                    second_UnitsDigit <= second_UnitsDigit + 1;
-                    second_TensDigit <= second_TensDigit;
-                    minute <= minute;
-                    cnt <= 0;
                 end
             end
         end

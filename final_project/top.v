@@ -1,6 +1,7 @@
 module final_project(
     input clk,
     input rst,
+    input strong,
     output [3:0] vgaRed,
     output [3:0] vgaGreen,
     output [3:0] vgaBlue,
@@ -68,15 +69,20 @@ module final_project(
         .v_cnt(v_cnt)
     );
 
+    wire [2:0] select;
+
     T TT(
         .clk(clk),
         .rst(rst),
         .DISPLAY(DISPLAY),
-        .DIGIT(DIGIT)
+        .DIGIT(DIGIT),
+        .game_clear(game_clear),
+        .game_fail(game_fail),
+        .select(select)
     );
 
     //music choose
-    wire [2:0] select;
+    
     music_ctrl MusicControl(
         .clk(clk), .rst(rst), .is_menu(select == 0), 
         .audio_mclk(audio_mclk), .audio_lrck(audio_lrck), 
@@ -95,7 +101,10 @@ module final_project(
         .led(led), 
         .select(select), 
         .flag_alphabet(flag_alphabet), 
-        .been_ready(been_ready)
+        .been_ready(been_ready),
+        .strong(strong),
+        .game_clear(game_clear),
+        .game_fail(game_fail)
     );
 
 endmodule

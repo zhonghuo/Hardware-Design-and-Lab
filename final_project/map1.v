@@ -2,6 +2,7 @@ module map1(
     input clk, 
     input rst, 
     input en, 
+    input strong,
     input wire [9:0] vga_h, 
     input wire [9:0] vga_v,  
     input [3:0] player_state, player2_state,
@@ -35,7 +36,7 @@ module map1(
     reg [24:0] mech_cnt_v = 25'b0, mech_2_cnt_h = 0;
 
     assign clear = (player_state == stactic && (13+player_horizontal_displacement)>=250 && (28+player_horizontal_displacement) <273 && (230-player_vertical_displacement) == 48) &&
-    (player2_state == stactic && (13+player2_h_dis)>=280 && (27+player2_h_dis) <301 && (230-player2_v_dis) == 48) && dimond1_touch && dimond2_touch;
+    (player2_state == stactic && (13+player2_h_dis)>=280 && (27+player2_h_dis) <301 && (230-player2_v_dis) == 48);
 
     always @(posedge clk) begin
         if(rst || !en) led <= 16'b0000_0000_0000_1111;
@@ -47,7 +48,7 @@ module map1(
 
     assign p1_on_mech1 = ((25+player_horizontal_displacement) < 50 && (230-player_vertical_displacement)==(139+mech_1_v_displacement));
 
-    assign dimond1_touch = (dimond1_flag) ? (
+    /*assign dimond1_touch = (dimond1_flag) ? (
         (22+player_horizontal_displacement == 197 && player_state == right && player_vertical_displacement >= 0 && player_vertical_displacement < 3) ? 1 : 0
     ) : (
         1
@@ -57,16 +58,19 @@ module map1(
         (10+player2_h_dis <= 32 && player2_state == left && (230-player2_v_dis) >= 65 && (230-player2_v_dis) <= 72) ? 1 : 0
     ) : (
         1
+    );*/
+
+    assign fail = (strong) ? (
+        0
+    ) : (
+        (fail_flag) ? (
+            (player_horizontal_displacement >= 28 && player_horizontal_displacement <=49 && (230-player_vertical_displacement)==182) ||
+            (player2_h_dis >= 28 && player2_h_dis <= 49 && (230-player2_v_dis) == 182)
+        ) : (
+            1
+        )
     );
 
-    assign fail = (fail_flag) ? (
-        (player_horizontal_displacement >= 201 && player_horizontal_displacement <=208 && (230-player_vertical_displacement)==230) ||
-        (player2_h_dis >= 140 && player2_h_dis <= 143 && (230-player2_v_dis) == 230) ||
-        (player_horizontal_displacement >= 28 && player_horizontal_displacement <=49 && (230-player_vertical_displacement)==182) ||
-        (player2_h_dis >= 28 && player2_h_dis <= 49 && (230-player2_v_dis) == 182)
-    ) : (
-        1
-    );
 
     assign p1_collision = (player_jump == 1 && (199 - player_vertical_displacement) == 190 && (10 + player_horizontal_displacement) < 240) ||
     (player_state == right && (28+player_horizontal_displacement) >= 275 && (230-player_vertical_displacement) >= 220) ||     // wall 7
@@ -151,12 +155,6 @@ module map1(
     assign addr = (h>=0 && h <320 && v>=0 && v < 10) ? (   // ceiling
         h+(v+220)*320
     ) : (
-        (h >= 164 && h < 176 && v >= 230 && v < 236) ? (   //red river
-            19521
-        ) : (
-            (h >= 224 && h < 236 && v >= 230 && v < 236) ? (  // blue river
-                22470
-            ) : (
                 (h >= 50 && h < 70 && v >= 182 && v < 188) ? (  // green river
                     60910
                 ) : (
@@ -193,12 +191,6 @@ module map1(
                                                                 (h>=0 && h<65 && v>=71 && v<81) ? (    // wall 8
                                                                     (h+160)+(v+158)*320
                                                                 ) : (
-                                                                    (h>=194 && h <206 && v>=203 && v<220) ? (       // red dimond 1
-                                                                        dimond1_touch ? 12900 : (((h-99)+(v-66)*320))
-                                                                    ) : (
-                                                                        (h>=20 && h<32 && v>=44 && v<60) ? (        // blue dimond 1
-                                                                            dimond2_touch ? 12900 : ((h+75)+((v+76)*320))
-                                                                        ) : (
                                                                             (h>=100 && h<105 && v>=177 && v<182) ? (     //button 1
                                                                                 (button1_tounch) ? (
                                                                                     60800
@@ -464,8 +456,8 @@ module map1(
                                                                                     )                                                                          
                                                                                 )
                                                                             )
-                                                                        )
-                                                                    )          
+                                                                        
+                                                                    
                                                                 )                                               
                                                             )
                                                         )
@@ -479,8 +471,8 @@ module map1(
                         )
                     )
                 )
-            )
-        )
+            
+        
     );
 
     always @(posedge clk) begin

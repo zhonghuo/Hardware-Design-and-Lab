@@ -1,6 +1,7 @@
 module map_switch(
     input clk, 
     input rst, 
+    input strong,
     inout PS2_DATA, 
     inout PS2_CLK, 
     input [9:0] key_down,
@@ -10,7 +11,8 @@ module map_switch(
     output reg [16:0] pixel_addr,
     output reg [15:0] led, 
     output reg [2:0] select,
-    output wire flag_alphabet
+    output wire flag_alphabet,
+    output wire game_clear, game_fail
 );
     parameter stactic = 4'd6, right = 4'd7, left = 4'd8, up = 4'd9;
 
@@ -72,7 +74,7 @@ module map_switch(
     wire [5:0] map_en = 1<<map;
     wire map1_clear, map2_clear, map3_clear, map4_clear, map5_clear;
     wire map1_fail, map2_fail, map3_fail, map4_fail, map5_fail;
-    wire game_clear, game_fail;
+    //wire game_clear, game_fail;
     assign game_clear = map1_clear || map2_clear || map3_clear || map4_clear || map5_clear;
     assign game_fail = map1_fail || map2_fail || map3_fail || map4_fail || map5_fail;
 
@@ -429,7 +431,8 @@ module map_switch(
         .should_down(map1_should_down),
         .should_down2(map1_should_down2),
         .button1_tounch(map1_button1_tounch), 
-        .clear(map1_clear), .fail(map1_fail)
+        .clear(map1_clear), .fail(map1_fail),
+        .strong(strong)
     );
 
     map2 Map2(
@@ -451,7 +454,8 @@ module map_switch(
         .should_down(map2_should_down),
         .should_down2(map2_should_down2),
         .button1_tounch(map2_button1_tounch), 
-        .clear(map2_clear), .fail(map2_fail)
+        .clear(map2_clear), .fail(map2_fail),
+        .strong(strong)
     );
 
     map3 Map3(
@@ -473,7 +477,8 @@ module map_switch(
         .should_down(map3_should_down),
         .should_down2(map3_should_down2),
         .button1_tounch(map3_button1_tounch), 
-        .clear(map3_clear), .fail(map3_fail)
+        .clear(map3_clear), .fail(map3_fail),
+        .strong(strong)
     );
 
     map4 Map4(
