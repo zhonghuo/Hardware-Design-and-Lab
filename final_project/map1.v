@@ -571,12 +571,12 @@ module map1(
             player_cnt_horizontal <= 25'b0;
             player_cnt_vertical <= 25'b0;
         end else begin
-            if(player_state == 4'd6) begin
+            if(player_state == stactic) begin
                 player_vertical_displacement <= player_vertical_displacement;
                 player_horizontal_displacement <= player_horizontal_displacement;
                 player_cnt_horizontal <= 0;
             end
-            else if(player_state == 4'd9) begin
+            else if(player_state == up) begin
                 if(player_jump == 0) begin
                     player_vertical_displacement <= player_vertical_displacement;
                     player_cnt_vertical <= 0;
@@ -603,7 +603,7 @@ module map1(
                     end
                 end
             end
-            else if(player_state == 4'd7) begin
+            else if(player_state == right) begin
                 if(player_cnt_horizontal < 25'd1500000) begin
                     player_cnt_horizontal <= player_cnt_horizontal + 1;
                     player_horizontal_displacement <= player_horizontal_displacement;
@@ -643,7 +643,7 @@ module map1(
                     end
                 end
             end
-            else if(player_state == 4'd8) begin
+            else if(player_state == left) begin
                 if(player_cnt_horizontal < 25'd1500000) begin
                     player_cnt_horizontal <= player_cnt_horizontal + 1;
                     player_horizontal_displacement <= player_horizontal_displacement;
